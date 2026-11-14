@@ -26531,7 +26531,10 @@
     "googleSheet": "Google табела",
     "googleSlides": "Google слајдови",
     "pullRequest": "PR #{number}",
-    "issue": "Проблем #{number}"
+    "issue": "Проблем #{number}",
+    "artifactDocument": "Dokument",
+    "artifactPage": "Stranica",
+    "artifactUpdated": "Ažurirano {date}"
   },
   "subscriptionUsage": {
     "fiveHour": "5 sati",

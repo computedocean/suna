@@ -1,6 +1,7 @@
 'use client';
 
 import { appLink } from './app-links';
+import { ArtifactLink, isArtifactLink } from './artifact-link';
 import { Github } from '../internal/icons/github';
 import { SlackLogoIcon } from '@phosphor-icons/react';
 import { LinearMark, FigmaMark, NotionMark, GoogleDocsMark, GoogleSheetsMark, GoogleSlidesMark } from './app-link-icons';
@@ -167,13 +168,24 @@ function bareLinkText(children: React.ReactNode): string | null {
   return text;
 }
 
-export function MarkdownLink({
+export function MarkdownLink({ href, children }: { href?: string; children?: React.ReactNode }) {
+  const { variant } = useContext(MarkdownRenderContext);
+  if (variant !== 'document' && href && isArtifactLink(href)) {
+    return <ArtifactLink href={href} raw={bareLinkText(children) === href}>
+      {(label) => <PlainMarkdownLink href={href}>{label ?? children}</PlainMarkdownLink>}
+    </ArtifactLink>;
+  }
+  return <PlainMarkdownLink href={href}>{children}</PlainMarkdownLink>;
+}
+
+function PlainMarkdownLink({
   href,
   children,
+  ...anchorProps
 }: {
   href?: string;
   children?: React.ReactNode;
-}) {
+} & React.ComponentPropsWithRef<'a'>) {
   const tAppLink = useTranslations('markdownAppLinks');
   const Link = useUiLink();
   const router = useUiRouter();
@@ -282,6 +294,7 @@ export function MarkdownLink({
   if (openPreview && href && resolvedHref !== href) {
     return (
       <a
+        {...anchorProps}
         href={href}
         className={anchorClass}
         title={presentation ? resolvedHref : undefined}
@@ -307,6 +320,7 @@ export function MarkdownLink({
   if (!shouldUseNextLink(resolvedHref)) {
     return (
       <a
+        {...anchorProps}
         href={resolvedHref}
         className={anchorClass}
         title={presentation ? resolvedHref : undefined}
@@ -328,6 +342,7 @@ export function MarkdownLink({
 
   return (
     <Link
+      {...anchorProps}
       href={resolvedHref}
       onClick={isHash ? (e) => handleHashClick(e, resolvedHref) : undefined}
       className={anchorClass}

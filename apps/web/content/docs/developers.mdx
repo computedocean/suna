@@ -8791,7 +8791,7 @@ The Artifact calls are root exports that take `projectId` first. Artifacts need 
 | Root export | What it does |
 | --- | --- |
 | `listArtifacts(projectId, { scope?, type?, q?, limit? }?)` | The Artifacts the caller may open, newest change first, as `Artifact[]`. `scope`: `all`, `mine`, `shared` or `pinned`. `type`: `doc` or `html`. |
-| `getArtifact(projectId, artifactId, { version? }?)` | `ArtifactDetail`: `can_edit`, `entry_version`, the files and a signed `view_url`, valid 12 h. `version` reads the Artifact at one save. |
+| `getArtifact(projectId, artifactId, { version?, showErrors? }?)` | `ArtifactDetail`: `can_edit`, `entry_version`, the files and a signed `view_url`, valid 12 h. `version` reads the Artifact at one save. Set `showErrors: false` for a background metadata read that must not show error toasts. |
 | `createArtifact(projectId, { files, title?, description?, visibility? })` | Publishes new files as an Artifact in the caller's `Artifacts` folder in Drive. `files` maps a path to `{ content }` or `{ content_base64 }`. `index.md` makes a doc, `index.html` a page. `visibility` defaults to `private`. Errors: `400 missing_entry`, `413 file_too_large` (a file over 16 MB), `413 publish_too_large` (over 32 MB). |
 | `shareArtifactPath(projectId, { path, title?, description?, visibility? })` | Shares a folder that is already in Drive. `409 already_shared` when the path is an Artifact already. |
 | `saveArtifact(projectId, artifactId, { files, base_version?, title?, description? })` | Writes files into the Artifact as one save. With `base_version`, a newer save by someone else returns `409 version_conflict`. Without write access to its folder: `403 artifact_read_only`. |

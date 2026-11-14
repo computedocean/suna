@@ -26531,7 +26531,10 @@
     "googleSheet": "Google-Tabelle",
     "googleSlides": "Google Slides",
     "pullRequest": "PR #{number}",
-    "issue": "Issue #{number}"
+    "issue": "Issue #{number}",
+    "artifactDocument": "Dokument",
+    "artifactPage": "Seite",
+    "artifactUpdated": "Aktualisiert am {date}"
   },
   "subscriptionUsage": {
     "fiveHour": "5 Stunden",

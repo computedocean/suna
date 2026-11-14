@@ -26531,7 +26531,10 @@
     "googleSheet": "Feuille Google",
     "googleSlides": "Google Slides",
     "pullRequest": "PR #{number}",
-    "issue": "Ticket #{number}"
+    "issue": "Ticket #{number}",
+    "artifactDocument": "Document",
+    "artifactPage": "Page",
+    "artifactUpdated": "Mis à jour le {date}"
   },
   "subscriptionUsage": {
     "fiveHour": "5 heures",

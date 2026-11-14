@@ -26531,7 +26531,10 @@
     "googleSheet": "Google 表格",
     "googleSlides": "Google 幻灯片",
     "pullRequest": "PR #{number}",
-    "issue": "议题 #{number}"
+    "issue": "议题 #{number}",
+    "artifactDocument": "文档",
+    "artifactPage": "页面",
+    "artifactUpdated": "更新于 {date}"
   },
   "subscriptionUsage": {
     "fiveHour": "5 小时",

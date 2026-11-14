@@ -727,6 +727,8 @@ exhaustive — see `API-MAP.md` for the full per-domain surface:
 | `kortix.session(pid, sid)` | id-bound handle: lifecycle (`get`/`update`/`delete`/`restore`/`start`/`restart`/`stop`/`reloadConfig`/`reloadConfigStream`/`setSharing`/`participants`/`setPinned`/`setArchived`/`presence`/`previews`/`commit`/`publicShares`/`ensureReady`) · finalized `cost()` · `send`/`abort`/`rewind`/`restoreRewind` (needs `session.rewind`)/`setModel`/`setAgent` · `transcript()` · `.files` · runtime URL helpers (`health`/`previewUrl`/`proxyUrl`) · the session verbs (`messages`/`pending`/`answerPermission`/`answerQuestion`/`compact`) · `stream()` · the deprecated `.runtime` |
 | `kortix.runtime()` | the runtime REST compatibility client of the process-wide active sandbox. It throws on a scoped client. Use the session verbs on `kortix.session(pid, sid)` instead |
 
+Artifact metadata reads accept `getArtifact(projectId, artifactId, { showErrors: false })` to suppress host error notifications. The promise still rejects on access or network errors.
+
 Runnable, self-contained scripts for the highest-value flows live in
 [`examples/`](./examples): list projects with a PAT, send + stream, the
 multi-tenant server-wrapper pattern, headless transcript rendering, cost

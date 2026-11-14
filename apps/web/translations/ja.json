@@ -26531,7 +26531,10 @@
     "googleSheet": "Google スプレッドシート",
     "googleSlides": "Google スライド",
     "pullRequest": "PR #{number}",
-    "issue": "課題 #{number}"
+    "issue": "課題 #{number}",
+    "artifactDocument": "ドキュメント",
+    "artifactPage": "ページ",
+    "artifactUpdated": "更新日: {date}"
   },
   "subscriptionUsage": {
     "fiveHour": "5時間",

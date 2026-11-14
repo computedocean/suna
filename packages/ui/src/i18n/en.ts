@@ -9840,7 +9840,10 @@ const catalog = {
     "googleSheet": "Google Sheet",
     "googleSlides": "Google Slides",
     "pullRequest": "PR #{number}",
-    "issue": "Issue #{number}"
+    "issue": "Issue #{number}",
+    "artifactDocument": "Document",
+    "artifactPage": "Page",
+    "artifactUpdated": "Updated {date}"
   },
   "subscriptionUsage": {
     "fiveHour": "5-hour",
