@@ -2184,9 +2184,6 @@
     }
   },
   "src/projects/routes/session-stream.ts": {
-    "no-restricted-imports": {
-      "count": 2
-    },
     "no-restricted-syntax": {
       "count": 1
     }
