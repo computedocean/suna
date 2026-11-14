@@ -313,6 +313,22 @@ describe('buildFeatureFlagCatalog', () => {
     expect(typeof reminders.available).toBe('boolean');
   });
 
+  test('an override keeps reporting the platform default it replaced', () => {
+    // Loops (`reminders`) is available everywhere and on by default. A project
+    // that switched it off and on again is overridden either way, and the
+    // catalog still says what a reset would return it to.
+    for (const choice of [false, true]) {
+      const reminders = buildFeatureFlagCatalog({ experimental: { reminders: choice } }).find(
+        (f) => f.key === 'reminders',
+      );
+      expect(reminders?.overridden).toBe(true);
+      expect(reminders?.enabled).toBe(choice);
+      expect(reminders?.default_enabled).toBe(true);
+    }
+    // Without an override the default is the effective state.
+    for (const f of buildFeatureFlagCatalog({})) expect(f.default_enabled).toBe(f.enabled);
+  });
+
   test('an unavailable flag is never enabled', () => {
     const everythingOn = Object.fromEntries(FEATURE_FLAG_KEYS.map((key) => [key, true]));
     for (const f of buildFeatureFlagCatalog({ experimental: everythingOn })) {

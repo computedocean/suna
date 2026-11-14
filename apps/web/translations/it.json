@@ -1255,6 +1255,7 @@
       "search": "Cerca funzionalità",
       "loadFailed": "Impossibile caricare il workspace",
       "retry": "Riprova",
+      "reset": "Ripristina il predefinito",
       "noMatches": "Nessun risultato per {query}.",
       "emptyTitle": "Nessuna funzionalità sperimentale",
       "emptyDescription": "Questa installazione non espone funzionalità attivabili per workspace.",

@@ -1255,6 +1255,7 @@
       "search": "Rechercher des fonctionnalités",
       "loadFailed": "Impossible de charger l’espace de travail",
       "retry": "Réessayer",
+      "reset": "Rétablir la valeur par défaut",
       "noMatches": "Aucun résultat pour {query}.",
       "emptyTitle": "Aucune fonctionnalité expérimentale",
       "emptyDescription": "Cette installation ne propose aucun indicateur de fonctionnalité par espace de travail.",

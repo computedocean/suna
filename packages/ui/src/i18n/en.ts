@@ -783,6 +783,7 @@ const catalog = {
       "search": "Search features",
       "loadFailed": "Failed to load workspace",
       "retry": "Retry",
+      "reset": "Reset to default",
       "noMatches": "No matches for {query}.",
       "emptyTitle": "No experimental features",
       "emptyDescription": "This deployment exposes no per-workspace feature flags.",

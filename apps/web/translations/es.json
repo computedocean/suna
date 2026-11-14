@@ -1255,6 +1255,7 @@
       "search": "Buscar funciones",
       "loadFailed": "No se pudo cargar el espacio de trabajo",
       "retry": "Reintentar",
+      "reset": "Restablecer el valor predeterminado",
       "noMatches": "No hay resultados para {query}.",
       "emptyTitle": "No hay funciones experimentales",
       "emptyDescription": "Esta instalación no ofrece indicadores de función por espacio de trabajo.",

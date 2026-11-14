@@ -225,6 +225,12 @@ export interface FeatureFlagView {
   /** True when this project set an explicit choice (vs inheriting the default). */
   overridden: boolean;
   /**
+   * What the flag resolves to without this project's choice: the state
+   * `updateFeatureFlag(projectId, key, null)` returns it to. Absent on servers
+   * older than this field.
+   */
+  default_enabled?: boolean;
+  /**
    * True for an internal-only flag (`workspace_volume`). The
    * catalog lists one only while it is on, so agents and people can see it.
    * Only a Kortix platform operator can change it: `PATCH /features` answers

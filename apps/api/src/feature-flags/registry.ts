@@ -677,6 +677,8 @@ export interface FeatureFlagView {
   enabled: boolean;
   /** True when this project set an explicit choice (vs inheriting the default). */
   overridden: boolean;
+  /** What the flag resolves to without this project's choice: the state a reset returns it to. */
+  default_enabled: boolean;
   /** A `catalogHidden` flag: listed only while on, writable only by a platform operator. */
   operator_only: boolean;
   /** Work in progress: not recommended yet. */
@@ -705,6 +707,7 @@ export function buildFeatureFlagCatalog(metadata: unknown): FeatureFlagView[] {
       available: f.available(),
       enabled,
       overridden: explicitOverride(metadata, f.key) !== undefined,
+      default_enabled: resolveFeatureFlag(null, f.key),
       operator_only: isOperatorOnlyFeatureFlag(f.key),
       wip: f.wip === true,
       scope: 'project' as const,

@@ -1255,6 +1255,7 @@
       "search": "Funktionen suchen",
       "loadFailed": "Workspace konnte nicht geladen werden",
       "retry": "Erneut versuchen",
+      "reset": "Auf Standard zurücksetzen",
       "noMatches": "Keine Treffer für {query}.",
       "emptyTitle": "Keine experimentellen Funktionen",
       "emptyDescription": "Diese Installation bietet keine workspacebezogenen Funktionsschalter.",

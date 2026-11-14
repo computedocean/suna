@@ -1255,6 +1255,7 @@
       "search": "機能を検索",
       "loadFailed": "ワークスペースを読み込めませんでした",
       "retry": "再試行",
+      "reset": "デフォルトに戻す",
       "noMatches": "{query} に一致する結果はありません。",
       "emptyTitle": "試験運用機能はありません",
       "emptyDescription": "この環境にはワークスペース単位の機能フラグがありません。",

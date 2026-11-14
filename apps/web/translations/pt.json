@@ -1255,6 +1255,7 @@
       "search": "Pesquisar recursos",
       "loadFailed": "Não foi possível carregar o espaço de trabalho",
       "retry": "Tentar novamente",
+      "reset": "Redefinir para o padrão",
       "noMatches": "Nenhum resultado para {query}.",
       "emptyTitle": "Nenhum recurso experimental",
       "emptyDescription": "Esta instalação não oferece sinalizadores de recurso por espaço de trabalho.",

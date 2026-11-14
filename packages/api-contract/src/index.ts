@@ -97,6 +97,8 @@ export const FeatureFlagViewSchema = z.object({
   available: z.boolean(),
   enabled: z.boolean(),
   overridden: z.boolean(),
+  /** What the flag resolves to without the project's choice: the state a reset returns it to. Absent on servers older than this field. */
+  default_enabled: z.boolean().optional(),
   /** Internal-only flag, listed only while on. Only a platform operator can change it. */
   operator_only: z.boolean().optional(),
   /** Work in progress: not recommended yet. Absent on servers older than this field. */
