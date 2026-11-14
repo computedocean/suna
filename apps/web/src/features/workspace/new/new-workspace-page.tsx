@@ -5,7 +5,8 @@ import { readCloneParam } from '@kortix/ui/workspace/new/clone-param';
 import { readSourceParam } from '@kortix/ui/workspace/new/source-param';
 import { useTranslations } from '@/i18n/use-translations';
 import { useSignedOutRedirect } from '@/lib/auth/use-signed-out-redirect';
-import { AnimatePresence, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, m } from 'motion/react';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 

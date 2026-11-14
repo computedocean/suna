@@ -10,7 +10,8 @@ import {
   StepHeader,
 } from '@kortix/ui/internal/auth/auth-primitives';
 import Loading from '@kortix/ui/loading';
-import { m, useReducedMotion } from 'motion/react';
+import { m } from 'motion/react';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 const EASE = [0.23, 1, 0.32, 1] as const;
 

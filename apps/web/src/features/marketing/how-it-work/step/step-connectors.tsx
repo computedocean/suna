@@ -2,7 +2,8 @@
 
 import { useLocalizedUiCatalog } from '@kortix/ui/i18n';
 import { BrandGlyph } from '@/features/marketing/kit/brand-glyph';
-import { m, useInView, useReducedMotion } from 'motion/react';
+import { m, useInView } from 'motion/react';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 import Image from 'next/image';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { useStepShowcaseStart } from '../use-step-showcase';

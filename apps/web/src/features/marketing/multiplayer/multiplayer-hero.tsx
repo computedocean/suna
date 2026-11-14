@@ -18,7 +18,7 @@ import {
   ShareNetworkIcon,
   UsersIcon,
 } from '@phosphor-icons/react/dist/ssr';
-import { useReducedMotion } from 'motion/react';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 import { useEffect, useState } from 'react';
 
 import { localizeMarketingContent as localizeModel } from './model';

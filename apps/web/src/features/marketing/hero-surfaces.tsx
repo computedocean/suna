@@ -23,6 +23,7 @@ import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import type { ComponentType, ReactNode } from 'react';
 import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 type SurfaceId = 'web' | 'slack' | 'teams' | 'email' | 'mobile' | 'cli' | 'sdk';
 
@@ -571,23 +572,6 @@ function ShowcaseVideo({
   );
 }
 
-const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
-
-function subscribeReducedMotion(onChange: () => void): () => void {
-  const query = window.matchMedia(REDUCED_MOTION_QUERY);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-}
-
-/** Server snapshot is `false`: the server renders no video either way. */
-function usePrefersReducedMotion(): boolean {
-  return useSyncExternalStore(
-    subscribeReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION_QUERY).matches,
-    () => false,
-  );
-}
-
 /** Recorded in the real product: a project, its connectors, agents, skills and
  *  schedules, then a session researching on a cloud computer and returning a
  *  finished deck. Every frame is the live app driven against a real project —
@@ -597,7 +581,7 @@ function WebSurface() {
   const theme = useHeroTheme();
   const systemTheme = useSystemTheme();
   const override = themeOverride(theme, systemTheme);
-  const reducedMotion = usePrefersReducedMotion();
+  const reducedMotion = useReducedMotion();
   // An OS colour-scheme flip mid-session changes which `media` query matches,
   // but a <video> never re-runs selection on its own: remount it.
   const [systemEpoch, setSystemEpoch] = useState(0);

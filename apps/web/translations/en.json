@@ -451,7 +451,7 @@
         },
         "preferences": {
           "label": "Language & shortcuts",
-          "description": "Language and keyboard shortcuts."
+          "description": "Language, motion and keyboard shortcuts."
         },
         "connected": {
           "label": "Connected accounts"
@@ -1306,9 +1306,11 @@
     },
     "preferences": {
       "title": "Language & shortcuts",
-      "description": "Language and keyboard shortcuts.",
+      "description": "Language, motion and keyboard shortcuts.",
       "languageTitle": "Language",
       "languageDescription": "The language Kortix displays, everywhere in the app.",
+      "motionTitle": "Reduce motion",
+      "motionDescription": "Stop shimmer, pulses and transitions across the app. Spinners keep turning.",
       "keyboardTitle": "Keyboard shortcuts",
       "keyboardDescription": "The modifier key used for tab switching, and every shortcut in the app.",
       "modifierKey": "Modifier key",

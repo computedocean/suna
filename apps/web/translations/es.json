@@ -598,7 +598,7 @@
         },
         "preferences": {
           "label": "Idioma y atajos",
-          "description": "Idioma y atajos de teclado."
+          "description": "Idioma, movimiento y atajos de teclado."
         },
         "connected": {
           "label": "Cuentas conectadas"
@@ -635,9 +635,11 @@
     },
     "preferences": {
       "title": "Idioma y atajos",
-      "description": "Idioma y atajos de teclado.",
+      "description": "Idioma, movimiento y atajos de teclado.",
       "languageTitle": "Idioma",
       "languageDescription": "El idioma Kortix aparece en todas partes de la aplicación.",
+      "motionTitle": "Reducir movimiento",
+      "motionDescription": "Detiene los destellos, pulsos y transiciones en toda la app. Los indicadores de carga siguen girando.",
       "keyboardTitle": "Atajos de teclado",
       "keyboardDescription": "La tecla modificadora utilizada para cambiar de pestaña y todos los accesos directos de la aplicación.",
       "modifierKey": "Tecla modificadora",

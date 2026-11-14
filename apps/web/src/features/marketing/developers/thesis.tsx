@@ -1,16 +1,8 @@
 'use client';
 
 import { cn } from '@kortix/ui';
-import {
-  m,
-  useScroll,
-  useSpring,
-  useTransform,
-  useInView,
-  useMotionValueEvent,
-  useReducedMotion,
-  type MotionValue,
-} from 'motion/react';
+import { m, useScroll, useSpring, useTransform, useInView, useMotionValueEvent, type MotionValue } from 'motion/react';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 import { useEffect, useId, useRef, useState } from 'react';
 import type { ThesisStatement } from './content';
 import { useDevelopersCopy } from './use-developers-copy';

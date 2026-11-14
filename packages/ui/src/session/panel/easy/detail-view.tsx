@@ -36,13 +36,8 @@ import {
   CaretRightIcon as ChevronRight,
   XIcon as X,
 } from '@phosphor-icons/react';
-import {
-  AnimatePresence,
-  m,
-  type TargetAndTransition,
-  type Transition,
-  useReducedMotion,
-} from 'motion/react';
+import { AnimatePresence, m, type TargetAndTransition, type Transition } from 'motion/react';
+import { useReducedMotion } from '../../../internal/hooks/use-reduced-motion';
 import {
   type ReactNode,
   type RefObject,

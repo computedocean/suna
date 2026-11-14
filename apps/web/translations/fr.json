@@ -598,7 +598,7 @@
         },
         "preferences": {
           "label": "Langue et raccourcis",
-          "description": "Langue et raccourcis clavier."
+          "description": "Langue, animations et raccourcis clavier."
         },
         "connected": {
           "label": "Comptes connectés"
@@ -635,9 +635,11 @@
     },
     "preferences": {
       "title": "Langue et raccourcis",
-      "description": "Raccourcis de langue et de clavier.",
+      "description": "Langue, animations et raccourcis clavier.",
       "languageTitle": "Langue",
       "languageDescription": "La langue Kortix s'affiche partout dans l'application.",
+      "motionTitle": "Réduire les animations",
+      "motionDescription": "Arrête les reflets, pulsations et transitions dans toute l’app. Les indicateurs de chargement continuent de tourner.",
       "keyboardTitle": "Raccourcis clavier",
       "keyboardDescription": "La touche de modification utilisée pour changer d'onglet et chaque raccourci de l'application.",
       "modifierKey": "Touche de modification",

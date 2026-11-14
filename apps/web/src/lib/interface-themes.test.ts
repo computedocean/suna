@@ -247,6 +247,22 @@ describe('INTERFACE_THEME_INIT_SCRIPT', () => {
     }
   });
 
+  test('the "Reduce motion" switch marks <html> on every route, before first paint', () => {
+    const stored = blob({ reduceMotion: true });
+    expect(runInitScript(stored, false, '/workspaces/p1/sessions/s1')).toEqual({
+      'data-reduce-motion': '',
+      'data-light-theme': 'pure-light',
+      'data-dark-theme': 'pure-dark',
+    });
+    expect(runInitScript(stored, false, '/pricing')).toEqual({ 'data-reduce-motion': '' });
+  });
+
+  test('the switch off, a legacy blob or a non-boolean leaves motion on', () => {
+    for (const stored of [blob({ reduceMotion: false }), blob({}), blob({ reduceMotion: 'true' }), null]) {
+      expect(runInitScript(stored, false, '/pricing')).toEqual({});
+    }
+  });
+
   test('blocked storage or bad JSON never throws', () => {
     expect(() => runInitScript(null, true)).not.toThrow();
     expect(() => runInitScript('{not json')).not.toThrow();

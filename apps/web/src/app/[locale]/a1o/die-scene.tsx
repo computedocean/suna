@@ -10,6 +10,7 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import { supportsWebGL2 } from '@kortix/ui/shader-safe';
 
 import { localizedA1oContent } from './content';
+import { useReduceMotionSetting } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 /**
  * A real die, thrown with real rigid-body physics.
@@ -473,7 +474,9 @@ export default function DieScene({
   onFirstDrag,
 }: DieSceneProps) {
   const [mounted, setMounted] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [systemReducedMotion, setReducedMotion] = useState(false);
+  const reduceMotionSetting = useReduceMotionSetting();
+  const reducedMotion = systemReducedMotion || reduceMotionSetting;
 
   // Drag deltas are handed to the physics loop through a ref rather than state:
   // a pointermove per frame must not re-render the React tree.

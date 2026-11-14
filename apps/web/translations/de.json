@@ -598,7 +598,7 @@
         },
         "preferences": {
           "label": "Sprache und Tastenkürzel",
-          "description": "Sprache und Tastenkürzel."
+          "description": "Sprache, Bewegung und Tastenkürzel."
         },
         "connected": {
           "label": "Verbundene Konten"
@@ -635,9 +635,11 @@
     },
     "preferences": {
       "title": "Sprache und Tastenkürzel",
-      "description": "Sprache und Tastenkürzel.",
+      "description": "Sprache, Bewegung und Tastenkürzel.",
       "languageTitle": "Sprache",
       "languageDescription": "Die Sprache Kortix wird überall in der App angezeigt.",
+      "motionTitle": "Bewegung reduzieren",
+      "motionDescription": "Stoppt Schimmer, Pulsieren und Übergänge in der ganzen App. Ladeanzeigen drehen sich weiter.",
       "keyboardTitle": "Tastenkürzel",
       "keyboardDescription": "Die Zusatztaste, die zum Wechseln zwischen Tabs und allen Tastenkombinationen in der App verwendet wird.",
       "modifierKey": "Modifikatortaste",

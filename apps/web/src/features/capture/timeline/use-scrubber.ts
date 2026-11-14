@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { MOMENTUM_STOP, SPP_MAX, SPP_MIN, clamp, momentumStep } from './track-model';
+import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 /**
  * The playhead: the time at the center of the track (`T`) and the scale
@@ -27,8 +28,7 @@ export interface Scrubber {
 
 const GLIDE_MS = 200;
 const easeOut = (k: number) => 1 - Math.pow(1 - k, 3);
-const reduceMotion = () =>
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduceMotion = prefersReducedMotion;
 
 export function useScrubber(initialT: number, bounds: { first: number; last: number } | null) {
   const state = useRef({ T: initialT, spp: 1000 });

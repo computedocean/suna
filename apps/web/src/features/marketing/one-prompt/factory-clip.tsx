@@ -1,23 +1,16 @@
 'use client';
 
 import { cn } from '@kortix/ui';
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { Scene } from './scenes';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 /** One pass of a clip: the signal, one step every STEP_MS, the result, a hold. */
 const STEP_MS = 800;
 const LEAD_MS = 700;
 const HOLD_MS = 2600;
 const TICK_MS = 100;
-
-const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
-const prefersReducedMotion = () => window.matchMedia(REDUCED_MOTION).matches;
-function subscribeReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-}
 
 /**
  * A factory's clip, drawn live: the signal arrives, the agent's steps appear
@@ -28,7 +21,7 @@ export function FactoryClip({ scene, agent }: { scene: Scene; agent: string }) {
   const root = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [elapsed, setElapsed] = useState(0);
-  const still = useSyncExternalStore(subscribeReducedMotion, prefersReducedMotion, () => false);
+  const still = useReducedMotion();
   const total = LEAD_MS + scene.steps.length * STEP_MS + HOLD_MS;
 
   useEffect(() => {

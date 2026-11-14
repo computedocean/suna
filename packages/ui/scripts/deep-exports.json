@@ -130,6 +130,7 @@
     "./internal/hooks/use-channel-bindings",
     "./internal/hooks/use-copy",
     "./internal/hooks/use-debounced-value",
+    "./internal/hooks/use-reduced-motion",
     "./internal/hooks/use-slash-focus",
     "./internal/icons/claude",
     "./internal/icons/codex",

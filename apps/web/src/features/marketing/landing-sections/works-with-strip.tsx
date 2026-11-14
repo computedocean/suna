@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { FULL_COLOR_LOGOS, WORKS_WITH } from './works-with-logos';
+import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 type Logo = (typeof WORKS_WITH)[number];
 
@@ -141,7 +142,7 @@ export function WorksWithStrip() {
 
   useEffect(() => {
     const el = root.current;
-    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!el || prefersReducedMotion()) return;
     const observer = new IntersectionObserver(([entry]) => setRunning(entry.isIntersecting));
     observer.observe(el);
     return () => observer.disconnect();

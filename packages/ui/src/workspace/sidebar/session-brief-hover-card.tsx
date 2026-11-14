@@ -30,6 +30,7 @@ import { CR_ID_PREFIX } from '../review/review-actions';
 import { SessionLabelBadges } from '../sessions/session-label-badges';
 import { SOURCE_ICONS } from './session-source-icons';
 import { isReviewOverdue, SessionStatusMark } from '../../session/list/session-status-mark';
+import { prefersReducedMotion } from '../../internal/hooks/use-reduced-motion';
 
 const DATE_TIME_OPTIONS: Intl.DateTimeFormatOptions = {
   year: 'numeric',
@@ -326,7 +327,7 @@ export function SessionBriefCardHost() {
         CARD_EDGE_PX,
         Math.min(rect.top, window.innerHeight - CARD_EDGE_PX - el.offsetHeight),
       );
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const reduce = prefersReducedMotion();
       // A move between rows glides; the first open fades in, as the reminders card does.
       el.style.transition =
         shown.current && via === 'pointer' && !reduce

@@ -274,6 +274,7 @@
     "./internal/hooks/use-channel-bindings": "./src/internal/hooks/use-channel-bindings.ts",
     "./internal/hooks/use-copy": "./src/internal/hooks/use-copy.ts",
     "./internal/hooks/use-debounced-value": "./src/internal/hooks/use-debounced-value.ts",
+    "./internal/hooks/use-reduced-motion": "./src/internal/hooks/use-reduced-motion.ts",
     "./internal/hooks/use-slash-focus": "./src/internal/hooks/use-slash-focus.ts",
     "./internal/icons/claude": "./src/internal/icons/claude.tsx",
     "./internal/icons/codex": "./src/internal/icons/codex.tsx",
@@ -1570,6 +1571,10 @@
       "./internal/hooks/use-debounced-value": {
         "types": "./dist/internal/hooks/use-debounced-value.d.ts",
         "import": "./dist/internal/hooks/use-debounced-value.js"
+      },
+      "./internal/hooks/use-reduced-motion": {
+        "types": "./dist/internal/hooks/use-reduced-motion.d.ts",
+        "import": "./dist/internal/hooks/use-reduced-motion.js"
       },
       "./internal/hooks/use-slash-focus": {
         "types": "./dist/internal/hooks/use-slash-focus.d.ts",

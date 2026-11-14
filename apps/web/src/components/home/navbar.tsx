@@ -36,7 +36,8 @@ import {
   TextTIcon as Type,
   XIcon as X,
 } from '@phosphor-icons/react';
-import { m, useReducedMotion } from 'motion/react';
+import { m } from 'motion/react';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   type KeyboardEvent,

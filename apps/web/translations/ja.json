@@ -598,7 +598,7 @@
         },
         "preferences": {
           "label": "言語とショートカット",
-          "description": "言語とキーボードショートカット。"
+          "description": "言語、モーション、キーボードショートカット。"
         },
         "connected": {
           "label": "接続済みアカウント"
@@ -635,9 +635,11 @@
     },
     "preferences": {
       "title": "言語とショートカット",
-      "description": "言語とキーボード ショートカット。",
+      "description": "言語、モーション、キーボードショートカット。",
       "languageTitle": "言語",
       "languageDescription": "アプリ内のあらゆる場所に言語「0」が表示されます。",
+      "motionTitle": "モーションを減らす",
+      "motionDescription": "アプリ全体のシマー、パルス、トランジションを止めます。読み込みスピナーは回り続けます。",
       "keyboardTitle": "キーボードショートカット",
       "keyboardDescription": "タブの切り替えとアプリ内のすべてのショートカットに使用される修飾キー。",
       "modifierKey": "修飾キー",

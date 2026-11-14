@@ -1,7 +1,8 @@
 'use client';
 
 import type { ProvisionPhase } from '@kortix/sdk';
-import { m, useReducedMotion } from 'motion/react';
+import { m } from 'motion/react';
+import { useReducedMotion } from '../../internal/hooks/use-reduced-motion';
 
 import { KortixLogo } from '../../primitives/kortix-logo';
 import { TextShimmer } from '../../primitives/text-shimmer';

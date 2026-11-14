@@ -2,7 +2,8 @@
 
 import { ShaderSafe } from '@kortix/ui/shader-safe';
 import { cn } from '@kortix/ui';
-import { useInView, useReducedMotion } from 'motion/react';
+import { useInView } from 'motion/react';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 import { useTheme } from 'next-themes';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';

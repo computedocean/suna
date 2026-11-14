@@ -1,7 +1,8 @@
 'use client';
 
 import { CreditCardIcon, ImageBrokenIcon, KeyIcon } from '@phosphor-icons/react';
-import { AnimatePresence, m, useReducedMotion } from 'motion/react';
+import { AnimatePresence, m } from 'motion/react';
+import { useReducedMotion } from '../../internal/hooks/use-reduced-motion';
 import { useContext, useState, type ReactNode } from 'react';
 import { useTranslations } from '../../i18n';
 

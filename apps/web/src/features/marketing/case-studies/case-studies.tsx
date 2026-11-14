@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 import { localizeMarketingContent as localizeContent, type CaseStudy } from './content';
+import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 const PLATINUM_TRACKING = 'tracking-[0.22em]'; // audit:allow Platinum's own wordmark tracking (pt-logo.tsx), a third-party mark
 
@@ -139,7 +140,7 @@ export function CaseStudies({
     const el = row.current;
     const card = el?.firstElementChild as HTMLElement | null;
     if (!el || !card) return;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = prefersReducedMotion();
     // The 1px is the hairline gap between cards.
     el.scrollBy({ left: direction * (card.offsetWidth + 1), behavior: reduce ? 'auto' : 'smooth' });
   }

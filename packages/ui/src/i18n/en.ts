@@ -390,7 +390,7 @@ const catalog = {
         },
         "preferences": {
           "label": "Language & shortcuts",
-          "description": "Language and keyboard shortcuts."
+          "description": "Language, motion and keyboard shortcuts."
         },
         "connected": {
           "label": "Connected accounts"

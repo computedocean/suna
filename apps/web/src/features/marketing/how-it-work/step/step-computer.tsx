@@ -5,7 +5,8 @@ import { ActivityBurst } from '@kortix/ui/session';
 import { useLocalizedUiCatalog } from '@kortix/ui/i18n';
 import type { ToolCallBlock } from '@kortix/sdk';
 import { cn } from '@kortix/ui';
-import { m, useReducedMotion, type Transition } from 'motion/react';
+import { m, type Transition } from 'motion/react';
+import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 /**

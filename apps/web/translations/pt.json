@@ -598,7 +598,7 @@
         },
         "preferences": {
           "label": "Idioma e atalhos",
-          "description": "Idioma e atalhos de teclado."
+          "description": "Idioma, movimento e atalhos de teclado."
         },
         "connected": {
           "label": "Contas conectadas"
@@ -635,9 +635,11 @@
     },
     "preferences": {
       "title": "Idioma e atalhos",
-      "description": "Atalhos de idioma e teclado.",
+      "description": "Idioma, movimento e atalhos de teclado.",
       "languageTitle": "Linguagem",
       "languageDescription": "O idioma Kortix é exibido em todos os lugares do aplicativo.",
+      "motionTitle": "Reduzir movimento",
+      "motionDescription": "Interrompe brilhos, pulsos e transições em todo o app. Os indicadores de carregamento continuam girando.",
       "keyboardTitle": "Atalhos de teclado",
       "keyboardDescription": "A tecla modificadora usada para alternar guias e todos os atalhos do aplicativo.",
       "modifierKey": "Tecla modificadora",
