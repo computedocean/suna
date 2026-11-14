@@ -9,6 +9,7 @@ import {
   clearDefaultProject,
   defaultProject,
   getHost,
+  listHosts,
   setActiveAccount,
   setDefaultProject,
 } from '../api/config.ts';
@@ -16,8 +17,10 @@ import type { AccountMembership, MeResponse, ProjectSummary } from '../api/types
 import { openInBrowser } from '../browser.ts';
 import {
   NO_WORKSPACE_LINE,
+  PICK_DEFAULT_LINE,
   emitJson,
   isNoWorkspaceError,
+  isWorkspaceDeletingError,
   locateProjectAnywhere,
   noWorkspace,
   resolveProjectContext,
@@ -37,7 +40,7 @@ import {
   resolveProjectId,
   saveLink,
 } from '../project-link.ts';
-import { listWorkspaceRowsReport, listableWorkspace, type WorkspaceListFailure, type WorkspaceRow } from '../project-bind.ts';
+import { ensureDefaultProjectBinding, listWorkspaceRowsReport, listableWorkspace, type WorkspaceListFailure, type WorkspaceRow } from '../project-bind.ts';
 import { confirm } from '../prompts.ts';
 import { C, help, pad, status } from '../style.ts';
 import { selectFromList } from '../tui-select.ts';
@@ -1678,8 +1681,12 @@ async function projectsRm(args: string[]): Promise<number> {
     return surface(err);
   }
 
-  // Drop the local binding if we just removed the linked workspace.
+  // Drop the local binding if we just removed the linked workspace, and the
+  // default on every host that pointed at it: a deleted workspace answers
+  // every later command with 409 `workspace_deleting`.
   if (loadLink()?.project_id === id) clearLink();
+  const wasDefault = listHosts().filter((h) => h.host.default_project?.project_id === id);
+  for (const h of wasDefault) clearDefaultProject(h.name);
 
   process.stdout.write(
     `${status.ok(`Deleted ${C.bold}${project.name}${C.reset}`)}\n` +
@@ -1689,6 +1696,12 @@ async function projectsRm(args: string[]): Promise<number> {
           ? `  ${C.dim}managed git repo deleted${C.reset}\n`
           : `  ${C.dim}no managed repo to delete (bring-your-own repos are left untouched)${C.reset}\n`),
   );
+  if (wasDefault.length === 0) return 0;
+  // The active host rebinds the way login does: the one workspace left binds
+  // (its account becomes active), several offer the picker or the hint.
+  const activeAuth = wasDefault.some((h) => h.name === activeHostName()) ? loadAuth() : null;
+  process.stdout.write(`  Cleared the default workspace.${activeAuth ? '' : ` ${PICK_DEFAULT_LINE}`}\n`);
+  if (activeAuth) await ensureDefaultProjectBinding(activeAuth);
   return 0;
 }
 
@@ -1696,9 +1709,9 @@ async function projectsRm(args: string[]): Promise<number> {
 
 function surface(err: unknown): number {
   if (isNoWorkspaceError(err)) return noWorkspace();
-  // A denial goes through the shared formatter so the CLI's tail names the
-  // refused identity and the right remedy.
-  if (err instanceof ApiError && err.status === 403) return surfaceApiError(err);
+  // A denial, or a workspace being deleted, goes through the shared formatter:
+  // the tail names the refused identity, or how to switch the default.
+  if (err instanceof ApiError && (err.status === 403 || isWorkspaceDeletingError(err))) return surfaceApiError(err);
   if (err instanceof ApiError) {
     if (err.status === 401) {
       process.stderr.write(`${status.err(tokenRejectedLine(err.message))}\n`);
