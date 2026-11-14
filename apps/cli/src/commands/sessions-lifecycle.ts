@@ -159,7 +159,7 @@ Options:
   -h, --help        Show this help.
 `;
 
-function parseCommon(argv: string[], helpText: string): {
+export function parseCommon(argv: string[], helpText: string): {
   rest: string[];
   opts: CtxOpts;
   json: boolean;

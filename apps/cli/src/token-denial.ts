@@ -141,7 +141,7 @@ const FENCE_FIX_LINE =
  *  carries no character validation): drop well-formed escape sequences and
  *  replace remaining control characters (C0/C1) and bidi overrides with '?',
  *  so nothing in the name can recolor output or move the cursor. */
-function terminalSafe(s: string): string {
+export function terminalSafe(s: string): string {
   return s
     .replace(/\x1b(?:\[[0-?]*[ -/]*[@-~]|\][^\x07\x1b]*(?:\x07|\x1b\\))/g, '')
     .replace(/[\u0000-\u001f\u007f-\u009f\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, '?');

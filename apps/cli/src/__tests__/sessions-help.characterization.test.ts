@@ -45,6 +45,7 @@ const PINS: Record<string, Pin> = {
   shell: [1, '904c52a3be97326ca52637377989f60b13303d6f24f599525472dd330f0cbd68', 2, 'empty'],
   attachments: [2, '3c1d2c8a0082644072173e55728e5e5b220bc5076fcbb55b54e89b51ecc8a6b9', 2],
   pending: [2, '2c11c80895de49241302f71478c81d0bce6df40bcab02ff0cc07c8220f9645b3', 2],
+  usage: [2, '79a5f8d9822aba5f01b14191be5dc0cadb4dba0d2a4068e77cff0967cfbf7a40', 2],
   approve: [2, 'dc12cdc172d1c4613cc155486dec12b0ea68ecb00c96c03991c7edccb943d7e4', 2],
   answer: [2, 'f56c86211bced1c3d7531eb3b82b0889251de89b3c98c0ee95658605f92634e1', 2],
   approvals: [2, '65b3a5675a051f2a856d00c24e56d5214a0905bb653ed7ac3724678c77de3fd8', 2],
@@ -68,7 +69,7 @@ const PINS: Record<string, Pin> = {
 
 /** The group help's sha: bare `sessions`, `<sub> --help` behind the group
  *  guard and the group's own `--help` all print the same bytes. */
-const GROUP_HELP_SHA = '2ed05b6e020d3d0e9ed2bd52cce7b7183a52921c57123ad1cd5fcae7fd19d108';
+const GROUP_HELP_SHA = 'f6bd00009634e41f8502422730bdc6158ae372d94ea3cbda6f4510c0bb9aae5b';
 
 async function runCli(args: string[]) {
   const env: Record<string, string | undefined> = {
