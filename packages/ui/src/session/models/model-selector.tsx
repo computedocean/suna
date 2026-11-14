@@ -1038,7 +1038,9 @@ export function ModelSelector({
               : 'w-[min(28rem,calc(100vw-1.5rem))]'
           }
         >
-          <div className="flex min-w-0 flex-col">
+          {/* `bg-surface` under the panel AND the subscription pane: the pane
+              sat on the popover's own fill, a second surface in light mode. */}
+          <div className="bg-surface flex min-w-0 flex-col">
             <ModelPickerPanel
               browseModels={browseModels}
               pickableModels={pickableModels}
