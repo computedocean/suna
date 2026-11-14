@@ -3016,40 +3016,35 @@
       "sending": "发送中…",
       "oneMoment": "请稍候…",
       "useDifferentEmail": "使用其他邮箱",
-      "usePasswordInstead": "改用密码",
-      "emailLinkInstead": "改为通过邮箱发送链接",
+      "usePasswordInstead": "使用密码",
+      "emailLinkInstead": "通过邮件发送验证码",
       "forgotPassword": "忘记密码？",
-      "automaticAccount": "还没有账户？点击“继续”即可自动创建账户。",
+      "automaticAccount": "登录或创建账户。",
       "sso": {
         "title": "使用单点登录",
-        "description": "<address>{email}</address> 可通过您所在组织的身份提供商登录。",
+        "description": "通过你的组织以 <address>{email}</address> 登录。",
         "continue": "使用 SSO 继续",
         "enterWorkEmail": "请在上方输入您的工作邮箱，然后选择单点登录。",
         "notConfigured": "“{domain}”尚未设置单点登录。请联系管理员进行配置，或继续使用邮箱登录。",
         "lookingUp": "正在查找您的身份提供商…",
-        "use": "使用单点登录（SSO）"
+        "use": "使用 SSO"
       },
       "link": {
         "title": "查看您的邮箱",
-        "description": "我们已向 <address>{email}</address> 发送链接。打开链接即可继续。",
-        "confirmDescription": "我们已向 <address>{email}</address> 发送确认邮件。请确认您的邮箱以继续。",
-        "unknownDescription": "我们已发送邮件至 <address>{email}</address> — 登录链接，或新账号的确认链接。",
-        "closedDescription": "如果 <address>{email}</address> 拥有账号，登录链接正在发送途中。",
-        "notReceived": "未收到链接？",
-        "confirmNotReceived": "未收到确认邮件？",
+        "description": "输入发送到 <address>{email}</address> 的验证码。",
+        "confirmDescription": "确认我们发送到 <address>{email}</address> 的邮件以继续。",
+        "unknownDescription": "输入发送到 <address>{email}</address> 的验证码。",
+        "closedDescription": "如果 <address>{email}</address> 有账户，验证码已在发送途中。",
         "resendIn": "{seconds} 秒后重新发送",
-        "resend": "重新发送",
-        "checkSpam": "没有收到？请检查垃圾邮件文件夹。"
+        "resend": "重新发送"
       },
       "credentials": {
         "signin": {
           "title": "欢迎回来",
-          "description": "输入密码以继续。",
           "passwordPlaceholder": "您的密码"
         },
         "signup": {
           "title": "创建您的账户",
-          "description": "设置密码即可开始使用。",
           "passwordPlaceholder": "创建密码"
         },
         "unknown": {
@@ -3063,22 +3058,19 @@
         "networkFailed": "请求未能发送，请重试。",
         "signupsClosed": "当前已关闭注册。请联系管理员或申请访问权限。",
         "ssoRequired": "您的组织要求使用单点登录。请改用 SSO 继续。",
-        "incorrectPassword": "密码错误。请重试，或通过“忘记密码？”重置密码。",
-        "existingAccountWrongPassword": "您已有账户——请输入现有密码登录。",
+        "incorrectPassword": "密码错误。",
+        "existingAccountWrongPassword": "此邮箱已有账户。请输入密码。",
         "confirmAccount": "请查看您的邮箱以确认账户",
         "invalidCode": "验证码无效或已过期"
       },
-      "legal": {
-        "signup": "创建账户即表示您同意<termsOfService>服务条款</termsOfService>和<privacyPolicy>隐私政策</privacyPolicy>",
-        "default": "<termsOfService>服务条款</termsOfService>和<privacyPolicy>隐私政策</privacyPolicy>"
-      }
+      "or": "或"
     },
     "passwordReset": {
       "loading": "加载中",
       "resetting": "正在重置密码",
       "request": {
         "title": "重置密码",
-        "description": "输入您的邮箱，我们会向您发送密码重置链接。",
+        "description": "我们会向你发送重置链接。",
         "email": "邮箱",
         "emailPlaceholder": "您的邮箱地址",
         "sending": "正在发送链接…",
@@ -3086,8 +3078,7 @@
       },
       "sent": {
         "title": "请查收邮件",
-        "description": "我们已向您发送密码重置链接。",
-        "address": "重置链接已发送至<address>{email}</address>"
+        "address": "我们已向 <address>{email}</address> 发送重置链接。"
       },
       "expired": {
         "title": "链接已失效",
@@ -3097,12 +3088,11 @@
       "success": {
         "title": "密码已更新",
         "description": "您现在可以使用新密码登录。",
-        "changed": "您的密码已更改。",
         "signIn": "前往登录"
       },
       "form": {
         "title": "设置新密码",
-        "description": "为您的账户设置新密码。",
+        "description": "设置新密码。",
         "newPassword": "新密码",
         "newPasswordPlaceholder": "您的新密码",
         "confirmPassword": "确认密码",
@@ -14201,7 +14191,7 @@
       "text6ff3bff5952a": "需要以下权限：",
       "text6ffb34d0baed": "git push origin HEAD",
       "text700e7474f9a9": "推荐链接不可用",
-      "text702391f5d071": "这将创建一个个人访问令牌。你可以随时在",
+      "text702391f5d071": "随时可在此撤销访问：",
       "text702ef921ed1d": "名字",
       "text7031306d3dd8": "此模型的提供商尚未连接到此工作区——路由到这里的请求会立即",
       "text7031edbcf9c4": "失败",
@@ -17048,7 +17038,7 @@
       "textc18ce3e6b5e0": "enterpriseAccordionSelfhostBody",
       "textc18dc13ca821": "会话仍可启动，但代理将缺少这些值。",
       "textc19b5dc4376a": "“有人提过关于导出的什么内容？”",
-      "textc19c3fc65916": "你的终端正在等待你批准此次登录。",
+      "textc19c3fc65916": "正在等待你的批准。",
       "textc1a5d4982c10": "而不是绕过审查。",
       "textc1abcf2a909a": "≈ {value0} 积分",
       "textc1ada08ce138": "审计记录",
@@ -20708,7 +20698,7 @@
       "text5f6ba69d66d1": "技能已移除",
       "textcb8d6b0c94c9": " 及其中的所有文件（包括修改），并从所有使用该技能的代理中移除它。在默认分支上提交一次。",
       "cliDeviceTitle": "授权 Kortix CLI",
-      "cliDeviceWarning": "仅批准您自己发起的登录。请确认此代码与终端中显示的代码一致。",
+      "cliDeviceWarning": "仅当此代码与终端显示一致时才批准。",
       "cliDeviceCode": "登录代码",
       "cliDeviceApproved": "登录已批准。请返回终端。",
       "cliDeviceAction": "授权 CLI",
@@ -21279,7 +21269,7 @@
       "text05ee1d6181f3": "变更请求合并时，{agent} 会执行你的指令。",
       "texte608495c45ce": "合并到 {branch}",
       "text80ca527b0d55": "已创建变更请求触发器",
-      "authEmailAlreadySent": "我们在一分钟内已发送过这封邮件。请先检查收件箱和垃圾邮件文件夹，再申请重新发送。",
+      "authEmailAlreadySent": "已发送。请检查收件箱和垃圾邮件。",
       "textfe0dab79db43": "在同一个对话中与 Kortix 交流:每条消息都是一个线程,Kortix 的最新回复会显示在其下方。",
       "text2e914b62b832": "Markdown 链接",
       "text7bed093239f3": "可识别的资源会显示应用图标和精简标签。悬停可查看原始 URL。",

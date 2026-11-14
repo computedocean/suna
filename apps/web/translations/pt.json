@@ -3016,40 +3016,35 @@
       "sending": "Enviando…",
       "oneMoment": "Aguarde um momento…",
       "useDifferentEmail": "Usar outro e-mail",
-      "usePasswordInstead": "Usar uma senha",
-      "emailLinkInstead": "Enviar um link por e-mail",
-      "forgotPassword": "Esqueceu sua senha?",
-      "automaticAccount": "É novo por aqui? Ao continuar, sua conta será criada automaticamente.",
+      "usePasswordInstead": "Usar senha",
+      "emailLinkInstead": "Enviar-me um código",
+      "forgotPassword": "Esqueceu a senha?",
+      "automaticAccount": "Entre ou crie uma conta.",
       "sso": {
         "title": "Usar login único",
-        "description": "<address>{email}</address> pode entrar usando o provedor de identidade da sua organização.",
+        "description": "Entre como <address>{email}</address> pela sua organização.",
         "continue": "Continuar com SSO",
         "enterWorkEmail": "Digite seu e-mail corporativo acima e escolha o login único.",
         "notConfigured": "O login único não está configurado para “{domain}”. Peça ao administrador para configurá-lo ou continue com seu e-mail.",
         "lookingUp": "Buscando seu provedor de identidade…",
-        "use": "Usar login único (SSO)"
+        "use": "Usar SSO"
       },
       "link": {
         "title": "Verifique seu e-mail",
-        "description": "Enviamos um link para <address>{email}</address>. Abra-o para continuar.",
-        "confirmDescription": "Enviamos um e-mail de confirmação para <address>{email}</address>. Confirme seu e-mail para continuar.",
-        "unknownDescription": "Enviamos um e-mail para <address>{email}</address> — um link de acesso ou um link de confirmação para uma nova conta.",
-        "closedDescription": "Se <address>{email}</address> tem uma conta, o link de acesso está a caminho.",
-        "notReceived": "Não recebeu o link?",
-        "confirmNotReceived": "Não recebeu o e-mail de confirmação?",
-        "resendIn": "Reenviar em {seconds}",
-        "resend": "Reenviar",
-        "checkSpam": "Não está lá? Verifique a pasta de spam ou lixo eletrónico."
+        "description": "Digite o código enviado para <address>{email}</address>.",
+        "confirmDescription": "Confirme o e-mail enviado para <address>{email}</address> para continuar.",
+        "unknownDescription": "Digite o código enviado para <address>{email}</address>.",
+        "closedDescription": "Se <address>{email}</address> tiver uma conta, um código está a caminho.",
+        "resendIn": "Reenviar em {seconds} s",
+        "resend": "Reenviar"
       },
       "credentials": {
         "signin": {
           "title": "Que bom ter você de volta",
-          "description": "Digite sua senha para continuar.",
           "passwordPlaceholder": "Sua senha"
         },
         "signup": {
           "title": "Crie sua conta",
-          "description": "Escolha uma senha para começar.",
           "passwordPlaceholder": "Crie uma senha"
         },
         "unknown": {
@@ -3063,22 +3058,19 @@
         "networkFailed": "Não foi possível enviar a solicitação. Tente novamente.",
         "signupsClosed": "As inscrições estão fechadas no momento. Entre em contato com o administrador ou solicite acesso.",
         "ssoRequired": "Sua organização exige login único. Continue com SSO.",
-        "incorrectPassword": "Senha incorreta. Tente novamente ou redefina-a em “Esqueceu sua senha?”.",
-        "existingAccountWrongPassword": "Você já tem uma conta — digite sua senha atual para entrar.",
+        "incorrectPassword": "Senha incorreta.",
+        "existingAccountWrongPassword": "Este e-mail já tem uma conta. Digite a senha.",
         "confirmAccount": "Verifique seu e-mail para confirmar sua conta",
         "invalidCode": "Código inválido ou expirado"
       },
-      "legal": {
-        "signup": "Ao criar uma conta, você concorda com os <termsOfService>Termos de Serviço</termsOfService> e a <privacyPolicy>Política de Privacidade</privacyPolicy>",
-        "default": "<termsOfService>Termos de Serviço</termsOfService> e <privacyPolicy>Política de Privacidade</privacyPolicy>"
-      }
+      "or": "ou"
     },
     "passwordReset": {
       "loading": "Carregando",
       "resetting": "Redefinindo senha",
       "request": {
         "title": "Redefina sua senha",
-        "description": "Digite seu e-mail e enviaremos um link para redefinir sua senha.",
+        "description": "Enviaremos um link de redefinição.",
         "email": "E-mail",
         "emailPlaceholder": "Seu endereço de e-mail",
         "sending": "Enviando link…",
@@ -3086,8 +3078,7 @@
       },
       "sent": {
         "title": "Confira seu e-mail",
-        "description": "Enviamos um link para redefinir sua senha.",
-        "address": "Link de redefinição enviado para <address>{email}</address>"
+        "address": "Enviamos um link de redefinição para <address>{email}</address>."
       },
       "expired": {
         "title": "Link expirado",
@@ -3097,12 +3088,11 @@
       "success": {
         "title": "Senha atualizada",
         "description": "Agora você pode entrar com sua nova senha.",
-        "changed": "Sua senha foi alterada.",
         "signIn": "Ir para o login"
       },
       "form": {
         "title": "Defina uma nova senha",
-        "description": "Escolha uma nova senha para sua conta.",
+        "description": "Escolha uma nova senha.",
         "newPassword": "Nova senha",
         "newPasswordPlaceholder": "Sua nova senha",
         "confirmPassword": "Confirme a senha",
@@ -14201,7 +14191,7 @@
       "text6ff3bff5952a": "precisa de permissão para:",
       "text6ffb34d0baed": "git push origin HEAD",
       "text700e7474f9a9": "Link de indicação indisponível",
-      "text702391f5d071": "Isso cria um token de acesso pessoal. Você pode revogá-lo a qualquer momento em",
+      "text702391f5d071": "Revogue o acesso a qualquer momento em",
       "text702ef921ed1d": "Nome",
       "text7031306d3dd8": "O provedor deste modelo não está conectado a este espaço de trabalho — as solicitações encaminhadas para ele falham imediatamente",
       "text7031edbcf9c4": "Falha",
@@ -17048,7 +17038,7 @@
       "textc18ce3e6b5e0": "enterpriseAccordionSelfhostBody",
       "textc18dc13ca821": "As sessões ainda podem começar, mas estes valores estarão ausentes para o agente.",
       "textc19b5dc4376a": "\"O que alguém já disse sobre exportação?\"",
-      "textc19c3fc65916": "no seu terminal está aguardando sua aprovação deste login.",
+      "textc19c3fc65916": "aguarda sua aprovação.",
       "textc1a5d4982c10": "não para contorná-la.",
       "textc1abcf2a909a": "≈ {value0} créditos",
       "textc1ada08ce138": "Trilha de auditoria",
@@ -20708,7 +20698,7 @@
       "text5f6ba69d66d1": "Habilidade removida",
       "textcb8d6b0c94c9": " e todos os arquivos nela, incluindo edições, e remove a habilidade de todos os agentes que a usam. Um commit no branch padrão.",
       "cliDeviceTitle": "Autorizar Kortix CLI",
-      "cliDeviceWarning": "Aprove apenas um início de sessão que você iniciou. Confira se este código é igual ao exibido no seu terminal.",
+      "cliDeviceWarning": "Aprove apenas se este código corresponder ao seu terminal.",
       "cliDeviceCode": "Código de acesso",
       "cliDeviceApproved": "Acesso aprovado. Volte ao terminal.",
       "cliDeviceAction": "Autorizar CLI",
@@ -21279,7 +21269,7 @@
       "text05ee1d6181f3": "Quando uma solicitação de mudança é mesclada, {agent} executa sua instrução.",
       "texte608495c45ce": "Mesclada em {branch}",
       "text80ca527b0d55": "Gatilho de solicitação de mudança criado",
-      "authEmailAlreadySent": "Enviamos este e-mail há menos de um minuto. Verifique a sua caixa de entrada e a pasta de spam antes de pedir outro.",
+      "authEmailAlreadySent": "Já enviado. Verifique sua caixa de entrada e o spam.",
       "textfe0dab79db43": "Converse com o Kortix em um único chat: cada mensagem é uma conversa, e a resposta mais recente do Kortix aparece abaixo dela.",
       "text2e914b62b832": "Links em Markdown",
       "text7bed093239f3": "Recursos reconhecidos mostram um ícone do app e um rótulo compacto. Passe o mouse para ver o URL original.",

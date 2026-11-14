@@ -48,7 +48,7 @@ function ConnectionResult() {
   if (!connectorsEnabled || !hasResult) return null;
 
   return (
-    <AuthFrame footerVariant="none">
+    <AuthFrame footerVariant="none" art={false}>
       <Rise>
         <StepHeader
           title={

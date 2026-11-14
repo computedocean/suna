@@ -410,7 +410,7 @@ function DeletingWorkspaceScreen({
   });
   const date = formatWorkspaceDate(deletionScheduledFor, locale);
   return (
-    <AuthFrame>
+    <AuthFrame art={false}>
       <Rise key="h-deleting">
         <StepHeader title={t('title', { name })} description={t('body', { date })} />
       </Rise>
@@ -533,7 +533,7 @@ function AccessGateScreen({
   const showAdminBypass = forbidden && !!adminRole?.isAdmin;
 
   return (
-    <AuthFrame>
+    <AuthFrame art={false}>
       {/*
         Keyed on `state` so a step change replays the same two-part rise the
         auth flow uses everywhere else: header first, body 60ms behind.

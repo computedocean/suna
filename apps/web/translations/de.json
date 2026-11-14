@@ -3016,40 +3016,35 @@
       "sending": "Wird gesendet …",
       "oneMoment": "Einen Moment …",
       "useDifferentEmail": "Andere E-Mail-Adresse verwenden",
-      "usePasswordInstead": "Stattdessen ein Passwort verwenden",
-      "emailLinkInstead": "Stattdessen einen Link per E-Mail senden",
+      "usePasswordInstead": "Passwort verwenden",
+      "emailLinkInstead": "Code per E-Mail senden",
       "forgotPassword": "Passwort vergessen?",
-      "automaticAccount": "Neu hier? Mit „Weiter“ wird dein Konto automatisch erstellt.",
+      "automaticAccount": "Melde dich an oder erstelle ein Konto.",
       "sso": {
         "title": "Single Sign-on verwenden",
-        "description": "<address>{email}</address> kann sich über den Identitätsanbieter deiner Organisation anmelden.",
+        "description": "Melde dich als <address>{email}</address> über deine Organisation an.",
         "continue": "Mit SSO fortfahren",
         "enterWorkEmail": "Gib oben deine geschäftliche E-Mail-Adresse ein und wähle dann Single Sign-on.",
         "notConfigured": "Single Sign-on ist für „{domain}“ nicht eingerichtet. Bitte deine Administration, es zu konfigurieren, oder fahre mit E-Mail fort.",
         "lookingUp": "Identitätsanbieter wird gesucht …",
-        "use": "Single Sign-on (SSO) verwenden"
+        "use": "SSO verwenden"
       },
       "link": {
         "title": "E-Mail prüfen",
-        "description": "Wir haben einen Link an <address>{email}</address> gesendet. Öffne ihn, um fortzufahren.",
-        "confirmDescription": "Wir haben eine Bestätigungs-E-Mail an <address>{email}</address> gesendet. Bestätige deine E-Mail, um fortzufahren.",
-        "unknownDescription": "Wir haben eine E-Mail an <address>{email}</address> geschickt — ein Anmelde-Link oder ein Bestätigungs-Link für ein neues Konto.",
-        "closedDescription": "Falls <address>{email}</address> ein Konto hat, ist sein Anmelde-Link unterwegs.",
-        "notReceived": "Keinen Link erhalten?",
-        "confirmNotReceived": "Keine Bestätigungs-E-Mail erhalten?",
-        "resendIn": "Erneut senden in {seconds}",
-        "resend": "Erneut senden",
-        "checkSpam": "Nicht da? Prüfe deinen Spam- oder Junk-Ordner."
+        "description": "Gib den Code ein, der an <address>{email}</address> gesendet wurde.",
+        "confirmDescription": "Bestätige die E-Mail, die wir an <address>{email}</address> gesendet haben.",
+        "unknownDescription": "Gib den Code ein, der an <address>{email}</address> gesendet wurde.",
+        "closedDescription": "Wenn <address>{email}</address> ein Konto hat, ist ein Code unterwegs.",
+        "resendIn": "Erneut senden in {seconds} s",
+        "resend": "Erneut senden"
       },
       "credentials": {
         "signin": {
           "title": "Willkommen zurück",
-          "description": "Gib dein Passwort ein, um fortzufahren.",
           "passwordPlaceholder": "Dein Passwort"
         },
         "signup": {
           "title": "Konto erstellen",
-          "description": "Wähle ein Passwort, um loszulegen.",
           "passwordPlaceholder": "Passwort erstellen"
         },
         "unknown": {
@@ -3063,22 +3058,19 @@
         "networkFailed": "Die Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.",
         "signupsClosed": "Die Registrierung ist derzeit geschlossen. Wende dich an deine Administration oder beantrage Zugriff.",
         "ssoRequired": "Deine Organisation verlangt Single Sign-on. Fahre stattdessen mit SSO fort.",
-        "incorrectPassword": "Falsches Passwort. Versuche es erneut oder setze es über „Passwort vergessen?“ zurück.",
-        "existingAccountWrongPassword": "Du hast bereits ein Konto – gib dein bestehendes Passwort ein, um dich anzumelden.",
+        "incorrectPassword": "Falsches Passwort.",
+        "existingAccountWrongPassword": "Diese E-Mail hat bereits ein Konto. Gib das Passwort ein.",
         "confirmAccount": "Prüfe deine E-Mail, um dein Konto zu bestätigen",
         "invalidCode": "Ungültiger oder abgelaufener Code"
       },
-      "legal": {
-        "signup": "Durch das Erstellen eines Kontos stimmen Sie den <termsOfService>Nutzungsbedingungen</termsOfService> und der <privacyPolicy>Datenschutzerklärung</privacyPolicy> zu",
-        "default": "<termsOfService>Nutzungsbedingungen</termsOfService> und <privacyPolicy>Datenschutzerklärung</privacyPolicy>"
-      }
+      "or": "oder"
     },
     "passwordReset": {
       "loading": "Wird geladen",
       "resetting": "Passwort wird zurückgesetzt",
       "request": {
         "title": "Passwort zurücksetzen",
-        "description": "Geben Sie Ihre E-Mail-Adresse ein. Wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+        "description": "Wir senden dir einen Link zum Zurücksetzen.",
         "email": "E-Mail",
         "emailPlaceholder": "Ihre E-Mail-Adresse",
         "sending": "Link wird gesendet …",
@@ -3086,8 +3078,7 @@
       },
       "sent": {
         "title": "Prüfen Sie Ihre E-Mails",
-        "description": "Wir haben Ihnen einen Link zum Zurücksetzen Ihres Passworts gesendet.",
-        "address": "Link zum Zurücksetzen gesendet an <address>{email}</address>"
+        "address": "Wir haben einen Link zum Zurücksetzen an <address>{email}</address> gesendet."
       },
       "expired": {
         "title": "Link abgelaufen",
@@ -3097,12 +3088,11 @@
       "success": {
         "title": "Passwort aktualisiert",
         "description": "Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
-        "changed": "Ihr Passwort wurde geändert.",
         "signIn": "Zur Anmeldung"
       },
       "form": {
         "title": "Neues Passwort festlegen",
-        "description": "Wählen Sie ein neues Passwort für Ihr Konto.",
+        "description": "Wähle ein neues Passwort.",
         "newPassword": "Neues Passwort",
         "newPasswordPlaceholder": "Ihr neues Passwort",
         "confirmPassword": "Passwort bestätigen",
@@ -14201,7 +14191,7 @@
       "text6ff3bff5952a": "benötigt die Berechtigung für:",
       "text6ffb34d0baed": "git push origin HEAD",
       "text700e7474f9a9": "Empfehlungslink nicht verfügbar",
-      "text702391f5d071": "Dadurch wird ein persönlicher Zugriffstoken erstellt. Du kannst ihn jederzeit widerrufen unter",
+      "text702391f5d071": "Zugriff jederzeit widerrufen unter",
       "text702ef921ed1d": "Vorname",
       "text7031306d3dd8": "Der Anbieter dieses Modells ist für diesen Workspace nicht verbunden – Anfragen dorthin schlagen sofort fehl",
       "text7031edbcf9c4": "Fehlgeschlagen",
@@ -17048,7 +17038,7 @@
       "textc18ce3e6b5e0": "enterpriseAccordionSelfhostBody",
       "textc18dc13ca821": "Sitzungen können weiterhin gestartet werden, aber dem Agent fehlen diese Werte.",
       "textc19b5dc4376a": "„Was hat jemand über den Export gesagt?“",
-      "textc19c3fc65916": "in deinem Terminal wartet darauf, dass du diese Anmeldung bestätigst.",
+      "textc19c3fc65916": "wartet auf deine Bestätigung.",
       "textc1a5d4982c10": "nicht, um sie zu umgehen.",
       "textc1abcf2a909a": "≈ {value0} Credits",
       "textc1ada08ce138": "Audit-Trail",
@@ -20708,7 +20698,7 @@
       "text5f6ba69d66d1": "Skill entfernt",
       "textcb8d6b0c94c9": " und alle Dateien darin, einschließlich Änderungen, und entfernt den Skill aus jedem Agenten, der ihn verwendet. Ein Commit auf dem Standard-Branch.",
       "cliDeviceTitle": "Kortix CLI autorisieren",
-      "cliDeviceWarning": "Genehmige nur eine Anmeldung, die du selbst gestartet hast. Prüfe, ob dieser Code mit dem in deinem Terminal übereinstimmt.",
+      "cliDeviceWarning": "Bestätige nur, wenn dieser Code mit deinem Terminal übereinstimmt.",
       "cliDeviceCode": "Anmeldecode",
       "cliDeviceApproved": "Anmeldung genehmigt. Kehre zu deinem Terminal zurück.",
       "cliDeviceAction": "CLI autorisieren",
@@ -21279,7 +21269,7 @@
       "text05ee1d6181f3": "Wenn eine Änderungsanfrage zusammengeführt wird, führt {agent} deine Anweisung aus.",
       "texte608495c45ce": "In {branch} zusammengeführt",
       "text80ca527b0d55": "Änderungsanfrage-Trigger erstellt",
-      "authEmailAlreadySent": "Wir haben diese E-Mail vor weniger als einer Minute gesendet. Prüfe deinen Posteingang und deinen Spam-Ordner, bevor du eine neue anforderst.",
+      "authEmailAlreadySent": "Bereits gesendet. Sieh in deinem Posteingang und Spam-Ordner nach.",
       "textfe0dab79db43": "Sprich mit Kortix in einem Chat: Jede Nachricht ist ein Thread, und die neueste Antwort von Kortix erscheint darunter.",
       "text2e914b62b832": "Markdown-Links",
       "text7bed093239f3": "Erkannte Ressourcen zeigen ein App-Symbol und eine kompakte Bezeichnung. Fahre mit der Maus darüber, um die ursprüngliche URL anzuzeigen.",

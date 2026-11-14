@@ -3016,40 +3016,35 @@
       "sending": "Sending…",
       "oneMoment": "One moment…",
       "useDifferentEmail": "Use a different email",
-      "usePasswordInstead": "Use a password instead",
-      "emailLinkInstead": "Email me a link instead",
-      "forgotPassword": "Forgot your password?",
-      "automaticAccount": "New here? Continue creates your account automatically.",
+      "usePasswordInstead": "Use a password",
+      "emailLinkInstead": "Email me a code",
+      "forgotPassword": "Forgot password?",
+      "automaticAccount": "Sign in or create an account.",
       "sso": {
         "title": "Use single sign-on",
-        "description": "<address>{email}</address> can sign in through your organization's identity provider.",
+        "description": "Sign in as <address>{email}</address> with your organization.",
         "continue": "Continue with SSO",
         "enterWorkEmail": "Enter your work email above, then choose single sign-on.",
         "notConfigured": "Single sign-on isn't set up for “{domain}”. Ask your admin to configure it, or continue with email.",
         "lookingUp": "Looking up your identity provider…",
-        "use": "Use single sign-on (SSO)"
+        "use": "Use SSO"
       },
       "link": {
         "title": "Check your email",
-        "description": "We sent a link to <address>{email}</address>. Open it to continue.",
-        "confirmDescription": "We sent a confirmation email to <address>{email}</address>. Confirm your email to continue.",
-        "unknownDescription": "We emailed <address>{email}</address> — a sign-in link, or a confirmation link for a new account.",
-        "closedDescription": "If <address>{email}</address> has an account, its sign-in link is on its way.",
-        "notReceived": "Didn't receive the link?",
-        "confirmNotReceived": "Didn't receive the confirmation email?",
-        "resendIn": "Resend in {seconds}",
-        "resend": "Resend",
-        "checkSpam": "Not there? Check your spam or junk folder."
+        "description": "Enter the code sent to <address>{email}</address>.",
+        "confirmDescription": "Confirm the email we sent to <address>{email}</address> to continue.",
+        "unknownDescription": "Enter the code sent to <address>{email}</address>.",
+        "closedDescription": "If <address>{email}</address> has an account, a code is on its way.",
+        "resendIn": "Resend in {seconds}s",
+        "resend": "Resend code"
       },
       "credentials": {
         "signin": {
           "title": "Welcome back",
-          "description": "Enter your password to continue.",
           "passwordPlaceholder": "Your password"
         },
         "signup": {
           "title": "Create your account",
-          "description": "Choose a password to get started.",
           "passwordPlaceholder": "Create a password"
         },
         "unknown": {
@@ -3063,22 +3058,19 @@
         "networkFailed": "The request could not be sent. Please try again.",
         "signupsClosed": "Signups are currently closed. Contact your administrator or request access.",
         "ssoRequired": "Your organization requires single sign-on. Continue with SSO instead.",
-        "incorrectPassword": "Incorrect password. Try again, or reset it via “Forgot your password?”.",
-        "existingAccountWrongPassword": "You already have an account — enter your existing password to sign in.",
+        "incorrectPassword": "Incorrect password.",
+        "existingAccountWrongPassword": "This email already has an account. Enter its password.",
         "confirmAccount": "Check your email to confirm your account",
         "invalidCode": "Invalid or expired code"
       },
-      "legal": {
-        "signup": "By creating an account, you agree to the <termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>",
-        "default": "<termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>"
-      }
+      "or": "or"
     },
     "passwordReset": {
       "loading": "Loading",
       "resetting": "Resetting password",
       "request": {
         "title": "Reset your password",
-        "description": "Enter your email and we'll send you a password reset link.",
+        "description": "We'll email you a reset link.",
         "email": "Email",
         "emailPlaceholder": "Your email address",
         "sending": "Sending link…",
@@ -3086,8 +3078,7 @@
       },
       "sent": {
         "title": "Check your email",
-        "description": "We've sent you a password reset link.",
-        "address": "Reset link sent to <address>{email}</address>"
+        "address": "We sent a reset link to <address>{email}</address>."
       },
       "expired": {
         "title": "Link expired",
@@ -3097,12 +3088,11 @@
       "success": {
         "title": "Password updated",
         "description": "You can now sign in with your new password.",
-        "changed": "Your password has been changed.",
         "signIn": "Go to sign in"
       },
       "form": {
         "title": "Set a new password",
-        "description": "Choose a new password for your account.",
+        "description": "Choose a new password.",
         "newPassword": "New password",
         "newPasswordPlaceholder": "Your new password",
         "confirmPassword": "Confirm password",
@@ -14246,7 +14236,7 @@
       "text6ff3bff5952a": "needs permission for:",
       "text6ffb34d0baed": "git push origin HEAD",
       "text700e7474f9a9": "Referral link not available",
-      "text702391f5d071": "This creates a personal access token. Revoke it anytime in",
+      "text702391f5d071": "Revoke access anytime in",
       "text702ef921ed1d": "First name",
       "text7031306d3dd8": "This model's provider isn't connected for this workspace — requests routed here fail over immediately",
       "text7031edbcf9c4": "Failure",
@@ -17093,7 +17083,7 @@
       "textc18ce3e6b5e0": "enterpriseAccordionSelfhostBody",
       "textc18dc13ca821": "Sessions can still start, but the agent will be missing these values.",
       "textc19b5dc4376a": "\"What has anyone said about export?\"",
-      "textc19c3fc65916": "in your terminal is waiting for you to approve this sign-in.",
+      "textc19c3fc65916": "is waiting for your approval.",
       "textc1a5d4982c10": "not slip past one.",
       "textc1abcf2a909a": "≈ {value0} credits",
       "textc1ada08ce138": "Audit trail",
@@ -20753,7 +20743,7 @@
       "text5f6ba69d66d1": "Skill removed",
       "textcb8d6b0c94c9": " and every file in it, edits included, and removes the skill from every agent that lists it. One commit on the default branch.",
       "cliDeviceTitle": "Authorize Kortix CLI",
-      "cliDeviceWarning": "Approve only a login you started. Check that this code matches the one your terminal shows.",
+      "cliDeviceWarning": "Approve only if this code matches your terminal.",
       "cliDeviceCode": "Login code",
       "cliDeviceApproved": "Login approved. Return to your terminal.",
       "cliDeviceAction": "Authorize CLI",
@@ -21324,7 +21314,7 @@
       "text05ee1d6181f3": "When a change request merges, {agent} runs your instruction.",
       "texte608495c45ce": "Merged into {branch}",
       "text80ca527b0d55": "Change request trigger created",
-      "authEmailAlreadySent": "We sent this email less than a minute ago. Check your inbox and your spam folder before you ask for another one.",
+      "authEmailAlreadySent": "Already sent. Check your inbox and spam folder.",
       "textfe0dab79db43": "Talk to Kortix in one chat: every message is a thread, and Kortix's newest reply shows under it.",
       "text2e914b62b832": "Markdown links",
       "text7bed093239f3": "Recognised resources show an app icon and compact label. Hover to inspect the original URL.",

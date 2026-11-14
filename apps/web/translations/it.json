@@ -3016,40 +3016,35 @@
       "sending": "Invio…",
       "oneMoment": "Un momento…",
       "useDifferentEmail": "Usa un'altra email",
-      "usePasswordInstead": "Usa invece una password",
-      "emailLinkInstead": "Inviami invece un link via email",
-      "forgotPassword": "Hai dimenticato la password?",
-      "automaticAccount": "È la prima volta qui? Continuando, il tuo account verrà creato automaticamente.",
+      "usePasswordInstead": "Usa una password",
+      "emailLinkInstead": "Inviami un codice",
+      "forgotPassword": "Password dimenticata?",
+      "automaticAccount": "Accedi o crea un account.",
       "sso": {
         "title": "Usa il single sign-on",
-        "description": "<address>{email}</address> può accedere tramite il provider di identità della tua organizzazione.",
+        "description": "Accedi come <address>{email}</address> con la tua organizzazione.",
         "continue": "Continua con SSO",
         "enterWorkEmail": "Inserisci qui sopra la tua email di lavoro, quindi scegli il single sign-on.",
         "notConfigured": "Il single sign-on non è configurato per “{domain}”. Chiedi all'amministratore di configurarlo oppure continua con l'email.",
         "lookingUp": "Ricerca del provider di identità…",
-        "use": "Usa il single sign-on (SSO)"
+        "use": "Usa SSO"
       },
       "link": {
         "title": "Controlla la tua email",
-        "description": "Abbiamo inviato un link a <address>{email}</address>. Aprilo per continuare.",
-        "confirmDescription": "Abbiamo inviato un'email di conferma a <address>{email}</address>. Conferma la tua email per continuare.",
-        "unknownDescription": "Ti abbiamo inviato un'e-mail a <address>{email}</address> — un link di accesso o un link di conferma per un nuovo account.",
-        "closedDescription": "Se <address>{email}</address> ha un account, il suo link di accesso è in arrivo.",
-        "notReceived": "Non hai ricevuto il link?",
-        "confirmNotReceived": "Non hai ricevuto l'email di conferma?",
-        "resendIn": "Invia di nuovo tra {seconds}",
-        "resend": "Invia di nuovo",
-        "checkSpam": "Non c'è? Controlla la cartella spam o posta indesiderata."
+        "description": "Inserisci il codice inviato a <address>{email}</address>.",
+        "confirmDescription": "Conferma l’email inviata a <address>{email}</address> per continuare.",
+        "unknownDescription": "Inserisci il codice inviato a <address>{email}</address>.",
+        "closedDescription": "Se <address>{email}</address> ha un account, il codice è in arrivo.",
+        "resendIn": "Invia di nuovo tra {seconds} s",
+        "resend": "Invia di nuovo"
       },
       "credentials": {
         "signin": {
           "title": "Bentornato",
-          "description": "Inserisci la password per continuare.",
           "passwordPlaceholder": "La tua password"
         },
         "signup": {
           "title": "Crea il tuo account",
-          "description": "Scegli una password per iniziare.",
           "passwordPlaceholder": "Crea una password"
         },
         "unknown": {
@@ -3063,22 +3058,19 @@
         "networkFailed": "Impossibile inviare la richiesta. Riprova.",
         "signupsClosed": "Le registrazioni sono momentaneamente chiuse. Contatta l'amministratore o richiedi l'accesso.",
         "ssoRequired": "La tua organizzazione richiede il single sign-on. Continua invece con SSO.",
-        "incorrectPassword": "Password errata. Riprova oppure reimpostala tramite “Hai dimenticato la password?”.",
-        "existingAccountWrongPassword": "Hai già un account: inserisci la password esistente per accedere.",
+        "incorrectPassword": "Password errata.",
+        "existingAccountWrongPassword": "Questa email ha già un account. Inserisci la password.",
         "confirmAccount": "Controlla la tua email per confermare l'account",
         "invalidCode": "Codice non valido o scaduto"
       },
-      "legal": {
-        "signup": "Creando un account, accetti i <termsOfService>Termini di servizio</termsOfService> e la <privacyPolicy>Informativa sulla privacy</privacyPolicy>",
-        "default": "<termsOfService>Termini di servizio</termsOfService> e <privacyPolicy>Informativa sulla privacy</privacyPolicy>"
-      }
+      "or": "oppure"
     },
     "passwordReset": {
       "loading": "Caricamento",
       "resetting": "Reimpostazione della password",
       "request": {
         "title": "Reimposta la password",
-        "description": "Inserisci la tua email e ti invieremo un link per reimpostare la password.",
+        "description": "Ti invieremo un link per reimpostarla.",
         "email": "Email",
         "emailPlaceholder": "Il tuo indirizzo email",
         "sending": "Invio del link…",
@@ -3086,8 +3078,7 @@
       },
       "sent": {
         "title": "Controlla la tua email",
-        "description": "Ti abbiamo inviato un link per reimpostare la password.",
-        "address": "Link di reimpostazione inviato a <address>{email}</address>"
+        "address": "Abbiamo inviato un link di reimpostazione a <address>{email}</address>."
       },
       "expired": {
         "title": "Link scaduto",
@@ -3097,12 +3088,11 @@
       "success": {
         "title": "Password aggiornata",
         "description": "Ora puoi accedere con la tua nuova password.",
-        "changed": "La tua password è stata modificata.",
         "signIn": "Vai all'accesso"
       },
       "form": {
         "title": "Imposta una nuova password",
-        "description": "Scegli una nuova password per il tuo account.",
+        "description": "Scegli una nuova password.",
         "newPassword": "Nuova password",
         "newPasswordPlaceholder": "La tua nuova password",
         "confirmPassword": "Conferma password",
@@ -14201,7 +14191,7 @@
       "text6ff3bff5952a": "richiede l'autorizzazione per:",
       "text6ffb34d0baed": "git push origin HEAD",
       "text700e7474f9a9": "Link di referral non disponibile",
-      "text702391f5d071": "Questo crea un token di accesso personale. Puoi revocarlo in qualsiasi momento nelle",
+      "text702391f5d071": "Revoca l’accesso in qualsiasi momento in",
       "text702ef921ed1d": "Nome",
       "text7031306d3dd8": "Il provider di questo modello non è connesso a questo workspace — le richieste instradate qui passano immediatamente al fallback",
       "text7031edbcf9c4": "Errore",
@@ -17048,7 +17038,7 @@
       "textc18ce3e6b5e0": "enterpriseAccordionSelfhostBody",
       "textc18dc13ca821": "Le sessioni possono ancora avviarsi, ma all'agente mancheranno questi valori.",
       "textc19b5dc4376a": "\"Cosa ha detto qualcuno sull’esportazione?\"",
-      "textc19c3fc65916": "nel terminale attende la tua approvazione per questo accesso.",
+      "textc19c3fc65916": "attende la tua approvazione.",
       "textc1a5d4982c10": "non per aggirarla.",
       "textc1abcf2a909a": "≈ {value0} crediti",
       "textc1ada08ce138": "Audit trail",
@@ -20708,7 +20698,7 @@
       "text5f6ba69d66d1": "Competenza rimossa",
       "textcb8d6b0c94c9": " e tutti i suoi file, modifiche incluse, e rimuove la competenza da ogni agente che la usa. Un commit sul branch predefinito.",
       "cliDeviceTitle": "Autorizza Kortix CLI",
-      "cliDeviceWarning": "Approva solo un accesso avviato da te. Verifica che questo codice corrisponda a quello mostrato dal terminale.",
+      "cliDeviceWarning": "Approva solo se questo codice corrisponde al tuo terminale.",
       "cliDeviceCode": "Codice di accesso",
       "cliDeviceApproved": "Accesso approvato. Torna al terminale.",
       "cliDeviceAction": "Autorizza CLI",
@@ -21279,7 +21269,7 @@
       "text05ee1d6181f3": "Quando una richiesta di modifica viene unita, {agent} esegue la tua istruzione.",
       "texte608495c45ce": "Unita in {branch}",
       "text80ca527b0d55": "Trigger della richiesta di modifica creato",
-      "authEmailAlreadySent": "Abbiamo inviato questa email meno di un minuto fa. Controlla la posta in arrivo e la cartella spam prima di richiederne un'altra.",
+      "authEmailAlreadySent": "Già inviata. Controlla la posta in arrivo e lo spam.",
       "textfe0dab79db43": "Parla con Kortix in un'unica chat: ogni messaggio è un thread e la risposta più recente di Kortix appare sotto di esso.",
       "text2e914b62b832": "Link Markdown",
       "text7bed093239f3": "Le risorse riconosciute mostrano l'icona dell'app e un'etichetta compatta. Passa il mouse per vedere l'URL originale.",

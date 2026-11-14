@@ -1785,40 +1785,35 @@ const catalog = {
       "sending": "Sending…",
       "oneMoment": "One moment…",
       "useDifferentEmail": "Use a different email",
-      "usePasswordInstead": "Use a password instead",
-      "emailLinkInstead": "Email me a link instead",
-      "forgotPassword": "Forgot your password?",
-      "automaticAccount": "New here? Continue creates your account automatically.",
+      "usePasswordInstead": "Use a password",
+      "emailLinkInstead": "Email me a code",
+      "forgotPassword": "Forgot password?",
+      "automaticAccount": "Sign in or create an account.",
       "sso": {
         "title": "Use single sign-on",
-        "description": "<address>{email}</address> can sign in through your organization's identity provider.",
+        "description": "Sign in as <address>{email}</address> with your organization.",
         "continue": "Continue with SSO",
         "enterWorkEmail": "Enter your work email above, then choose single sign-on.",
         "notConfigured": "Single sign-on isn't set up for “{domain}”. Ask your admin to configure it, or continue with email.",
         "lookingUp": "Looking up your identity provider…",
-        "use": "Use single sign-on (SSO)"
+        "use": "Use SSO"
       },
       "link": {
         "title": "Check your email",
-        "description": "We sent a link to <address>{email}</address>. Open it to continue.",
-        "confirmDescription": "We sent a confirmation email to <address>{email}</address>. Confirm your email to continue.",
-        "unknownDescription": "We emailed <address>{email}</address> — a sign-in link, or a confirmation link for a new account.",
-        "closedDescription": "If <address>{email}</address> has an account, its sign-in link is on its way.",
-        "notReceived": "Didn't receive the link?",
-        "confirmNotReceived": "Didn't receive the confirmation email?",
-        "resendIn": "Resend in {seconds}",
-        "resend": "Resend",
-        "checkSpam": "Not there? Check your spam or junk folder."
+        "description": "Enter the code sent to <address>{email}</address>.",
+        "confirmDescription": "Confirm the email we sent to <address>{email}</address> to continue.",
+        "unknownDescription": "Enter the code sent to <address>{email}</address>.",
+        "closedDescription": "If <address>{email}</address> has an account, a code is on its way.",
+        "resendIn": "Resend in {seconds}s",
+        "resend": "Resend code"
       },
       "credentials": {
         "signin": {
           "title": "Welcome back",
-          "description": "Enter your password to continue.",
           "passwordPlaceholder": "Your password"
         },
         "signup": {
           "title": "Create your account",
-          "description": "Choose a password to get started.",
           "passwordPlaceholder": "Create a password"
         },
         "unknown": {
@@ -1832,22 +1827,19 @@ const catalog = {
         "networkFailed": "The request could not be sent. Please try again.",
         "signupsClosed": "Signups are currently closed. Contact your administrator or request access.",
         "ssoRequired": "Your organization requires single sign-on. Continue with SSO instead.",
-        "incorrectPassword": "Incorrect password. Try again, or reset it via “Forgot your password?”.",
-        "existingAccountWrongPassword": "You already have an account — enter your existing password to sign in.",
+        "incorrectPassword": "Incorrect password.",
+        "existingAccountWrongPassword": "This email already has an account. Enter its password.",
         "confirmAccount": "Check your email to confirm your account",
         "invalidCode": "Invalid or expired code"
       },
-      "legal": {
-        "signup": "By creating an account, you agree to the <termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>",
-        "default": "<termsOfService>Terms of Service</termsOfService> and <privacyPolicy>Privacy Policy</privacyPolicy>"
-      }
+      "or": "or"
     },
     "passwordReset": {
       "loading": "Loading",
       "resetting": "Resetting password",
       "request": {
         "title": "Reset your password",
-        "description": "Enter your email and we'll send you a password reset link.",
+        "description": "We'll email you a reset link.",
         "email": "Email",
         "emailPlaceholder": "Your email address",
         "sending": "Sending link…",
@@ -1855,8 +1847,7 @@ const catalog = {
       },
       "sent": {
         "title": "Check your email",
-        "description": "We've sent you a password reset link.",
-        "address": "Reset link sent to <address>{email}</address>"
+        "address": "We sent a reset link to <address>{email}</address>."
       },
       "expired": {
         "title": "Link expired",
@@ -1866,12 +1857,11 @@ const catalog = {
       "success": {
         "title": "Password updated",
         "description": "You can now sign in with your new password.",
-        "changed": "Your password has been changed.",
         "signIn": "Go to sign in"
       },
       "form": {
         "title": "Set a new password",
-        "description": "Choose a new password for your account.",
+        "description": "Choose a new password.",
         "newPassword": "New password",
         "newPasswordPlaceholder": "Your new password",
         "confirmPassword": "Confirm password",

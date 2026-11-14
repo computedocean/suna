@@ -3017,39 +3017,34 @@
       "oneMoment": "少々お待ちください…",
       "useDifferentEmail": "別のメールアドレスを使用",
       "usePasswordInstead": "パスワードを使用",
-      "emailLinkInstead": "代わりにメールでリンクを受け取る",
+      "emailLinkInstead": "コードをメールで受け取る",
       "forgotPassword": "パスワードをお忘れですか？",
-      "automaticAccount": "初めての方は、「続行」を選ぶとアカウントが自動的に作成されます。",
+      "automaticAccount": "ログインまたはアカウントを作成します。",
       "sso": {
         "title": "シングルサインオンを使用",
-        "description": "<address>{email}</address>では、組織のIDプロバイダーを通じてサインインできます。",
+        "description": "<address>{email}</address> として組織経由でログインします。",
         "continue": "SSOで続行",
         "enterWorkEmail": "上に勤務先のメールアドレスを入力し、シングルサインオンを選択してください。",
         "notConfigured": "“{domain}”ではシングルサインオンが設定されていません。管理者に設定を依頼するか、メールアドレスで続行してください。",
         "lookingUp": "IDプロバイダーを確認中…",
-        "use": "シングルサインオン（SSO）を使用"
+        "use": "SSOを使用"
       },
       "link": {
         "title": "メールを確認してください",
-        "description": "<address>{email}</address> にリンクを送信しました。リンクを開いて続行してください。",
-        "confirmDescription": "<address>{email}</address> に確認メールを送信しました。メールを確認して続行してください。",
-        "unknownDescription": "<address>{email}</address> にメールを送信しました — サインイン用リンク、または新規アカウント用の確認リンクです。",
-        "closedDescription": "<address>{email}</address> のアカウントがある場合、サインイン用リンクを送信しました。",
-        "notReceived": "リンクが届きませんか？",
-        "confirmNotReceived": "確認メールが届きませんか？",
+        "description": "<address>{email}</address> に送信したコードを入力してください。",
+        "confirmDescription": "<address>{email}</address> に送信したメールを確認して続行してください。",
+        "unknownDescription": "<address>{email}</address> に送信したコードを入力してください。",
+        "closedDescription": "<address>{email}</address> にアカウントがある場合、コードが届きます。",
         "resendIn": "{seconds}秒後に再送信",
-        "resend": "再送信",
-        "checkSpam": "見つからない場合は、迷惑メールフォルダを確認してください。"
+        "resend": "再送信"
       },
       "credentials": {
         "signin": {
           "title": "おかえりなさい",
-          "description": "続行するにはパスワードを入力してください。",
           "passwordPlaceholder": "パスワードを入力"
         },
         "signup": {
           "title": "アカウントを作成",
-          "description": "開始するにはパスワードを設定してください。",
           "passwordPlaceholder": "パスワードを作成"
         },
         "unknown": {
@@ -3063,22 +3058,19 @@
         "networkFailed": "リクエストを送信できませんでした。もう一度お試しください。",
         "signupsClosed": "現在、新規登録を停止しています。管理者に連絡するか、アクセスを申請してください。",
         "ssoRequired": "組織でシングルサインオンが必須です。SSOで続行してください。",
-        "incorrectPassword": "パスワードが正しくありません。もう一度お試しいただくか、「パスワードをお忘れですか？」からリセットしてください。",
-        "existingAccountWrongPassword": "すでにアカウントがあります。既存のパスワードを入力してサインインしてください。",
+        "incorrectPassword": "パスワードが正しくありません。",
+        "existingAccountWrongPassword": "このメールアドレスにはアカウントがあります。パスワードを入力してください。",
         "confirmAccount": "メールを確認してアカウントを認証してください",
         "invalidCode": "コードが無効か、有効期限が切れています"
       },
-      "legal": {
-        "signup": "アカウントを作成すると、<termsOfService>利用規約</termsOfService>および<privacyPolicy>プライバシーポリシー</privacyPolicy>に同意したものとみなされます",
-        "default": "<termsOfService>利用規約</termsOfService>および<privacyPolicy>プライバシーポリシー</privacyPolicy>"
-      }
+      "or": "または"
     },
     "passwordReset": {
       "loading": "読み込み中",
       "resetting": "パスワードをリセット中",
       "request": {
         "title": "パスワードをリセット",
-        "description": "メールアドレスを入力すると、パスワードリセット用のリンクをお送りします。",
+        "description": "リセット用のリンクをメールで送信します。",
         "email": "メールアドレス",
         "emailPlaceholder": "メールアドレスを入力",
         "sending": "リンクを送信中…",
@@ -3086,8 +3078,7 @@
       },
       "sent": {
         "title": "メールを確認してください",
-        "description": "パスワードリセット用のリンクを送信しました。",
-        "address": "リセットリンクを<address>{email}</address>に送信しました"
+        "address": "<address>{email}</address> にリセットリンクを送信しました。"
       },
       "expired": {
         "title": "リンクの有効期限が切れています",
@@ -3097,12 +3088,11 @@
       "success": {
         "title": "パスワードを更新しました",
         "description": "新しいパスワードでサインインできるようになりました。",
-        "changed": "パスワードが変更されました。",
         "signIn": "サインイン画面へ"
       },
       "form": {
         "title": "新しいパスワードを設定",
-        "description": "アカウント用の新しいパスワードを設定してください。",
+        "description": "新しいパスワードを設定してください。",
         "newPassword": "新しいパスワード",
         "newPasswordPlaceholder": "新しいパスワードを入力",
         "confirmPassword": "パスワードを確認",
@@ -14201,7 +14191,7 @@
       "text6ff3bff5952a": "次の権限が必要です:",
       "text6ffb34d0baed": "git push origin HEAD",
       "text700e7474f9a9": "紹介リンクを利用できません",
-      "text702391f5d071": "個人アクセストークンが作成されます。いつでも取り消せます：",
+      "text702391f5d071": "アクセスはいつでも次の場所で取り消せます:",
       "text702ef921ed1d": "名",
       "text7031306d3dd8": "このモデルのプロバイダーはこのワークスペースに接続されていません — ここにルーティングされたリクエストは直ちにフォールバックします",
       "text7031edbcf9c4": "失敗",
@@ -17048,7 +17038,7 @@
       "textc18ce3e6b5e0": "enterpriseAccordionSelfhostBody",
       "textc18dc13ca821": "セッションは開始できますが、エージェントにはこれらの値がありません。",
       "textc19b5dc4376a": "「exportについて誰か何か言っていた？」",
-      "textc19c3fc65916": "ターミナルで承認待ちです。",
+      "textc19c3fc65916": "があなたの承認を待っています。",
       "textc1a5d4982c10": "すり抜けるためのものではありません。",
       "textc1abcf2a909a": "≈ {value0} クレジット",
       "textc1ada08ce138": "監査証跡",
@@ -20708,7 +20698,7 @@
       "text5f6ba69d66d1": "スキルを削除しました",
       "textcb8d6b0c94c9": " とその中のすべてのファイル（編集内容を含む）。このスキルを使うすべてのエージェントからも外します。デフォルトブランチへの 1 回のコミットです。",
       "cliDeviceTitle": "Kortix CLI を認証",
-      "cliDeviceWarning": "自分で開始したログインのみ承認してください。このコードがターミナルに表示されたコードと一致することを確認してください。",
+      "cliDeviceWarning": "このコードがターミナルの表示と一致する場合のみ承認してください。",
       "cliDeviceCode": "ログインコード",
       "cliDeviceApproved": "ログインを承認しました。ターミナルに戻ってください。",
       "cliDeviceAction": "CLI を認証",
@@ -21279,7 +21269,7 @@
       "text05ee1d6181f3": "変更リクエストがマージされると、{agent}があなたの指示を実行します。",
       "texte608495c45ce": "{branch} にマージ",
       "text80ca527b0d55": "変更リクエストのトリガーを作成しました",
-      "authEmailAlreadySent": "このメールは1分以内に送信済みです。再送信する前に、受信トレイと迷惑メールフォルダを確認してください。",
+      "authEmailAlreadySent": "送信済みです。受信トレイと迷惑メールフォルダを確認してください。",
       "textfe0dab79db43": "1つのチャットでKortixと会話できます。メッセージはすべてスレッドになり、Kortixの最新の返信がその下に表示されます。",
       "text2e914b62b832": "Markdownリンク",
       "text7bed093239f3": "認識されたリソースにはアプリアイコンと簡易ラベルが表示されます。ホバーすると元のURLを確認できます。",

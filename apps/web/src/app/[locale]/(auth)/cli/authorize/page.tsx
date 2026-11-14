@@ -379,20 +379,15 @@ function CliAuthorizeInner() {
           {tI18nComplete.raw('textb6741b4ccf6d')}
         </Button>
 
-        <div className="text-muted-foreground mt-8 space-y-2 text-sm">
-          <p>
-            {tI18nComplete.raw('text702391f5d071')}{' '}
-            <span className="text-foreground">{tI18nComplete.raw('text7955091baf3b')}</span>.
-          </p>
-          <p>
-            <Link
-              href="/"
-              className="hover:text-foreground -my-2 inline-block py-2 transition-colors"
-            >
-              {tI18nComplete.raw('text19766ed6ccb2')}
-            </Link>
-          </p>
-        </div>
+        <p className="text-muted-foreground mt-5 text-sm">
+          {tI18nComplete.raw('text702391f5d071')}{' '}
+          <span className="text-foreground">{tI18nComplete.raw('text7955091baf3b')}</span>.
+        </p>
+        <p className="text-muted-foreground mt-2 text-sm">
+          <Link href="/" className="hover:text-foreground -my-2 inline-block py-2 transition-colors">
+            {tI18nComplete.raw('text19766ed6ccb2')}
+          </Link>
+        </p>
       </Rise>
     </AuthFrame>
   );

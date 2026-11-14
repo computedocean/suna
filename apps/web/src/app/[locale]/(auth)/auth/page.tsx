@@ -36,7 +36,14 @@ import Loading from '@kortix/ui/loading';
 import { errorToast } from '@kortix/ui/toast';
 import { AuthFrame } from '@kortix/ui/internal/auth/auth-card-shell';
 import { useBrandName } from '@kortix/ui/internal/branding/branding-provider';
-import { FieldError, FieldLabel, InfoStrip, StepHeader } from '@kortix/ui/internal/auth/auth-primitives';
+import {
+  FieldError,
+  FieldLabel,
+  InfoStrip,
+  OrDivider,
+  QuietLinks,
+  StepHeader,
+} from '@kortix/ui/internal/auth/auth-primitives';
 import { useAuth } from '@/features/providers/auth-provider';
 import { invalidateTokenCache, setBootstrapAuthToken } from '@/lib/auth-token';
 import { ENTRY_EMAIL_STASH_KEY, ENTRY_SUBMIT_FLAG_KEY } from '@/lib/auth/entry-hydration-guard';
@@ -283,7 +290,7 @@ function AuthCardForm({
   useEffect(() => {
     // The cooldown ticks on every step, not just the link step: a rate-limited
     // send cools the button that fired it (the password form's and the SSO
-    // interstitial's "Email me a link instead" — KRTX-1882), so the countdown
+    // interstitial's "Email me a code" — KRTX-1882), so the countdown
     // must keep running wherever the visitor is.
     if (resendIn <= 0) return;
     const t = setTimeout(() => setResendIn((prev) => prev - 1), 1000);
@@ -854,18 +861,23 @@ function AuthCardForm({
     }
   };
 
-  const handleVerifyCode = async () => {
-    if (submitInFlight.current || !sentEmail || !/^\d{6}$/.test(code)) return;
+  // The six-box input completes before React commits `code`, so it passes the
+  // finished value; the submit button reads state.
+  const handleVerifyCode = async (value: string = code) => {
+    if (submitInFlight.current || !sentEmail || !/^\d{6}$/.test(value)) return;
     submitInFlight.current = true;
     clearNotices();
     setPendingAction('continue');
     try {
       const { data, error } = await createBrowserSupabaseClient().auth.verifyOtp({
         email: sentEmail,
-        token: code,
+        token: value,
         type: 'email',
       });
       if (error || !data.session?.access_token || !data.session.refresh_token) {
+        // A rejected code is cleared: the next six digits are a fresh attempt,
+        // never a correction that verifies on every keystroke.
+        setCode('');
         failWith(t('errors.invalidCode'));
         return;
       }
@@ -885,6 +897,7 @@ function AuthCardForm({
           : null,
       });
     } catch {
+      setCode('');
       failWith(t('errors.networkFailed'));
     } finally {
       submitInFlight.current = false;
@@ -950,47 +963,24 @@ function AuthCardForm({
             </div>
           )}
 
-          <div className="text-muted-foreground mt-6 space-y-2 text-sm">
-            <p className="flex flex-wrap items-center gap-2">
-              {passwordEnabled && (
-                <button
-                  type="button"
-                  onClick={usePasswordFromSso}
-                  disabled={pending}
-                  className="hover:text-foreground -my-2 py-2 transition-colors disabled:opacity-50"
-                >
-                  {t('usePasswordInstead')}
-                </button>
-              )}
-              {passwordEnabled && magicLinkEnabled && (
-                <span aria-hidden className="text-muted-foreground select-none">
-                  ·
-                </span>
-              )}
-              {magicLinkEnabled && (
-                <button
-                  type="button"
-                  onClick={() => sendMagic(email, 'link')}
-                  disabled={pending || resendIn > 0}
-                  className="hover:text-foreground -my-2 py-2 transition-colors disabled:opacity-50"
-                >
-                  {pendingAction === 'link' ? t('sending') : t('emailLinkInstead')}
-                </button>
-              )}
-            </p>
-            {magicLinkEnabled && resendIn > 0 && (
-              <p>{t('link.resendIn', { seconds: resendIn })}</p>
-            )}
-            <p>
-              <button
-                type="button"
-                onClick={goToEntry}
-                className="hover:text-foreground -my-2 py-2 transition-colors"
-              >
-                {t('useDifferentEmail')}
-              </button>
-            </p>
-          </div>
+          <QuietLinks
+            disabled={pending}
+            links={[
+              passwordEnabled
+                ? { key: 'password', label: t('usePasswordInstead'), onClick: usePasswordFromSso }
+                : null,
+              magicLinkEnabled
+                ? {
+                    key: 'link',
+                    label: pendingAction === 'link' ? t('sending') : t('emailLinkInstead'),
+                    hint: resendIn > 0 ? t('link.resendIn', { seconds: resendIn }) : null,
+                    onClick: () => void sendMagic(email, 'link'),
+                    disabled: resendIn > 0,
+                  }
+                : null,
+              { key: 'email', label: t('useDifferentEmail'), onClick: goToEntry },
+            ]}
+          />
         </m.div>
       </>
     );
@@ -1001,7 +991,7 @@ function AuthCardForm({
       <EmailLinkStep
         code={code}
         onCodeChange={setCode}
-        onVerify={() => void handleVerifyCode()}
+        onVerify={(value) => void handleVerifyCode(value)}
         sentEmail={sentEmail}
         mode={linkMode}
         errorMessage={errorMessage}
@@ -1028,41 +1018,36 @@ function AuthCardForm({
           <StepHeader
             title={t(`credentials.${credentialKey}.title`)}
             description={
-              credMode === 'closed'
-                ? t('errors.signupsClosed') // localized; identical for every address
-                : credentialKey === 'unknown'
-                  ? undefined
-                  : t(`credentials.${credentialKey}.description`)
+              <span className="flex min-w-0 items-center gap-2">
+                <span className="text-foreground truncate">{email}</span>
+                <button
+                  type="button"
+                  onClick={goToEntry}
+                  aria-label={t('changeEmail')}
+                  className="hover:text-foreground -my-2 shrink-0 py-2 transition-colors"
+                >
+                  {t('edit')}
+                </button>
+              </span>
             }
           />
         </m.div>
 
         <m.div {...rise(0.06)}>
+          {/* localized; identical for every address (KRTX-3504) */}
+          {credMode === 'closed' && <InfoStrip message={t('errors.signupsClosed')} />}
           {info && <InfoStrip message={info} />}
 
           <form onSubmit={handleCredentialsSubmit} className="space-y-5">
-            <div className="space-y-3">
-              <FieldLabel htmlFor="email-locked">{t('email')}</FieldLabel>
-              <div className="relative">
-                <Input
-                  id="email-locked"
-                  value={email}
-                  readOnly
-                  tabIndex={-1}
-                  size="md"
-                  className="text-muted-foreground pr-14"
-                />
-                <button
-                  type="button"
-                  onClick={goToEntry}
-                  aria-label={t('changeEmail')}
-                  className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center px-3 text-sm font-medium transition-colors"
-                >
-                  {t('edit')}
-                </button>
-              </div>
-            </div>
-
+            {/* Password managers pair the password with this account. */}
+            <input
+              type="email"
+              name="username"
+              autoComplete="username"
+              value={email}
+              readOnly
+              hidden
+            />
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <FieldLabel htmlFor="password">{t('password')}</FieldLabel>
@@ -1094,26 +1079,18 @@ function AuthCardForm({
           </form>
 
           {magicLinkEnabled && (
-            <div className="mt-3">
-              <Button
-                type="button"
-                variant="secondary"
-                size="lg"
-                className="w-full"
-                onClick={() => sendMagic()}
-                disabled={pending || resendIn > 0}
-              >
-                {pendingAction === 'link' ? (
-                  <Loading className="text-foreground! size-4 shrink-0" />
-                ) : null}
-                {t('emailLinkInstead')}
-              </Button>
-              {resendIn > 0 && (
-                <p className="text-muted-foreground mt-2 text-center text-sm">
-                  {t('link.resendIn', { seconds: resendIn })}
-                </p>
-              )}
-            </div>
+            <QuietLinks
+              disabled={pending}
+              links={[
+                {
+                  key: 'link',
+                  label: pendingAction === 'link' ? t('sending') : t('emailLinkInstead'),
+                  hint: resendIn > 0 ? t('link.resendIn', { seconds: resendIn }) : null,
+                  onClick: () => void sendMagic(),
+                  disabled: resendIn > 0,
+                },
+              ]}
+            />
           )}
         </m.div>
       </>
@@ -1124,21 +1101,24 @@ function AuthCardForm({
   return (
     <>
       <m.div {...rise(0)}>
-        <StepHeader title={t('welcome', { name: brandName })} />
+        {/* One system: no sign-in/sign-up toggle. Continue routes new emails
+            into registration and existing ones into sign-in automatically. */}
+        <StepHeader title={t('welcome', { name: brandName })} description={t('automaticAccount')} />
       </m.div>
 
       <m.div {...rise(0.06)}>
         {info && <InfoStrip message={info} />}
 
         {googleEnabled && (
-          <div className="mb-8">
+          <>
             <Suspense fallback={null}>
               <GoogleSignIn
                 returnUrl={returnUrl}
                 mobileCallbackState={mobileCallbackState ?? undefined}
               />
             </Suspense>
-          </div>
+            <OrDivider label={t('or')} />
+          </>
         )}
 
         {/* The pre-hydration submit guard targets this attribute. It ships
@@ -1181,39 +1161,29 @@ function AuthCardForm({
           </Button>
         </form>
 
-        {passwordEnabled && magicLinkEnabled && (
-          <p className="text-muted-foreground mt-4 text-sm">
-            <button
-              type="button"
-              onClick={() => void goToPassword()}
-              disabled={pending}
-              className="hover:text-foreground -my-2 py-2 underline-offset-4 transition-colors hover:underline disabled:opacity-50"
-            >
-              {pendingAction === 'password' ? t('oneMoment') : t('usePasswordInstead')}
-            </button>
-          </p>
-        )}
-
-        {/* Explicit SSO entry — the discoverable counterpart of the silent
-            home-realm discovery Continue already performs. Same dialect as the
-            link-step footer links; only rendered when this deployment has SAML
-            enabled, so self-hosted installs without SSO never show a dead door. */}
-        {samlEnabled && (
-          <p className="text-muted-foreground mt-4 text-sm">
-            <button
-              type="button"
-              onClick={() => void handleSsoContinue()}
-              disabled={pending}
-              className="hover:text-foreground -my-2 py-2 transition-colors disabled:opacity-50"
-            >
-              {pendingAction === 'sso' ? t('sso.lookingUp') : t('sso.use')}
-            </button>
-          </p>
-        )}
-
-        {/* One system: no sign-in/sign-up toggle. Continue routes new emails
-            into registration and existing ones into sign-in automatically. */}
-        <p className="text-muted-foreground mt-8 text-sm">{t('automaticAccount')}</p>
+        {/* The alternatives share one quiet row. SSO is the discoverable
+            counterpart of the silent home-realm discovery Continue already
+            performs, rendered only when this deployment has SAML enabled, so
+            self-hosted installs without SSO never show a dead door. */}
+        <QuietLinks
+          links={[
+            passwordEnabled && magicLinkEnabled
+              ? {
+                  key: 'password',
+                  label: pendingAction === 'password' ? t('oneMoment') : t('usePasswordInstead'),
+                  onClick: () => void goToPassword(),
+                }
+              : null,
+            samlEnabled
+              ? {
+                  key: 'sso',
+                  label: pendingAction === 'sso' ? t('sso.lookingUp') : t('sso.use'),
+                  onClick: () => void handleSsoContinue(),
+                }
+              : null,
+          ]}
+          disabled={pending}
+        />
       </m.div>
     </>
   );
@@ -1414,7 +1384,7 @@ function AuthContent() {
   // A stale/invalidated session (sessionExpired, or forceForm from the
   // safety-net timeout) also lands here — never a dead shell.
   return (
-    <AuthFrame footerVariant="continue">
+    <AuthFrame>
       <AuthCardForm
         callbackError={searchParams.get('expired') === 'true' || searchParams.has('error') || searchParams.has('error_code')}
         returnUrl={returnUrl}

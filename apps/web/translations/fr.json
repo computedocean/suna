@@ -3017,39 +3017,34 @@
       "oneMoment": "Un instant…",
       "useDifferentEmail": "Utiliser une autre adresse e-mail",
       "usePasswordInstead": "Utiliser un mot de passe",
-      "emailLinkInstead": "M’envoyer un lien par e-mail",
+      "emailLinkInstead": "M’envoyer un code",
       "forgotPassword": "Mot de passe oublié ?",
-      "automaticAccount": "Nouveau ici ? Continuer crée automatiquement votre compte.",
+      "automaticAccount": "Connectez-vous ou créez un compte.",
       "sso": {
         "title": "Utiliser l’authentification unique",
-        "description": "<address>{email}</address> peut se connecter via le fournisseur d’identité de votre organisation.",
+        "description": "Connectez-vous en tant que <address>{email}</address> via votre organisation.",
         "continue": "Continuer avec le SSO",
         "enterWorkEmail": "Saisissez votre adresse e-mail professionnelle ci-dessus, puis choisissez l’authentification unique.",
         "notConfigured": "L’authentification unique n’est pas configurée pour « {domain} ». Demandez à votre administrateur de la configurer ou continuez avec votre e-mail.",
         "lookingUp": "Recherche de votre fournisseur d’identité…",
-        "use": "Utiliser l’authentification unique (SSO)"
+        "use": "Utiliser le SSO"
       },
       "link": {
         "title": "Consultez votre boîte e-mail",
-        "description": "Nous avons envoyé un lien à <address>{email}</address>. Ouvrez-le pour continuer.",
-        "confirmDescription": "Nous avons envoyé un e-mail de confirmation à <address>{email}</address>. Confirmez votre adresse e-mail pour continuer.",
-        "unknownDescription": "Nous avons envoyé un e-mail à <address>{email}</address> — un lien de connexion, ou un lien de confirmation pour un nouveau compte.",
-        "closedDescription": "Si <address>{email}</address> a un compte, son lien de connexion est en route.",
-        "notReceived": "Vous n’avez pas reçu le lien ?",
-        "confirmNotReceived": "Vous n’avez pas reçu l’e-mail de confirmation ?",
-        "resendIn": "Renvoyer dans {seconds}",
-        "resend": "Renvoyer",
-        "checkSpam": "Vous ne le trouvez pas ? Vérifiez vos spams ou courriers indésirables."
+        "description": "Saisissez le code envoyé à <address>{email}</address>.",
+        "confirmDescription": "Confirmez l’e-mail envoyé à <address>{email}</address> pour continuer.",
+        "unknownDescription": "Saisissez le code envoyé à <address>{email}</address>.",
+        "closedDescription": "Si <address>{email}</address> a un compte, un code est en route.",
+        "resendIn": "Renvoyer dans {seconds} s",
+        "resend": "Renvoyer"
       },
       "credentials": {
         "signin": {
           "title": "Bon retour parmi nous",
-          "description": "Saisissez votre mot de passe pour continuer.",
           "passwordPlaceholder": "Votre mot de passe"
         },
         "signup": {
           "title": "Créer votre compte",
-          "description": "Choisissez un mot de passe pour commencer.",
           "passwordPlaceholder": "Créez un mot de passe"
         },
         "unknown": {
@@ -3063,22 +3058,19 @@
         "networkFailed": "La requête n'a pas pu être envoyée. Veuillez réessayer.",
         "signupsClosed": "Les inscriptions sont actuellement fermées. Contactez votre administrateur ou demandez un accès.",
         "ssoRequired": "Votre organisation exige l’authentification unique. Continuez plutôt avec le SSO.",
-        "incorrectPassword": "Mot de passe incorrect. Réessayez ou réinitialisez-le via « Mot de passe oublié ? ».",
-        "existingAccountWrongPassword": "Vous avez déjà un compte — saisissez votre mot de passe existant pour vous connecter.",
+        "incorrectPassword": "Mot de passe incorrect.",
+        "existingAccountWrongPassword": "Cet e-mail a déjà un compte. Saisissez son mot de passe.",
         "confirmAccount": "Consultez votre boîte e-mail pour confirmer votre compte",
         "invalidCode": "Code invalide ou expiré"
       },
-      "legal": {
-        "signup": "En créant un compte, vous acceptez les <termsOfService>Conditions d’utilisation</termsOfService> et la <privacyPolicy>Politique de confidentialité</privacyPolicy>",
-        "default": "<termsOfService>Conditions d’utilisation</termsOfService> et <privacyPolicy>Politique de confidentialité</privacyPolicy>"
-      }
+      "or": "ou"
     },
     "passwordReset": {
       "loading": "Chargement",
       "resetting": "Réinitialisation du mot de passe",
       "request": {
         "title": "Réinitialiser votre mot de passe",
-        "description": "Saisissez votre adresse e-mail et nous vous enverrons un lien de réinitialisation.",
+        "description": "Nous vous enverrons un lien de réinitialisation.",
         "email": "E-mail",
         "emailPlaceholder": "Votre adresse e-mail",
         "sending": "Envoi du lien…",
@@ -3086,8 +3078,7 @@
       },
       "sent": {
         "title": "Consultez votre boîte e-mail",
-        "description": "Nous vous avons envoyé un lien de réinitialisation de votre mot de passe.",
-        "address": "Lien de réinitialisation envoyé à <address>{email}</address>"
+        "address": "Nous avons envoyé un lien de réinitialisation à <address>{email}</address>."
       },
       "expired": {
         "title": "Lien expiré",
@@ -3097,12 +3088,11 @@
       "success": {
         "title": "Mot de passe mis à jour",
         "description": "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.",
-        "changed": "Votre mot de passe a été modifié.",
         "signIn": "Accéder à la connexion"
       },
       "form": {
         "title": "Définir un nouveau mot de passe",
-        "description": "Choisissez un nouveau mot de passe pour votre compte.",
+        "description": "Choisissez un nouveau mot de passe.",
         "newPassword": "Nouveau mot de passe",
         "newPasswordPlaceholder": "Votre nouveau mot de passe",
         "confirmPassword": "Confirmer le mot de passe",
@@ -14201,7 +14191,7 @@
       "text6ff3bff5952a": "demande l’autorisation pour :",
       "text6ffb34d0baed": "git push origin HEAD",
       "text700e7474f9a9": "Lien de parrainage indisponible",
-      "text702391f5d071": "Cela crée un jeton d’accès personnel. Vous pouvez le révoquer à tout moment dans",
+      "text702391f5d071": "Révoquez l’accès à tout moment dans",
       "text702ef921ed1d": "Prénom",
       "text7031306d3dd8": "Le fournisseur de ce modèle n’est pas connecté pour cet espace de travail — les requêtes acheminées ici échouent immédiatement",
       "text7031edbcf9c4": "Échec",
@@ -17048,7 +17038,7 @@
       "textc18ce3e6b5e0": "enterpriseAccordionSelfhostBody",
       "textc18dc13ca821": "Les sessions peuvent toujours démarrer, mais l’agent ne disposera pas de ces valeurs.",
       "textc19b5dc4376a": "« Qu’a dit quelqu’un à propos de l’export ? »",
-      "textc19c3fc65916": "dans votre terminal attend votre approbation pour cette connexion.",
+      "textc19c3fc65916": "attend votre approbation.",
       "textc1a5d4982c10": "pas pour le contourner.",
       "textc1abcf2a909a": "≈ {value0} crédits",
       "textc1ada08ce138": "Piste d’audit",
@@ -20708,7 +20698,7 @@
       "text5f6ba69d66d1": "Compétence supprimée",
       "textcb8d6b0c94c9": " et tous ses fichiers, modifications comprises, et retire la compétence de chaque agent qui l'utilise. Un commit sur la branche par défaut.",
       "cliDeviceTitle": "Autoriser Kortix CLI",
-      "cliDeviceWarning": "Approuvez uniquement une connexion que vous avez lancée. Vérifiez que ce code correspond à celui affiché dans votre terminal.",
+      "cliDeviceWarning": "N’approuvez que si ce code correspond à votre terminal.",
       "cliDeviceCode": "Code de connexion",
       "cliDeviceApproved": "Connexion approuvée. Retournez dans votre terminal.",
       "cliDeviceAction": "Autoriser CLI",
@@ -21279,7 +21269,7 @@
       "text05ee1d6181f3": "Quand une demande de modification est fusionnée, {agent} exécute votre instruction.",
       "texte608495c45ce": "Fusionnée dans {branch}",
       "text80ca527b0d55": "Déclencheur de demande de modification créé",
-      "authEmailAlreadySent": "Nous avons envoyé cet e-mail il y a moins d'une minute. Vérifiez votre boîte de réception et vos spams avant d'en demander un autre.",
+      "authEmailAlreadySent": "Déjà envoyé. Vérifiez votre boîte de réception et vos spams.",
       "textfe0dab79db43": "Discutez avec Kortix dans un seul chat : chaque message est un fil, et la réponse la plus récente de Kortix s'affiche en dessous.",
       "text2e914b62b832": "Liens Markdown",
       "text7bed093239f3": "Les ressources reconnues affichent une icône d'application et une étiquette compacte. Survolez pour voir l'URL d'origine.",
