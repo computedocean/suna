@@ -789,7 +789,10 @@ function handleUnhandledError(err: Error, c: Context): Response {
   const undecryptable = handleSecretUndecryptable(err, c, method, path);
   if (undecryptable) return undecryptable;
   if (err instanceof BillingError) {
-    appLogger.error(`${method} ${path} -> ${err.statusCode} [BillingError]`, {
+    // A 4xx refusal (tier cannot buy, invalid amount, insufficient credits) is the
+    // caller's to fix, not a server fault: warn. Only a 5xx stays an error.
+    const log = err.statusCode >= 500 ? appLogger.error : appLogger.warn;
+    log(`${method} ${path} -> ${err.statusCode} [BillingError]`, {
       statusCode: err.statusCode,
       message: err.message,
       path,
