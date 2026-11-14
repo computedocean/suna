@@ -192,16 +192,17 @@ const scriptLiteral = (value: unknown): string =>
  * storage, bad JSON, unknown id) leaves the defaults. Keep it
  * dependency-free: it is inlined as a string.
  *
- * It also puts `data-reduce-motion` on `<html>` on every route when the
- * person's "Reduce motion" switch is on, so the first paint already skips the
- * enter animations and shimmer (`ReduceMotionSync` keeps it current after).
+ * On the same themed routes it also puts `data-reduce-motion` on `<html>`
+ * when the person's "Reduce motion" switch is on, so the first paint already
+ * skips the enter animations and shimmer (`ReduceMotionSync` keeps it current
+ * after). Marketing, auth and other public pages keep their motion.
  */
 // A literal, not an import: `use-reduced-motion.ts` is a client module, and this
 // file feeds the server-rendered root layout. The type pins the two copies.
 const REDUCE_MOTION_ATTRIBUTE = 'data-reduce-motion' satisfies typeof ReduceMotionAttribute;
 
-export const INTERFACE_THEME_INIT_SCRIPT = `(function(){try{var d=document.documentElement,s={};try{var r=localStorage.getItem('${USER_PREFERENCES_STORAGE_KEY}'),p=r?JSON.parse(r):null;s=(p&&p.state&&p.state.preferences)||{};}catch(e){}if(s.reduceMotion===true)d.setAttribute('${REDUCE_MOTION_ATTRIBUTE}','');if(!new RegExp(${scriptLiteral(
+export const INTERFACE_THEME_INIT_SCRIPT = `(function(){try{var d=document.documentElement,s={};try{var r=localStorage.getItem('${USER_PREFERENCES_STORAGE_KEY}'),p=r?JSON.parse(r):null;s=(p&&p.state&&p.state.preferences)||{};}catch(e){}if(!new RegExp(${scriptLiteral(
   THEMED_ROUTE_SOURCE,
-)}).test(location.pathname))return;var L=${scriptLiteral(LIGHT_THEME_IDS)},D=${scriptLiteral(
+)}).test(location.pathname))return;if(s.reduceMotion===true)d.setAttribute('${REDUCE_MOTION_ATTRIBUTE}','');var L=${scriptLiteral(LIGHT_THEME_IDS)},D=${scriptLiteral(
   DARK_THEME_IDS,
 )};d.setAttribute('data-light-theme',L.indexOf(s.lightTheme)>=0?s.lightTheme:'${DEFAULT_LIGHT_THEME}');d.setAttribute('data-dark-theme',D.indexOf(s.darkTheme)>=0?s.darkTheme:'${DEFAULT_DARK_THEME}');}catch(e){}})();`;

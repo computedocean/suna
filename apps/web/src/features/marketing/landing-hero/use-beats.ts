@@ -1,6 +1,6 @@
 'use client';
 
-import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
+import { useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
 
 /**

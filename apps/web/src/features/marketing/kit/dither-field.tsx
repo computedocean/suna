@@ -2,7 +2,6 @@
 
 import { cn } from '@kortix/ui';
 import { useEffect, useRef } from 'react';
-import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 const VERTEX = `
   attribute vec2 position;
@@ -125,7 +124,7 @@ export function DitherField({ className, still: stillProp = false }: { className
     const uInk = gl.getUniformLocation(program, 'ink');
 
     // `still`: draw one frame and never run a loop (static art, no motion cost).
-    const still = stillProp || prefersReducedMotion();
+    const still = stillProp || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let visible = false;
     let frame = 0;
     let last = -Infinity;

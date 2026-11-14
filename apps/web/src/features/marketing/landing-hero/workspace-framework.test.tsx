@@ -30,11 +30,8 @@ mock.module('./framework-window', () => ({
 
 /** Drives the component's real motion hook through the spread module below. */
 let reduced = false;
-const realReducedMotion = await import('@kortix/ui/internal/hooks/use-reduced-motion');
-mock.module('@kortix/ui/internal/hooks/use-reduced-motion', () => ({
-  ...realReducedMotion,
-  useReducedMotion: () => reduced,
-}));
+const realMotion = await import('motion/react');
+mock.module('motion/react', () => ({ ...realMotion, useReducedMotion: () => reduced }));
 
 const { WorkspaceFramework } = await import('./workspace-framework');
 

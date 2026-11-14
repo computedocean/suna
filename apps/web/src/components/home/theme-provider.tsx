@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  isThemedPath,
   normalizeDarkTheme,
   normalizeLightTheme,
   syncInterfaceThemes,
@@ -34,24 +35,28 @@ function ThemeChoiceSync() {
 
 /**
  * Mirrors the "Reduce motion" switch (Settings ▸ Preferences) onto `<html>` as
- * `data-reduce-motion`, on every route. `INTERFACE_THEME_INIT_SCRIPT` sets it
- * for the first paint; this keeps it current when the switch flips, in the
- * same frame.
+ * `data-reduce-motion` while a workspace route (`isThemedPath`: /workspaces,
+ * /projects, /new, /settings) is showing, and clears it everywhere else, so
+ * marketing and auth pages keep their motion. `INTERFACE_THEME_INIT_SCRIPT`
+ * sets it for the first paint; this follows navigation and a flip of the switch.
  *
  * It reads the store directly, not through a hook: during hydration a
  * persisted store's hook returns its default (`false`), and a layout effect
  * driven by that value would strip the pre-paint attribute for a frame.
  */
 function ReduceMotionSync() {
+  const pathname = usePathname();
+
   React.useLayoutEffect(() => {
+    const themed = isThemedPath(pathname);
     const apply = () =>
       applyReduceMotion(
         document.documentElement,
-        useUserPreferencesStore.getState().preferences.reduceMotion === true,
+        themed && useUserPreferencesStore.getState().preferences.reduceMotion === true,
       );
     apply();
     return useUserPreferencesStore.subscribe(apply);
-  }, []);
+  }, [pathname]);
 
   return null;
 }

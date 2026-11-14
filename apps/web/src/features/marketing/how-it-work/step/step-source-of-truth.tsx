@@ -3,8 +3,7 @@
 import { useLocalizedUiCatalog } from '@kortix/ui/i18n';
 import { AgentMark } from '@kortix/ui/internal/components/agent-mark';
 import { BookOpenIcon, CpuIcon, LightningIcon, PlugIcon, ShieldIcon, SparkleIcon } from '@phosphor-icons/react';
-import { AnimatePresence, m, useInView, type Transition } from 'motion/react';
-import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
+import { AnimatePresence, m, useInView, useReducedMotion, type Transition } from 'motion/react';
 import { useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
 
 /**

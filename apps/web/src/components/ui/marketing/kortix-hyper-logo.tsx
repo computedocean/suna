@@ -1,7 +1,6 @@
 'use client';
 
-import { m, type MotionProps } from 'motion/react';
-import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
+import { m, type MotionProps, useReducedMotion } from 'motion/react';
 import { useEffect, useId, useRef, useState } from 'react';
 
 import { cn } from '@kortix/ui';

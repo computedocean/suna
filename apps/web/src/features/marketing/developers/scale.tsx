@@ -1,8 +1,7 @@
 'use client';
 
 import { cn } from '@kortix/ui';
-import { m } from 'motion/react';
-import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
+import { m, useReducedMotion } from 'motion/react';
 import { useDevelopersCopy } from './use-developers-copy';
 import { SECTION_HEADING } from './shared';
 

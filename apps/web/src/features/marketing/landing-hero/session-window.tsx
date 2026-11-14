@@ -25,7 +25,6 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { CustomizeGlyph } from './customize-glyph';
 
 import { SessionStatusMark } from './session-status-mark';
-import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 /**
  * The Kortix session screen, rebuilt as live DOM for the landing hero (Paper
@@ -141,7 +140,7 @@ function useScript(target: React.RefObject<HTMLElement | null>, play: boolean | 
   useEffect(() => {
     const el = target.current;
     if (!el || play === false) return;
-    if (prefersReducedMotion()) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setStage(FINAL);
       return;
     }

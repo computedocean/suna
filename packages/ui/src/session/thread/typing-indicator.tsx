@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { useTranslations } from '../../i18n';
 import { cn } from '../../lib/utils';
-import { useReduceMotionSetting } from '../../internal/hooks/use-reduced-motion';
+import { useReduceMotionActive } from '../../internal/hooks/use-reduced-motion';
 
 /** The clock of a wait since `sinceIso` ("0:42"), ticking each second; null without a start. */
 export function useElapsedLabel(sinceIso: string | null | undefined, format: (ms: number) => string): string | null {
@@ -51,7 +51,7 @@ export function TypingIndicator({
   // An infinite Motion loop already running ignores `skipAnimations`, so the
   // "Reduce motion" switch stops the dots here, held at a mid opacity. The OS
   // setting alone keeps the pulse: it is opacity only (`kortix-brand` motion.md).
-  const reduceMotion = useReduceMotionSetting();
+  const reduceMotion = useReduceMotionActive();
   const label = t('typing', { name });
   const [late, setLate] = useState(detailDelayMs <= 0);
   useEffect(() => {

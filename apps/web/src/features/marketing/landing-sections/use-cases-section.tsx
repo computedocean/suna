@@ -6,8 +6,7 @@ import { DitherField } from '@/features/marketing/kit/dither-field';
 import { cn } from '@kortix/ui';
 import { useLocalizedUiCatalog } from '@kortix/ui/i18n';
 import { ArrowUpRightIcon } from '@phosphor-icons/react';
-import { m, type Transition } from 'motion/react';
-import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
+import { m, useReducedMotion, type Transition } from 'motion/react';
 import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react';
 
 import { TEAMS, type TeamId } from './use-case-teams';

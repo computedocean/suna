@@ -9,8 +9,7 @@ import {
   MagnifyingGlassIcon,
   TerminalWindowIcon,
 } from '@phosphor-icons/react';
-import { useInView } from 'motion/react';
-import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
+import { useInView, useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { CLI_REFERENCE_URL, type CliGroup } from './content';
 import { useDevelopersCopy } from './use-developers-copy';

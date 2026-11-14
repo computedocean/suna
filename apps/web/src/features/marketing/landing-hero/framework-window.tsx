@@ -15,7 +15,6 @@ import { useEffect, useRef, useState } from 'react';
 
 import { H, useFitScale, W } from './session-window';
 import { useBeats } from './use-beats';
-import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 /** One line of an open file: YAML and frontmatter tinted, Markdown headings in weight. */
 function Line({
@@ -106,7 +105,7 @@ export function FrameworkWindow({
     const list = code.current;
     const first = list?.querySelector<HTMLElement>(`[data-line="${focused?.from ?? 1}"]`);
     if (!list || !first) return;
-    const reduced = prefersReducedMotion();
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const scroll = () =>
       list.scrollTo({
         top: Math.max(0, first.offsetTop - 12),

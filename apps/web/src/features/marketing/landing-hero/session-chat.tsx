@@ -23,7 +23,7 @@ import {
   UsersIcon,
   type Icon,
 } from '@phosphor-icons/react';
-import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
+import { useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 import { AppBoard, Composer, HeaderTools } from './session-window';

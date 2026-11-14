@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 /**
  * Synthesized sound for the die. Everything is generated with Web Audio — no
@@ -19,6 +18,11 @@ import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-moti
 // identifier plus value entropy, and flagged this localStorage name as a
 // credential.
 const MUTE_PREFERENCE_ID = 'kortix.a1o.muted';
+
+function prefersReducedMotion() {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
 
 export function useRollSound() {
   const contextRef = useRef<AudioContext | null>(null);

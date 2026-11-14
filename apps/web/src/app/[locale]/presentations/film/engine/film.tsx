@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@kortix/ui';
-import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
+import { useReducedMotion } from 'motion/react';
 import { PauseIcon, PlayIcon, SpeakerHighIcon, SpeakerSlashIcon } from '@phosphor-icons/react';
 import {
   createContext,

@@ -10,8 +10,7 @@ import {
   WarningIcon as DangerTriangleSolid,
   InfoIcon as InfoCircleSolid,
 } from '@phosphor-icons/react';
-import { m } from 'motion/react';
-import { useReducedMotion } from '../hooks/use-reduced-motion';
+import { m, useReducedMotion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 
 import { inputFocusClasses, inputSurfaceClasses } from '../../primitives/input';

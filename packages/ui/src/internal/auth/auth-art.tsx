@@ -1,6 +1,6 @@
 'use client';
 
-import { useReducedMotion } from '../hooks/use-reduced-motion';
+import { useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
 import { lazyClient } from '../../lib/lazy-client';

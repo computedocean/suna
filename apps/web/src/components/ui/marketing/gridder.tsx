@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { HyperText } from '../hyper-text';
-import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 interface GridCell {
   id: string;
@@ -98,7 +97,9 @@ export default function KortixGrid({
     const container = containerRef.current;
     if (!container) return;
 
-    const reduce = prefersReducedMotion();
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (reduce) {
       container.style.setProperty('--grid-flow', '0px');
       return;

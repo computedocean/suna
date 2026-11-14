@@ -10,7 +10,6 @@
 
 import type { Icon as PhosphorIcon, IconWeight } from '@phosphor-icons/react';
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react';
-import { prefersReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
 
 export type DitherMode = 'users' | 'code' | 'shield' | 'check';
 export type DitherSurface = 'glyph' | 'tile';
@@ -253,7 +252,7 @@ export function DitherIcon({
   const anim = useRef({ amount: 0, start: 0, frame: 0, last: 0, px: 0.5, py: 0.5, pOn: 0 });
   useEffect(() => {
     const a = anim.current;
-    const reduced = prefersReducedMotion();
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const canvas = canvasRef.current;
     const tick = (now: number) => {
       const { active: on, speed: s, enterMs: inMs, exitMs: outMs } = live.current;

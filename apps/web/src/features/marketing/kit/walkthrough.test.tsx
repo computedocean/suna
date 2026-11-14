@@ -19,14 +19,11 @@ Object.defineProperties(globalThis, {
   IS_REACT_ACT_ENVIRONMENT: { value: true, configurable: true },
 });
 
-// The heroes read reduced motion through the shared hook; the stub lets each
-// test pick it.
+// motion reads the reduced-motion preference once per process; the stub lets
+// each test pick it.
 let reducedMotion = false;
-const reducedMotionModule = await import('@kortix/ui/internal/hooks/use-reduced-motion');
-mock.module('@kortix/ui/internal/hooks/use-reduced-motion', () => ({
-  ...reducedMotionModule,
-  useReducedMotion: () => reducedMotion,
-}));
+const motion = await import('motion/react');
+mock.module('motion/react', () => ({ ...motion, useReducedMotion: () => reducedMotion }));
 
 const [compliance, enterprise, framework, multiplayer, security, selfHosted, sovereign] =
   await Promise.all([

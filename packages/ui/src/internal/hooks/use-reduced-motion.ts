@@ -4,9 +4,11 @@
  * Reduced motion: the operating system's `prefers-reduced-motion` OR the
  * person's own "Reduce motion" switch (Settings ▸ Preferences).
  *
- * The switch is mirrored onto `<html>` as `data-reduce-motion` (the pre-paint
- * script in `apps/web/src/lib/interface-themes.ts`, then `ReduceMotionSync`).
- * Every motion path reads one of these two:
+ * The switch is mirrored onto `<html>` as `data-reduce-motion` on workspace
+ * routes only (the pre-paint script in `apps/web/src/lib/interface-themes.ts`,
+ * then `ReduceMotionSync`). The attribute is the single source: marketing and
+ * auth pages never carry it, so they keep their motion. Every motion path
+ * reads one of these:
  *   - CSS keyframes and transitions: `theme.css` keys on the attribute, and the
  *     `motion-reduce:` / `motion-safe:` variants match it.
  *   - `motion/react`: `MotionGlobalConfig.skipAnimations`, set with the
@@ -16,8 +18,8 @@
  *   - Code that picks a motion branch itself: `useReducedMotion()` (React) or
  *     `prefersReducedMotion()` (a one-off check outside render).
  *
- * Use these instead of `useReducedMotion` from `motion/react` or a raw
- * `matchMedia('(prefers-reduced-motion: reduce)')`: both read only the OS.
+ * In workspace UI, use these instead of `useReducedMotion` from
+ * `motion/react` or a raw `matchMedia(...)`: both read only the OS.
  */
 
 import { MotionGlobalConfig } from 'motion/react';
@@ -72,14 +74,28 @@ function subscribeSystem(onChange: () => void): () => void {
 const systemSnapshot = (): boolean => getSystemQuery()?.matches ?? false;
 const serverSnapshot = (): boolean => false;
 
-/** The person's "Reduce motion" switch alone. Legacy persisted preferences predate it: `false`. */
+/** The switch's stored value, for the Preferences control. Legacy persisted preferences predate it: `false`. */
 export function useReduceMotionSetting(): boolean {
   return useUserPreferencesStore((s) => s.preferences.reduceMotion === true);
 }
 
-/** Drop-in for `motion/react`'s `useReducedMotion` that also honors the switch. */
+/** The attribute, live: set only while the switch is on AND a workspace route is showing. */
+function subscribeAttribute(onChange: () => void): () => void {
+  if (typeof MutationObserver === 'undefined') return () => {};
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: [REDUCE_MOTION_ATTRIBUTE] });
+  return () => observer.disconnect();
+}
+const attributeSnapshot = (): boolean => document.documentElement.hasAttribute(REDUCE_MOTION_ATTRIBUTE);
+
+/** True while the switch applies to the current page (`data-reduce-motion` is on `<html>`). */
+export function useReduceMotionActive(): boolean {
+  return useSyncExternalStore(subscribeAttribute, attributeSnapshot, serverSnapshot);
+}
+
+/** Drop-in for `motion/react`'s `useReducedMotion` that also honors the switch on workspace routes. */
 export function useReducedMotion(): boolean {
   const system = useSyncExternalStore(subscribeSystem, systemSnapshot, serverSnapshot);
-  const setting = useReduceMotionSetting();
-  return setting || system;
+  const active = useReduceMotionActive();
+  return active || system;
 }

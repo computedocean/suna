@@ -6,7 +6,7 @@ import { localizeUiCatalog } from '@kortix/ui/i18n';
 import { MANIFEST } from '@/features/marketing/framework/content';
 import { cn } from '@kortix/ui';
 import { PauseIcon, PlayIcon } from '@phosphor-icons/react';
-import { useReducedMotion } from '@kortix/ui/internal/hooks/use-reduced-motion';
+import { useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 
 import { FrameworkWindow, type FrameworkFocus } from './framework-window';
