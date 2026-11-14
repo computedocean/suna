@@ -140,6 +140,8 @@ export type FeatureFlagKey =
   | 'program_agents'
   /** Evals: run agents on Harbor-format tasks and score them (`evals:` in kortix.yaml, `kortix evals`). Experimental, off by default. */
   | 'evals'
+  /** Desktop tabs: the desktop app shows browser-style tabs in the title bar for this project's pages. Client-only, off by default. */
+  | 'desktop_tabs'
   /** @deprecated Withdrawn — agents messaging people left the product. The API no longer lists, resolves, or accepts it. Removed in the next major. */
   | 'human_messaging';
 
@@ -203,6 +205,7 @@ export const FEATURE_FLAG_KEYS: readonly FeatureFlagKey[] = [
   'spaces_proactive',
   'program_agents',
   'evals',
+  'desktop_tabs',
 ] as const;
 
 /**

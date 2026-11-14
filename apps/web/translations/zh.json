@@ -1339,6 +1339,10 @@
         "evals": {
           "name": "Evals",
           "description": "Run your agents on a list of tasks and score the results. A task is an instruction, a sandbox and a test script that writes a score (the Harbor task format). Declare a set of tasks under `evals:` in kortix.yaml, run it against any agent and model, and compare runs to see whether a change made the agent better or worse."
+        },
+        "desktop_tabs": {
+          "name": "桌面标签页",
+          "description": "桌面应用在标题栏中显示类似浏览器的标签页：每个会话、工件和页面都在各自的标签页中打开，⌘T、⌘W 和 ⌘1–9 的用法与浏览器相同。网页版保持不变。"
         }
       },
       "channelsSwitch": {
@@ -1650,6 +1654,7 @@
         "status": "状态",
         "subAgent": "子代理",
         "spawned": "派生会话",
+        "spawnedBy": "由 {title} 启动",
         "subAgentCount": "{count, plural, other {# 个子代理}}",
         "spawnedCount": "{count, plural, other {# 个派生会话}}",
         "created": "创建时间",
@@ -27209,5 +27214,52 @@
       "results": "结果"
     },
     "colTaskCount": "任务"
+  },
+  "desktopTabs": {
+    "tabs": "已打开的标签页",
+    "newTab": "新标签页",
+    "newTabToRight": "在右侧新建标签页",
+    "duplicate": "复制",
+    "pin": "固定标签页",
+    "unpin": "取消固定标签页",
+    "closeTab": "关闭标签页",
+    "closeOthers": "关闭其他标签页",
+    "closeToRight": "关闭右侧标签页",
+    "reopenClosed": "重新打开已关闭的标签页",
+    "session": "会话",
+    "artifact": "产物",
+    "page": "页面",
+    "unavailable": "不可用",
+    "newSession": "新会话",
+    "sessions": "会话",
+    "artifacts": "产物",
+    "customize": "自定义",
+    "goal": "目标",
+    "settings": "设置",
+    "pages": {
+      "apps": "应用",
+      "chat": "聊天",
+      "drive": "云盘",
+      "files": "文件",
+      "goals": "目标",
+      "inbox": "收件箱",
+      "memory": "记忆",
+      "members": "成员"
+    },
+    "sections": {
+      "agents": "智能体",
+      "connectors": "连接器",
+      "secrets": "密钥",
+      "skills": "技能",
+      "drives": "云盘",
+      "apps": "应用",
+      "triggers": "触发器",
+      "models": "模型",
+      "repo": "仓库",
+      "review": "审核",
+      "reminders": "循环",
+      "members": "成员",
+      "settings": "设置"
+    }
   }
 }

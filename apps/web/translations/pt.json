@@ -1339,6 +1339,10 @@
         "evals": {
           "name": "Evals",
           "description": "Run your agents on a list of tasks and score the results. A task is an instruction, a sandbox and a test script that writes a score (the Harbor task format). Declare a set of tasks under `evals:` in kortix.yaml, run it against any agent and model, and compare runs to see whether a change made the agent better or worse."
+        },
+        "desktop_tabs": {
+          "name": "Abas no desktop",
+          "description": "O app de desktop mostra abas como as de um navegador na barra de título: cada sessão, artefato e página abre em sua própria aba, e ⌘T, ⌘W e ⌘1–9 funcionam como em um navegador. O app web não muda."
         }
       },
       "channelsSwitch": {
@@ -1650,6 +1654,7 @@
         "status": "Estado",
         "subAgent": "Subagente",
         "spawned": "Sessão iniciada",
+        "spawnedBy": "Iniciada por {title}",
         "subAgentCount": "{count, plural, one {# subagente} other {# subagentes}}",
         "spawnedCount": "{count, plural, one {# sessão iniciada} other {# sessões iniciadas}}",
         "created": "Criada em",
@@ -27209,5 +27214,52 @@
       "results": "Resultados"
     },
     "colTaskCount": "Tarefas"
+  },
+  "desktopTabs": {
+    "tabs": "Abas abertas",
+    "newTab": "Nova aba",
+    "newTabToRight": "Nova aba à direita",
+    "duplicate": "Duplicar",
+    "pin": "Fixar aba",
+    "unpin": "Desafixar aba",
+    "closeTab": "Fechar aba",
+    "closeOthers": "Fechar outras abas",
+    "closeToRight": "Fechar abas à direita",
+    "reopenClosed": "Reabrir aba fechada",
+    "session": "Sessão",
+    "artifact": "Artefato",
+    "page": "Página",
+    "unavailable": "Indisponível",
+    "newSession": "Nova sessão",
+    "sessions": "Sessões",
+    "artifacts": "Artefatos",
+    "customize": "Personalizar",
+    "goal": "Objetivo",
+    "settings": "Configurações",
+    "pages": {
+      "apps": "Apps",
+      "chat": "Chat",
+      "drive": "Drive",
+      "files": "Arquivos",
+      "goals": "Objetivos",
+      "inbox": "Caixa de entrada",
+      "memory": "Memória",
+      "members": "Membros"
+    },
+    "sections": {
+      "agents": "Agentes",
+      "connectors": "Conectores",
+      "secrets": "Segredos",
+      "skills": "Skills",
+      "drives": "Drives",
+      "apps": "Apps",
+      "triggers": "Gatilhos",
+      "models": "Modelos",
+      "repo": "Repositório",
+      "review": "Revisão",
+      "reminders": "Loops",
+      "members": "Membros",
+      "settings": "Configurações"
+    }
   }
 }

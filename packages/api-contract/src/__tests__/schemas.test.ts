@@ -166,6 +166,7 @@ function projectFixture(overrides: Record<string, unknown> = {}) {
       spaces_proactive: false,
       program_agents: false,
       evals: false,
+      desktop_tabs: false,
     },
     experimental_features: [],
     default_sandbox_provider: null,
@@ -901,6 +902,7 @@ describe('envelopes', () => {
       'spaces_proactive',
       'program_agents',
       'evals',
+      'desktop_tabs',
     ]);
   });
 

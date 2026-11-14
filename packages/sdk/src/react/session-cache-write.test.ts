@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { QueryClient } from '@tanstack/react-query';
 import {
   applyToCachedSessionShape,
+  readCachedWorkspaceSessions,
   removeCachedWorkspaceSession,
   updateCachedWorkspaceSessions,
   upsertCachedWorkspaceSession,
@@ -447,5 +448,44 @@ describe('filtered list caches (KRTX-639)', () => {
     qc.setQueryData(legacy, pagedOf([]));
     upsertCachedWorkspaceSession(qc, 'P1', withInitiator('NEW', { parent_session_id: 'S0' }));
     expect(ids(qc, legacy)).toEqual(['NEW']);
+  });
+});
+
+describe('readCachedWorkspaceSessions', () => {
+  const P = 'P1';
+  const at = (id: string, name: string) =>
+    ({ session_id: id, custom_name: name }) as unknown as ProjectSession;
+
+  test('reads the asked rows from every session cache shape', () => {
+    const qc = new QueryClient();
+    qc.setQueryData(qk.project.sessionsPaged(P, 'visible'), {
+      pages: [{ items: [at('S1', 'paged')], next_cursor: null }],
+      pageParams: [null],
+    });
+    qc.setQueryData(qk.project.sessions(P, 'project'), [at('S2', 'flat')]);
+    qc.setQueryData(qk.project.session(P, 'S3'), at('S3', 'single'));
+    const rows = readCachedWorkspaceSessions(qc, P, ['S1', 'S2', 'S3', 'S4']);
+    expect([...rows.keys()].sort()).toEqual(['S1', 'S2', 'S3']);
+    expect(rows.get('S3')?.custom_name).toBe('single');
+  });
+
+  test('the most recently updated cache wins when two hold the same session', () => {
+    const qc = new QueryClient();
+    qc.setQueryData(qk.project.sessions(P, 'visible'), [at('S1', 'Old title')], {
+      updatedAt: 1_000,
+    });
+    qc.setQueryData(qk.project.sessions(P, 'project'), [at('S1', 'Polled title')], {
+      updatedAt: 2_000,
+    });
+    expect(readCachedWorkspaceSessions(qc, P, ['S1']).get('S1')?.custom_name).toBe('Polled title');
+  });
+
+  test('ignores non-session caches under the sessions prefix', () => {
+    // The prompt inbox is an array under the same prefix (prod, 2026-09-22).
+    const qc = new QueryClient();
+    qc.setQueryData([...qk.project.session(P, 'S1'), 'prompts'], [
+      { session_id: 'S1', custom_name: 'not a session' },
+    ]);
+    expect(readCachedWorkspaceSessions(qc, P, ['S1']).size).toBe(0);
   });
 });

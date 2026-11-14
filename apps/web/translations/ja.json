@@ -1339,6 +1339,10 @@
         "evals": {
           "name": "Evals",
           "description": "Run your agents on a list of tasks and score the results. A task is an instruction, a sandbox and a test script that writes a score (the Harbor task format). Declare a set of tasks under `evals:` in kortix.yaml, run it against any agent and model, and compare runs to see whether a change made the agent better or worse."
+        },
+        "desktop_tabs": {
+          "name": "デスクトップのタブ",
+          "description": "デスクトップアプリのタイトルバーにブラウザのようなタブを表示します。セッション、アーティファクト、ページはそれぞれ専用のタブで開き、⌘T、⌘W、⌘1〜9 はブラウザと同じように動作します。Web アプリは変わりません。"
         }
       },
       "channelsSwitch": {
@@ -1650,6 +1654,7 @@
         "status": "状態",
         "subAgent": "サブエージェント",
         "spawned": "起動されたセッション",
+        "spawnedBy": "{title} から起動",
         "subAgentCount": "{count, plural, other {サブエージェント #件}}",
         "spawnedCount": "{count, plural, other {起動されたセッション #件}}",
         "created": "作成日時",
@@ -27209,5 +27214,52 @@
       "results": "結果"
     },
     "colTaskCount": "タスク"
+  },
+  "desktopTabs": {
+    "tabs": "開いているタブ",
+    "newTab": "新しいタブ",
+    "newTabToRight": "右に新しいタブ",
+    "duplicate": "複製",
+    "pin": "タブを固定",
+    "unpin": "タブの固定を解除",
+    "closeTab": "タブを閉じる",
+    "closeOthers": "他のタブを閉じる",
+    "closeToRight": "右側のタブを閉じる",
+    "reopenClosed": "閉じたタブを再度開く",
+    "session": "セッション",
+    "artifact": "アーティファクト",
+    "page": "ページ",
+    "unavailable": "利用できません",
+    "newSession": "新しいセッション",
+    "sessions": "セッション",
+    "artifacts": "アーティファクト",
+    "customize": "カスタマイズ",
+    "goal": "ゴール",
+    "settings": "設定",
+    "pages": {
+      "apps": "アプリ",
+      "chat": "チャット",
+      "drive": "ドライブ",
+      "files": "ファイル",
+      "goals": "ゴール",
+      "inbox": "受信トレイ",
+      "memory": "メモリ",
+      "members": "メンバー"
+    },
+    "sections": {
+      "agents": "エージェント",
+      "connectors": "コネクタ",
+      "secrets": "シークレット",
+      "skills": "スキル",
+      "drives": "ドライブ",
+      "apps": "アプリ",
+      "triggers": "トリガー",
+      "models": "モデル",
+      "repo": "リポジトリ",
+      "review": "レビュー",
+      "reminders": "ループ",
+      "members": "メンバー",
+      "settings": "設定"
+    }
   }
 }

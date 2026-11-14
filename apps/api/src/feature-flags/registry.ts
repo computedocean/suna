@@ -600,6 +600,19 @@ const FLAGS: readonly FeatureFlagDef[] = [
       '(KORTIX_FEATURE_FLAGS → kortixd). The `evals:` section of kortix.yaml stays valid either way. The eval_jobs and eval_trials ' +
       'rows and the Evals folder in Files stay.',
   },
+  {
+    key: 'desktop_tabs',
+    name: 'Desktop tabs',
+    description:
+      'The desktop app shows browser-style tabs in the title bar: each session, artifact and page opens in its own tab, and ⌘T, ⌘W and ⌘1–9 work like a browser. The web app is unchanged.',
+    stability: 'beta',
+    available: () => true,
+    platformDefault: () => false,
+    enforcement: 'ui-only',
+    enforcementNote:
+      'UI-ONLY: tabs are window chrome in the desktop app (apps/web/src/features/desktop-tabs). They own no data and no route, so the server has nothing to refuse. ' +
+      'Off, the desktop title bar is the one it was before, and the tabs saved in the window\'s local storage stay until the flag is on again.',
+  },
 ];
 
 const FLAG_BY_KEY: Record<FeatureFlagKey, FeatureFlagDef> = Object.fromEntries(

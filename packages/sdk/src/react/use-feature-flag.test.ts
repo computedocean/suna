@@ -322,6 +322,7 @@ describe('useFeatureFlags', () => {
     'spaces_proactive',
     'program_agents',
     'evals',
+    'desktop_tabs',
     'volumes',
     'drives',
     'artifacts',

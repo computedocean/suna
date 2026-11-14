@@ -1339,6 +1339,10 @@
         "evals": {
           "name": "Evals",
           "description": "Run your agents on a list of tasks and score the results. A task is an instruction, a sandbox and a test script that writes a score (the Harbor task format). Declare a set of tasks under `evals:` in kortix.yaml, run it against any agent and model, and compare runs to see whether a change made the agent better or worse."
+        },
+        "desktop_tabs": {
+          "name": "Onglets du bureau",
+          "description": "L'app de bureau affiche des onglets comme ceux d'un navigateur dans la barre de titre : chaque session, artefact et page s'ouvre dans son propre onglet, et ⌘T, ⌘W et ⌘1–9 fonctionnent comme dans un navigateur. L'app web ne change pas."
         }
       },
       "channelsSwitch": {
@@ -1650,6 +1654,7 @@
         "status": "État",
         "subAgent": "Sous-agent",
         "spawned": "Session lancée",
+        "spawnedBy": "Lancée par {title}",
         "subAgentCount": "{count, plural, one {# sous-agent} other {# sous-agents}}",
         "spawnedCount": "{count, plural, one {# session lancée} other {# sessions lancées}}",
         "created": "Créée",
@@ -27209,5 +27214,52 @@
       "results": "Résultats"
     },
     "colTaskCount": "Tâches"
+  },
+  "desktopTabs": {
+    "tabs": "Onglets ouverts",
+    "newTab": "Nouvel onglet",
+    "newTabToRight": "Nouvel onglet à droite",
+    "duplicate": "Dupliquer",
+    "pin": "Épingler l'onglet",
+    "unpin": "Désépingler l'onglet",
+    "closeTab": "Fermer l'onglet",
+    "closeOthers": "Fermer les autres onglets",
+    "closeToRight": "Fermer les onglets à droite",
+    "reopenClosed": "Rouvrir l'onglet fermé",
+    "session": "Session",
+    "artifact": "Artefact",
+    "page": "Page",
+    "unavailable": "Indisponible",
+    "newSession": "Nouvelle session",
+    "sessions": "Sessions",
+    "artifacts": "Artefacts",
+    "customize": "Personnaliser",
+    "goal": "Objectif",
+    "settings": "Paramètres",
+    "pages": {
+      "apps": "Apps",
+      "chat": "Chat",
+      "drive": "Drive",
+      "files": "Fichiers",
+      "goals": "Objectifs",
+      "inbox": "Boîte de réception",
+      "memory": "Mémoire",
+      "members": "Membres"
+    },
+    "sections": {
+      "agents": "Agents",
+      "connectors": "Connecteurs",
+      "secrets": "Secrets",
+      "skills": "Skills",
+      "drives": "Drives",
+      "apps": "Apps",
+      "triggers": "Déclencheurs",
+      "models": "Modèles",
+      "repo": "Dépôt",
+      "review": "Revue",
+      "reminders": "Loops",
+      "members": "Membres",
+      "settings": "Paramètres"
+    }
   }
 }

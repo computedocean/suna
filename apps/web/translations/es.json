@@ -1339,6 +1339,10 @@
         "evals": {
           "name": "Evals",
           "description": "Run your agents on a list of tasks and score the results. A task is an instruction, a sandbox and a test script that writes a score (the Harbor task format). Declare a set of tasks under `evals:` in kortix.yaml, run it against any agent and model, and compare runs to see whether a change made the agent better or worse."
+        },
+        "desktop_tabs": {
+          "name": "Pestañas de escritorio",
+          "description": "La app de escritorio muestra pestañas como las de un navegador en la barra de título: cada sesión, artefacto y página se abre en su propia pestaña, y ⌘T, ⌘W y ⌘1–9 funcionan como en un navegador. La app web no cambia."
         }
       },
       "channelsSwitch": {
@@ -1650,6 +1654,7 @@
         "status": "Estado",
         "subAgent": "Subagente",
         "spawned": "Sesión generada",
+        "spawnedBy": "Iniciada por {title}",
         "subAgentCount": "{count, plural, one {# subagente} other {# subagentes}}",
         "spawnedCount": "{count, plural, one {# sesión generada} other {# sesiones generadas}}",
         "created": "Creada",
@@ -27209,5 +27214,52 @@
       "results": "Resultados"
     },
     "colTaskCount": "Tareas"
+  },
+  "desktopTabs": {
+    "tabs": "Pestañas abiertas",
+    "newTab": "Nueva pestaña",
+    "newTabToRight": "Nueva pestaña a la derecha",
+    "duplicate": "Duplicar",
+    "pin": "Fijar pestaña",
+    "unpin": "Desfijar pestaña",
+    "closeTab": "Cerrar pestaña",
+    "closeOthers": "Cerrar otras pestañas",
+    "closeToRight": "Cerrar pestañas a la derecha",
+    "reopenClosed": "Reabrir pestaña cerrada",
+    "session": "Sesión",
+    "artifact": "Artefacto",
+    "page": "Página",
+    "unavailable": "No disponible",
+    "newSession": "Nueva sesión",
+    "sessions": "Sesiones",
+    "artifacts": "Artefactos",
+    "customize": "Personalizar",
+    "goal": "Objetivo",
+    "settings": "Ajustes",
+    "pages": {
+      "apps": "Apps",
+      "chat": "Chat",
+      "drive": "Drive",
+      "files": "Archivos",
+      "goals": "Objetivos",
+      "inbox": "Bandeja",
+      "memory": "Memoria",
+      "members": "Miembros"
+    },
+    "sections": {
+      "agents": "Agentes",
+      "connectors": "Conectores",
+      "secrets": "Secretos",
+      "skills": "Skills",
+      "drives": "Drives",
+      "apps": "Apps",
+      "triggers": "Disparadores",
+      "models": "Modelos",
+      "repo": "Repositorio",
+      "review": "Revisión",
+      "reminders": "Loops",
+      "members": "Miembros",
+      "settings": "Ajustes"
+    }
   }
 }

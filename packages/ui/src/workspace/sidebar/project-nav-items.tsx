@@ -68,7 +68,14 @@ function CustomizeNavEntry({ projectId }: { projectId: string }) {
       <SidebarMenuButton asChild isActive={isProjectAdminPath(pathname)} className="text-sidebar-foreground pr-8">
         {/* Prefetched: the sidebar swaps to the panel's rail on the click,
             and the page should be there when the swap lands. */}
-        <Link href={hasAgents ? adminPath(projectId, 'agents') : adminPath(projectId)} prefetch onClick={close}>
+        {/* `data-kx-settings-entry`: the desktop tab strip sends this link to
+            the settings tab you were last in (apps/web desktop-tabs-gate.tsx). */}
+        <Link
+          href={hasAgents ? adminPath(projectId, 'agents') : adminPath(projectId)}
+          prefetch
+          onClick={close}
+          data-kx-settings-entry=""
+        >
           <span className="shrink-0">
             <CustomizeGlyph />
           </span>

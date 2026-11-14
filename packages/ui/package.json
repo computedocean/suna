@@ -275,6 +275,7 @@
     "./internal/hooks/use-copy": "./src/internal/hooks/use-copy.ts",
     "./internal/hooks/use-debounced-value": "./src/internal/hooks/use-debounced-value.ts",
     "./internal/hooks/use-reduced-motion": "./src/internal/hooks/use-reduced-motion.ts",
+    "./internal/hooks/use-review-session-summary": "./src/internal/hooks/use-review-session-summary.ts",
     "./internal/hooks/use-slash-focus": "./src/internal/hooks/use-slash-focus.ts",
     "./internal/icons/claude": "./src/internal/icons/claude.tsx",
     "./internal/icons/codex": "./src/internal/icons/codex.tsx",
@@ -434,6 +435,7 @@
     "./separator": "./src/primitives/separator.tsx",
     "./session": "./src/session/index.ts",
     "./session-panel": "./src/session/panel/index.ts",
+    "./session/actions/project-session-list-helpers": "./src/session/actions/project-session-list-helpers.ts",
     "./session/actions/session-label": "./src/session/actions/session-label.ts",
     "./session/composer/attachment-tiles": "./src/session/composer/attachment-tiles.tsx",
     "./session/composer/composer-agent-access": "./src/session/composer/composer-agent-access.ts",
@@ -442,6 +444,7 @@
     "./session/composer/menus/slash-actions": "./src/session/composer/menus/slash-actions.ts",
     "./session/composer/queue-projection": "./src/session/composer/queue-projection.ts",
     "./session/composer/session-chat-input": "./src/session/composer/session-chat-input.tsx",
+    "./session/list/session-status-mark": "./src/session/list/session-status-mark.tsx",
     "./session/models/ask-owner-for-credits-button": "./src/session/models/ask-owner-for-credits-button.tsx",
     "./session/models/connect-model-step": "./src/session/models/connect-model-step.tsx",
     "./session/models/model-grouping": "./src/session/models/model-grouping.ts",
@@ -566,6 +569,7 @@
     "./workspace/sidebar/project-nav-items": "./src/workspace/sidebar/project-nav-items.tsx",
     "./workspace/sidebar/project-session-list": "./src/workspace/sidebar/project-session-list.tsx",
     "./workspace/sidebar/project-sidebar": "./src/workspace/sidebar/project-sidebar.tsx",
+    "./workspace/sidebar/session-brief-hover-card": "./src/workspace/sidebar/session-brief-hover-card.tsx",
     "./workspace/sidebar/session-section-labels": "./src/workspace/sidebar/session-section-labels.ts",
     "./workspace/sidebar/session-source-icons": "./src/workspace/sidebar/session-source-icons.ts",
     "./workspace/sidebar/use-workspace-directory": "./src/workspace/sidebar/use-workspace-directory.ts",
@@ -1576,6 +1580,10 @@
         "types": "./dist/internal/hooks/use-reduced-motion.d.ts",
         "import": "./dist/internal/hooks/use-reduced-motion.js"
       },
+      "./internal/hooks/use-review-session-summary": {
+        "types": "./dist/internal/hooks/use-review-session-summary.d.ts",
+        "import": "./dist/internal/hooks/use-review-session-summary.js"
+      },
       "./internal/hooks/use-slash-focus": {
         "types": "./dist/internal/hooks/use-slash-focus.d.ts",
         "import": "./dist/internal/hooks/use-slash-focus.js"
@@ -2206,6 +2214,10 @@
         "types": "./dist/session/panel/index.d.ts",
         "import": "./dist/session/panel/index.js"
       },
+      "./session/actions/project-session-list-helpers": {
+        "types": "./dist/session/actions/project-session-list-helpers.d.ts",
+        "import": "./dist/session/actions/project-session-list-helpers.js"
+      },
       "./session/actions/session-label": {
         "types": "./dist/session/actions/session-label.d.ts",
         "import": "./dist/session/actions/session-label.js"
@@ -2237,6 +2249,10 @@
       "./session/composer/session-chat-input": {
         "types": "./dist/session/composer/session-chat-input.d.ts",
         "import": "./dist/session/composer/session-chat-input.js"
+      },
+      "./session/list/session-status-mark": {
+        "types": "./dist/session/list/session-status-mark.d.ts",
+        "import": "./dist/session/list/session-status-mark.js"
       },
       "./session/models/ask-owner-for-credits-button": {
         "types": "./dist/session/models/ask-owner-for-credits-button.d.ts",
@@ -2721,6 +2737,10 @@
       "./workspace/sidebar/project-sidebar": {
         "types": "./dist/workspace/sidebar/project-sidebar.d.ts",
         "import": "./dist/workspace/sidebar/project-sidebar.js"
+      },
+      "./workspace/sidebar/session-brief-hover-card": {
+        "types": "./dist/workspace/sidebar/session-brief-hover-card.d.ts",
+        "import": "./dist/workspace/sidebar/session-brief-hover-card.js"
       },
       "./workspace/sidebar/session-section-labels": {
         "types": "./dist/workspace/sidebar/session-section-labels.d.ts",
