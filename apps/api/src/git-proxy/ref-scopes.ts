@@ -24,6 +24,7 @@
  * the ungoverned projects this whole change exists to protect. So a session
  * principal must find the leaf EXPLICITLY listed in its grant; absent is denied.
  */
+import { agentMayPerform } from '../iam/agent-scope';
 import type { AgentGrant } from '@kortix/db';
 
 import { holdsEveryGrant } from '../iam/agent-grant-ceiling';
@@ -78,7 +79,7 @@ export async function principalHoldsRefScope(
     case 'session': {
       const grant = caller.agentGrant;
       if (!grant) return false; // Default-deny — see the header note.
-      if (grant.permissions !== 'all' && !grant.permissions.includes(scope)) return false;
+      if (!agentMayPerform(grant, scope)) return false;
       if (!principal.userId || !principal.tokenId) return false;
       // actorForToken selects the agent's service account (a governed grant)
       // or the launcher (a null grant). The manifest can

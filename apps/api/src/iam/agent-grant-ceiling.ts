@@ -15,6 +15,7 @@
  * narrowing or removing an agent is always allowed. Humans and sessions that
  * borrow a human's authority are not affected.
  */
+import { canonicalizeGrantActions } from './agent-scope';
 import type { AgentGrant } from '@kortix/db';
 import { AGENT_DEFAULT_CEILING } from './agent-principal';
 import { authorize } from './authorize';
@@ -57,7 +58,7 @@ function dimensionsOf(grant: AgentGrant | undefined): Record<ListDimension, Item
   if (!grant) return { permissions: [], connectors: [], secrets: [], apps: [] };
   // An omitted `env` is `all` and an omitted `apps` is none: the same reading
   // as agentMayUseEnv / agentMayOpenApp at use time.
-  const raw = { permissions: grant.permissions, connectors: grant.connectors, secrets: grant.env ?? 'all', apps: grant.apps ?? [] };
+  const raw = { permissions: canonicalizeGrantActions(grant)?.permissions ?? [], connectors: grant.connectors, secrets: grant.env ?? 'all', apps: grant.apps ?? [] };
   const out = {} as Record<ListDimension, Items>;
   for (const d of DIMENSIONS) out[d] = raw[d] === 'all' || raw[d].includes('*') ? 'all' : raw[d];
   return out;

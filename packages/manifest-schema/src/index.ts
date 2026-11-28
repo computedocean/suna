@@ -48,6 +48,7 @@ import {
   GRANTABLE_KORTIX_PERMISSIONS,
   SECRET_NAME_RE,
   isGrantableKortixPermission,
+  isKortixPermissionGroup,
   isHumanOnlyKortixPermission,
   LEGACY_SANDBOX_KEYS,
   LEGACY_TOLERATED_KORTIX_PERMISSIONS,
@@ -233,6 +234,9 @@ export {
   ENV_NAME_RE,
   GRANTABLE_KORTIX_PERMISSIONS,
   GRANTABLE_KORTIX_WORKSPACE_PERMISSIONS,
+  KORTIX_PERMISSION_GROUPS,
+  isKortixPermissionGroup,
+  expandKortixPermissionGroup,
   isGrantableKortixPermission,
   isHumanOnlyKortixPermission,
   HEX_COLOR_RE_V2,
@@ -572,7 +576,7 @@ export function validateGrantList(
     }
     const s = item.trim();
     // Either name is grantable: `project.session.start` or `workspace.session.start`.
-    if (checkAction && s !== '*' && !isGrantableKortixPermission(s)) {
+    if (checkAction && s !== '*' && !isGrantableKortixPermission(s) && !isKortixPermissionGroup(s)) {
       const renamedTo = DEPRECATED_KORTIX_PERMISSION_ALIASES[s];
       if (renamedTo) {
         // A RENAMED action, not a dead one: it still resolves to a real
@@ -610,7 +614,7 @@ export function validateGrantList(
       } else {
         issues.push({
           path: `${where}[${k}]`,
-          message: `"${s}" is not a Kortix permission (allowed: a workspace.* action or its legacy name; see kortix validate --scopes).`,
+          message: `"${s}" is not a Kortix permission (allowed: a registered action or terminal group.* pattern, e.g. workspace.session.* or session.*; see kortix validate --scopes).`,
           severity: 'error',
         });
       }

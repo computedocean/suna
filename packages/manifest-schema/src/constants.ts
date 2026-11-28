@@ -292,6 +292,31 @@ export function isGrantableKortixPermission(action: string): boolean {
   return GRANTABLE_KORTIX_PERMISSIONS.includes(toLegacyAction(action));
 }
 
+/** Terminal groups in canonical workspace spelling, legacy spelling, and project shorthand.
+ * Only registered, agent-grantable leaves participate; a dot is a segment boundary.
+ */
+const PERMISSION_NAMES = GRANTABLE_KORTIX_PERMISSIONS.flatMap((action) => [
+  action, toWorkspaceAction(action), ...(action.startsWith('project.') ? [action.slice(8)] : []),
+]);
+export const KORTIX_PERMISSION_GROUPS: readonly string[] = [...new Set(PERMISSION_NAMES.flatMap((action) => {
+  const segments = action.split('.');
+  return segments.slice(1).map((_, index) => `${segments.slice(0, index + 1).join('.')}.*`);
+}))].sort();
+
+export function isKortixPermissionGroup(value: string): boolean {
+  return KORTIX_PERMISSION_GROUPS.includes(value);
+}
+
+/** Resolve a valid group against today's registry, never against arbitrary input actions. */
+export function expandKortixPermissionGroup(value: string): readonly string[] {
+  if (!isKortixPermissionGroup(value)) return [];
+  const prefix = value.slice(0, -1);
+  return GRANTABLE_KORTIX_PERMISSIONS.filter((action) =>
+    [action, toWorkspaceAction(action), ...(action.startsWith('project.') ? [action.slice(8)] : [])]
+      .some((name) => name.startsWith(prefix)),
+  );
+}
+
 /**
  * Actions removed from the enforcement catalog (IAM dead-catalog cleanup,
  * 2026-07) but that older project manifests may still list under

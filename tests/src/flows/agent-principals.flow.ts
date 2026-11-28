@@ -165,6 +165,22 @@ flow(
         if (issues.length) throw new Error(`canonical key produced issues: ${JSON.stringify(issues)}`);
       });
 
+      await ctx.step('group wildcard validates, persists resolved leaves and grants only its group through HTTP', async () => {
+        const grouped = manifest({ modern: { kortix_permissions: ['workspace.file.*'] } });
+        (await validate(grouped)).status(200).body().has('$.valid', true);
+        (await validate(manifest({ modern: { kortix_permissions: ['workspace.files.*'] } }))).status(200).body().has('$.valid', false);
+        await world.writeManifest(grouped);
+        const groupedRun = await world.mintAgentSession({ agent: 'modern', launcher: ctx.P.OWNER });
+        if (JSON.stringify(groupedRun.grant?.permissions) !== JSON.stringify(['project.file.read', 'project.file.write'])) {
+          throw new Error('group grant did not persist the file permission leaves');
+        }
+        (await filesOf(groupedRun, world.projectId)).status(200);
+        assertDenial(await secretsOf(groupedRun, world.projectId), 'agent_scope_insufficient', 'project.secret.read');
+        sandbox.writeFile('kortix.yaml', grouped);
+        const result = await sandbox.run(['validate', '--json', '--no-dockerfile-lint']);
+        if (result.exitCode !== 0) throw new Error(`group CLI validation failed: ${result.all.slice(0, 600)}`);
+      });
+
       await ctx.step('kortix_cli is deprecated: valid, one warning at agents.legacy.kortix_cli with fix agent-kortix-cli; a write that sets it against a different kortix_permissions answers 400', async () => {
         const r = await validate(retired);
         r.status(200).body().has('$.valid', true);

@@ -459,7 +459,7 @@ IP allowlist and MFA policies of the account apply to git requests too.
 - A session pushes only its own branch, the branch named after its `session_id`.
 - Any other branch needs `project.gitops.ref.any` in the agent's `kortix_permissions`. Deleting a branch needs `project.gitops.ref.delete`.
 - A push to the default branch also needs `project.agent.write`, `project.trigger.create`, `project.trigger.update` and `project.trigger.delete`.
-- The agent's `kortix_permissions` must list the permission, or be `"*"`, and the agent's ceiling role must also hold it. Neither widens the other. The role of the person who started the session is not an input. An agent with no `kortix_permissions` key holds no workspace permission. See [What an agent may do](/docs/guide#agents).
+- The agent's `kortix_permissions` must list the permission, include a matching group wildcard, or be `"*"`, and the agent's ceiling role must also hold it. Neither widens the other. The role of the person who started the session is not an input. An agent with no `kortix_permissions` key holds no workspace permission. See [What an agent may do](/docs/guide#agents).
 
 By default, agents land work through [change requests](#change-requests). [Agents](/docs/guide#agents) shows how to grant permissions.
 
@@ -9495,3 +9495,28 @@ CLI: `kortix sessions model get [session-id]`, `set [session-id] <model>`,
 and `switch [session-id] <model> --prompt "Continue verification" --idempotency-key verification-model-1`.
 The new verbs default to `KORTIX_SESSION_ID`. The existing `sessions model <session-id> <model>` remains supported.
 Never send a peer message to yourself to continue a model switch.
+
+
+### Permission group wildcards
+
+Use terminal `.*` entries in `kortix_permissions` to grant a registered group:
+
+```yaml
+agents:
+  worker:
+    prompt: Help with sessions.
+    kortix_permissions: [session.*, workspace.gitops.read]
+```
+
+`workspace.*` selects every agent-grantable workspace permission, not arbitrary permission names.
+`workspace.session.*`, legacy `project.session.*`, and shorthand `session.*` select the same session group.
+Every dotted prefix of a registered grantable permission is a group, including nested groups such as
+`workspace.session.bindings.*` and `workspace.gitops.ref.*`. Legacy administration groups such as
+`billing.*`, `member.*`, and `role.*` retain their registry names; their canonical names start with `workspace.`.
+A group includes all descendant leaves, but never similarly prefixed siblings: `session.*` does not match `sessions`.
+Unknown groups, interior stars, and partial-segment stars are invalid. Use a list for group patterns;
+scalar `"*"` and `"all"` keep their existing global meaning. Exact entries can be mixed with groups.
+
+Groups resolve against the current permission registry when the grant is loaded. Future grantable leaves
+under that prefix are included on the next grant resolution; already minted credentials retain their resolved list.
+Existing explicit lists do not change. Role ceilings, human-only exclusions and workspace boundaries still apply.

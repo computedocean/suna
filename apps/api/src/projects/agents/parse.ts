@@ -10,6 +10,7 @@ import {
   RETIRED_KORTIX_PERMISSIONS,
   isManifestSyntaxError,
   resolveGrantSet,
+  isKortixPermissionGroup,
   SLUG_RE,
   type GrantSetV2,
 } from '@kortix/manifest-schema';
@@ -288,7 +289,7 @@ function toGrantSet(value: GrantSetV2): GrantSet {
 function validateKortixAction(raw: string): string | null {
   // Either name: `workspace.session.start` is `project.session.start`.
   const action = toLegacyAction(raw);
-  if (GRANTABLE_KORTIX_PERMISSIONS.has(action)) return null;
+  if (isKortixPermissionGroup(raw) || GRANTABLE_KORTIX_PERMISSIONS.has(action)) return null;
   // A RENAMED action still resolves — `canonicalizeGrantActions` rewrites it to
   // the live leaf. Accept it here: rejecting it would push the spec into
   // `loaded.errors`, and an agent whose manifest failed to parse is given an

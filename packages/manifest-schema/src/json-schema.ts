@@ -55,6 +55,7 @@ import {
   DEPRECATED_KORTIX_PERMISSION_ALIASES,
   GRANTABLE_KORTIX_PERMISSIONS,
   GRANTABLE_KORTIX_WORKSPACE_PERMISSIONS,
+  KORTIX_PERMISSION_GROUPS,
   RETIRED_KORTIX_PERMISSIONS,
   HEX_COLOR_RE_V2,
   PI_PACKAGE_NAME_RE,
@@ -189,6 +190,7 @@ function kortixPermissionsEnum(): readonly string[] {
   return [
     ...GRANTABLE_KORTIX_PERMISSIONS,
     ...GRANTABLE_KORTIX_WORKSPACE_PERMISSIONS,
+    ...KORTIX_PERMISSION_GROUPS,
     ...Object.keys(DEPRECATED_KORTIX_PERMISSION_ALIASES),
     ...RETIRED_KORTIX_PERMISSIONS,
     // HUMAN_ONLY validates with a warning (it grants nothing), so it is accepted here too.
@@ -1334,7 +1336,7 @@ function agentBlockV3Schema(): JsonSchemaFragment {
       secrets: namedGrantSchema("Secret names the agent's sandbox receives.", v2.properties.secrets),
       apps: namedGrantSchema("App slugs the agent may open when the App's access is restricted or private.", v2.properties.apps),
       kortix_permissions: namedGrantSchema(
-        'Project permissions (`project.*`) the agent holds, whoever starts the session. `kortix validate --scopes` prints them. An account permission is an error.',
+        'Registered workspace permissions or terminal group.* patterns (workspace.session.*, session.*, or legacy project.session.*). Groups include descendant grantable leaves; role ceilings and human-only exclusions still apply. `kortix validate --scopes` prints individual permissions.',
         v2.properties.kortix_permissions,
       ),
       sandbox: { ...v2.properties.sandbox, description: 'A template slug, or `default` for the platform image. Default: `sandbox.default`.' },
