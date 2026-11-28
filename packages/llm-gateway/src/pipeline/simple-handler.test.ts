@@ -1456,7 +1456,8 @@ describe('model fallback chains (route.fallbackModels)', () => {
     ['paused, retry on any error', 'provider_pool_rate_limited', 'any-error', 200],
     ['needing reconnection, retry on any error', 'provider_reauth_required', 'any-error', 200],
     ['needing reconnection, retry on service errors', 'provider_reauth_required', 'transient', 400],
-    ['not connected, retry on any error', 'provider_not_connected', 'any-error', 400],
+    ['not connected, retry on any error', 'provider_not_connected', 'any-error', 200],
+    ['not connected, retry on service errors', 'provider_not_connected', 'transient', 400],
   ] as const)('a ChatGPT model with every account %s', async (_name, code, fallbackOn, expected) => {
     const managedUpstream: UpstreamDescriptor = { ...fallbackUpstream, billingMode: 'credits' };
     const { response, calls, traces } = await run({
@@ -1487,6 +1488,34 @@ describe('model fallback chains (route.fallbackModels)', () => {
       // The route hold this failure took: the pool's reset (42 s here), else 60 s.
       holdSeconds: code === 'provider_pool_rate_limited' ? 42 : 60,
     })]);
+  });
+
+  // A removed provider key stopped every session of a workspace for two days:
+  // the routed model's provider had no key, and the project's chain on "Any
+  // error" never ran. A missing key is a provider error, so that chain runs.
+  test('an own-key model with no key connected moves to the project chain on any error', async () => {
+    const planUpstream: UpstreamDescriptor = { ...fallbackUpstream, provider: 'openai-codex', billingMode: 'none', markup: 0 };
+    const gated: string[] = [];
+    const { response, calls, traces } = await run({
+      policyId: 'project:default',
+      fallbackOn: 'any-error',
+      resolve: (model) => {
+        if (model !== 'primary-model') return [planUpstream];
+        throw new GatewayResolutionError('provider_not_connected',
+          'No anthropic API key is connected for this project.', 'Add an anthropic API key in Models.');
+      },
+      respond: () => ok('from fallback'),
+      billing: async (accountId) => { gated.push(accountId); },
+    });
+    expect(response.status).toBe(200);
+    expect(response.headers.get('x-kortix-model')).toBe('fallback-model');
+    expect(calls.map((call) => new URL(call.url).host)).toEqual(['fallback.example']);
+    // An own-key fallback bills nothing, so no wallet gate runs.
+    expect(gated).toEqual([]);
+    expect(traces.at(-1)).toMatchObject({ ok: true, servedModel: 'fallback-model', fallbackFrom: 'primary-model' });
+    expect(traces.at(-1)?.attemptFailures).toEqual([
+      expect.objectContaining({ stage: 'resolve', routeModel: 'primary-model', code: 'provider_not_connected', status: 401 }),
+    ]);
   });
 
   // A routed model that cannot be resolved at all is the same "the provider

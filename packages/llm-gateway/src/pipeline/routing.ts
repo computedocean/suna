@@ -86,8 +86,8 @@ export async function routeChat(runtime: HandlerRuntime, admission: Omit<Admissi
   const memoryKey = routeMemoryKey(principal, routeModel);
   /**
    * Starts the project's own chain when the routed model has no usable
-   * upstream: every own key or ChatGPT account is paused or needs reconnection
-   * (see CHAIN_TAKES_OVER). The routed model is an own key or ChatGPT plan, so
+   * upstream: every own key or ChatGPT account is paused or needs reconnection,
+   * or the provider has no key connected (see CHAIN_TAKES_OVER). The routed model is an own key or ChatGPT plan, so
    * a Kortix-billed fallback needs the wallet admission first.
    */
   const startChainWithout = async (resolution: GatewayResolutionError) => {
