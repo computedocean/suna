@@ -1,14 +1,14 @@
 /**
  * kortix_connectors: outside apps the project's agents may use (Gmail, Google
  * Drive, Notion, a CRM…). List what is installed, find an app, add it, and get
- * the sign-in link the person clicks. Which agent may use which connector is
+ * the sign-in link the person clicks, or the link where they save a key. Which agent may use which connector is
  * `kortix_agents` `set_access`. A My Kortix platform tool (`platform.ts`):
  * every action is one `kortix connectors …` command.
  */
 import { adminHref, capRows, cliJson, cliRun, fail, ok, cliArgProblem, cliError, parseJson, runKortix, type PlatformToolContext } from './platform'
 
 const TOOL = 'kortix_connectors' as const
-const ACTIONS = ['list', 'find', 'add', 'connect'] as const
+const ACTIONS = ['list', 'find', 'add', 'connect', 'secret'] as const
 
 /** One row of `kortix connectors ls --json` (`{ connectors: [...] }`, the API's connector list). */
 interface ListedConnector {
@@ -151,6 +151,40 @@ async function connect(slug: string, shared: boolean, forTrigger: boolean, conte
   )
 }
 
+/** `kortix secrets request <NAME…> --json`: the link a person saves the value(s) at. */
+interface SecretLink {
+  url?: string
+  names?: string[]
+  expires_at?: string
+  withheld?: Array<{ name?: string }>
+}
+
+/**
+ * The link where the person saves a key, as the card's action. The models used to run
+ * `kortix secrets request` in the shell and copy its ~600-character link into the reply:
+ * one cut it short, another left it out (secret-request, 2026-11-28).
+ */
+async function secret(names: string[], forConnector: boolean, context: PlatformToolContext) {
+  const read = await cliJson<SecretLink>(['secrets', 'request', ...names, ...(forConnector ? ['--scope', 'connector'] : []), '--json'], context)
+  if ('error' in read) return fail(TOOL, 'secret', `Could not make the link for ${names.join(', ')}`, read.error, context)
+  const link = read.value
+  if (!link.url) return fail(TOOL, 'secret', `Could not make the link for ${names.join(', ')}`, { kind: 'failed', message: 'The command answered with no link.' }, context)
+  const saved = link.names?.length ? link.names : names
+  const until = link.expires_at ? ` It works until ${link.expires_at.slice(0, 10)}.` : ''
+  const withheld = (link.withheld ?? []).map((item) => item.name).filter(Boolean)
+  return ok(
+    TOOL,
+    'secret',
+    {
+      title: `Save ${saved.join(', ')}`,
+      subtitle: `Paste it at the link, never in chat.${until}${withheld.length ? ` This session will not receive ${withheld.join(', ')} after it is saved.` : ''}`,
+      status: 'needs_you',
+      links: [{ label: saved.length === 1 ? 'Save the key' : 'Save the keys', href: link.url }],
+    },
+    { names: saved, url: link.url, expires_at: link.expires_at ?? null, withheld },
+  )
+}
+
 export default {
   description:
     'Outside apps agents may use (Gmail, Google Drive, Notion, Slack, a CRM…). Actions: `list` (what is added and signed in); ' +
@@ -158,6 +192,8 @@ export default {
     '`connect` (slug: get the sign-in link for the person; shared=true makes the sign-in the whole workspace\'s; ' +
     'for_trigger=true when the sign-in is for a trigger, wake-up or other automation: those run only on the shared sign-in, so it mints that one). ' +
     'Mint ONE link per app and end the turn: never a private link first and a shared one after it. ' +
+    '`secret` (names: the key names, e.g. ["ACME_API_KEY"]; for_connector=true for a key only a connector spends): the link where the person saves a key they must provide. ' +
+    'The card shows the link: never copy it, never mint it in the shell; in a reply without cards (Slack), give data.url exactly. ' +
     'Never ask for a password: the person signs in through the link. To let an agent use a connector, use kortix_agents set_access.',
   parameters: {
     type: 'object',
@@ -168,6 +204,8 @@ export default {
       slug: { type: 'string', description: 'For connect: the connector slug list shows.' },
       shared: { type: 'boolean', description: 'For connect: share the sign-in with the whole workspace. Pass true when the person asks for it "for the workspace" or "for the team". Default: only this person, or shared when for_trigger is true.' },
       for_trigger: { type: 'boolean', description: 'For connect: the sign-in is for a trigger, wake-up or automation. It is then the workspace\'s shared sign-in.' },
+      names: { type: 'array', items: { type: 'string' }, description: 'For secret: the key names the person saves at the link (upper case, e.g. ACME_API_KEY).' },
+      for_connector: { type: 'boolean', description: 'For secret: the key is spent only by a connector, never read in a session.' },
     },
     required: ['action'],
   },
@@ -175,6 +213,14 @@ export default {
     const action = String(args.action ?? '')
     const text = (key: string) => (typeof args[key] === 'string' ? args[key].trim() : '')
     if (action === 'list') return list(context)
+    if (action === 'secret') {
+      const raw: unknown[] = Array.isArray(args.names) ? args.names : typeof args.names === 'string' ? args.names.split(/[\s,]+/) : []
+      const names = raw.map((name) => String(name ?? '').trim().toUpperCase()).filter(Boolean)
+      if (!names.length) return fail(TOOL, action, 'Which key?', { kind: 'invalid', message: 'Pass names, e.g. ["ACME_API_KEY"].' }, context)
+      const bad = names.map((name) => cliArgProblem('names', name, 'word')).find(Boolean)
+      if (bad) return fail(TOOL, action, 'Which key?', { kind: 'invalid', message: bad }, context)
+      return secret(names, args.for_connector === true, context)
+    }
     const field = action === 'find' ? 'query' : action === 'add' ? 'app' : 'slug'
     const bad = text(field) ? cliArgProblem(field, text(field), action === 'find' ? 'text' : 'word') : null
     if (bad) return fail(TOOL, action, 'Which app?', { kind: 'invalid', message: bad }, context)

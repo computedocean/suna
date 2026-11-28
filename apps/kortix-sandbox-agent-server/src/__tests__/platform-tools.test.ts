@@ -220,6 +220,32 @@ describe('kortix_connectors', () => {
     expect(result.error?.message).toContain('Add it first')
   })
 
+  // secret-request on three models (2026-11-28): the models ran `kortix secrets request` in the shell and
+  // copied its ~600-character link by hand. Kimi cut it short (a dead link); GLM left it out of the reply.
+  test('secret: the save link is the card action, from the CLI, never copied by the model', async () => {
+    fakeKortix(`'secrets request ACME_API_KEY --json') echo '{"url":"https://kortix.example.test/secret-intake/ksl_abc","names":["ACME_API_KEY"],"scope":"runtime","expires_at":"2026-12-05T10:00:00.000Z","withheld":[]}' ;;`)
+    const result = await run('kortix_connectors', { action: 'secret', names: ['acme_api_key'] })
+    expect(result.card.status).toBe('needs_you')
+    expect(result.card.title).toBe('Save ACME_API_KEY')
+    expect(result.card.links).toEqual([{ label: 'Save the key', href: 'https://kortix.example.test/secret-intake/ksl_abc' }])
+    expect(result.card.subtitle).toContain('never in chat')
+    expect(argvs()).toEqual(['secrets request ACME_API_KEY --json'])
+  })
+
+  test('secret: a key only a connector spends is minted with --scope connector, and a withheld name is said', async () => {
+    fakeKortix(`'secrets request STRIPE_KEY --scope connector --json') echo '{"url":"https://kortix.example.test/secret-intake/ksl_x","names":["STRIPE_KEY"],"scope":"connector","expires_at":"2026-12-05T10:00:00.000Z","withheld":[{"name":"STRIPE_KEY"}]}' ;;`)
+    const result = await run('kortix_connectors', { action: 'secret', names: 'STRIPE_KEY', for_connector: true })
+    expect(result.card.links?.[0]?.href).toBe('https://kortix.example.test/secret-intake/ksl_x')
+    expect(result.card.subtitle).toContain('This session will not receive STRIPE_KEY')
+  })
+
+  test('secret without a name asks which key', async () => {
+    fakeKortix('')
+    const result = await run('kortix_connectors', { action: 'secret' })
+    expect(result.error?.message).toContain('Pass names')
+    expect(argvs().filter(Boolean)).toEqual([])
+  })
+
   test('connect: the sign-in link is the card action and the person must act', async () => {
     fakeKortix(`'connectors connect gmail --owner me') echo 'Open this link to sign in: https://auth.example.com/connect?x=1' ;;`)
     const result = await run('kortix_connectors', { action: 'connect', slug: 'gmail' })
