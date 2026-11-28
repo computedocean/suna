@@ -531,6 +531,7 @@
     "./wallpaper-shaders": "./src/primitives/wallpaper-shaders.tsx",
     "./workspace": "./src/workspace/index.ts",
     "./workspace/admin/project-admin-dashboard": "./src/workspace/admin/project-admin-dashboard.tsx",
+    "./workspace/admin/workspace-settings-rail": "./src/workspace/admin/workspace-settings-rail.tsx",
     "./workspace/calendar/calendar-page": "./src/workspace/calendar/calendar-page.tsx",
     "./workspace/home/access-requests-bell": "./src/workspace/home/access-requests-bell.tsx",
     "./workspace/home/first-chat": "./src/workspace/home/first-chat.tsx",
@@ -2589,6 +2590,10 @@
       "./workspace/admin/project-admin-dashboard": {
         "types": "./dist/workspace/admin/project-admin-dashboard.d.ts",
         "import": "./dist/workspace/admin/project-admin-dashboard.js"
+      },
+      "./workspace/admin/workspace-settings-rail": {
+        "types": "./dist/workspace/admin/workspace-settings-rail.d.ts",
+        "import": "./dist/workspace/admin/workspace-settings-rail.js"
       },
       "./workspace/calendar/calendar-page": {
         "types": "./dist/workspace/calendar/calendar-page.d.ts",

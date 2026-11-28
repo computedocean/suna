@@ -65,7 +65,8 @@ const TITLE_SYSTEM_PROMPT =
 // compare-and-set in `persistTitle`.
 const inFlight = new Set<string>();
 
-function standaloneGatewayUrl(): string | null {
+/** The internal gateway's chat completions URL; null when none is configured. Also the Space memory update's (`lib/space-memory-update`). */
+export function standaloneGatewayUrl(): string | null {
   const target =
     config.LLM_GATEWAY_PROXY_TARGET ||
     (config.LLM_GATEWAY_PROXY_PORT
@@ -365,6 +366,19 @@ function platformDefaultModel(): string | null {
  */
 async function resolveFallbackModel(
   input: GenerateSessionTitleInput,
+  excludedModel?: string,
+): Promise<string | null> {
+  return resolveInternalModel(input, excludedModel);
+}
+
+/**
+ * The model a server-side call (a title, a Space memory update) runs on: the
+ * account's own default, then the platform default, and only one the gateway
+ * serves for this account and project; never a Claude subscription model
+ * (it runs only inside a box). Null: none, so the caller spends nothing.
+ */
+export async function resolveInternalModel(
+  input: { userId: string; accountId: string; projectId: string },
   excludedModel?: string,
 ): Promise<string | null> {
   const [{ accountMayUseManagedModels }, resolution] = await Promise.all([

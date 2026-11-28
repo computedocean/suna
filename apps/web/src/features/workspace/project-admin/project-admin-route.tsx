@@ -23,6 +23,7 @@ const WorkspaceGeneralExtras = lazy(() =>
     default: mod.WorkspaceGeneralExtras,
   })),
 );
+// Keep in step with `WORKSPACE_SETTINGS_RAIL_HOST` (workspace-settings-host.ts): the sidebar lists the same rows.
 const HOST_SECTIONS: ProjectAdminHostSections = {
   account: WorkspaceAccountPane,
   generalExtras: WorkspaceGeneralExtras,

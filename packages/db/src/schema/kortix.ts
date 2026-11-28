@@ -2013,8 +2013,18 @@ export const projectSessionGroups = kortixSchema.table(
     name: text('name').notNull(),
     /** What the space is for, at most 2000 characters (the API checks it). Every session of the space reads it at turn start. */
     description: text('description'),
+    /** What every session of the space must follow there, at most 8000 characters (check below). Members write it; every session of the space reads it at turn start. */
+    instructions: text('instructions'),
     /** `private` | `project` (check below). */
     visibility: text('visibility').default('private').notNull(),
+    /** The leader job (`worker/jobs/space-memory.ts`) files durable facts from the space's idle sessions into its memory. On by default; a manager turns it off. */
+    memoryAutoUpdate: boolean('memory_auto_update').default(true).notNull(),
+    /** When an update (the job or `POST …/memory/update`) last wrote a page into the space memory; null before the first. */
+    memoryUpdatedAt: timestamp('memory_updated_at', { withTimezone: true }),
+    /** A memory update of the space runs until this time (one at a time across every API process); null or past: none runs. */
+    memoryUpdateLeaseUntil: timestamp('memory_update_lease_until', { withTimezone: true }),
+    /** After a failed automatic update the job leaves the space alone until this time; a person's update ignores it. */
+    memoryUpdateRetryAt: timestamp('memory_update_retry_at', { withTimezone: true }),
     /** The tabs after Sessions, in order (at most 20): a channel's tab shape (`ProjectSpaceTabRecord`, kinds file|folder|artifact|app|link). */
     tabs: jsonb('tabs').$type<ProjectSpaceTabRecord[]>().default(sql`'[]'::jsonb`).notNull(),
     /** `{ emoji }` or `{ glyph: { name, color } }` (the API checks it); null: clients draw the icon `suggestSpaceIcon` gives the name. */
@@ -2028,6 +2038,7 @@ export const projectSessionGroups = kortixSchema.table(
     check('project_session_groups_name_check', sql`char_length(${table.name}) between 1 and 80`),
     check('project_session_groups_position_check', sql`${table.position} >= 0`),
     check('project_session_groups_visibility_check', sql`${table.visibility} in ('private', 'project')`),
+    check('project_session_groups_instructions_check', sql`char_length(${table.instructions}) <= 8000`),
     uniqueIndex('uniq_project_session_groups_name').on(table.projectId, sql`lower(${table.name})`),
     index('idx_project_session_groups_project').on(table.projectId, table.position),
   ],

@@ -782,6 +782,15 @@ export function registerProjectSessionsRoutes(): void {
       if (!intent)
         return c.json({ error: 'invalid sharing — mode must be project|private|members' }, 400);
 
+    // First, before any other admission step (one may upsert provider-secret pools).
+    // A session of a private Space (its own or its parent's) stays private to its owner: the Space
+    // shares it with the Space's members, and sharing it further would hand the Space's folder and
+    // memory to people who do not see the Space. Narrowing to private is always allowed.
+    if (intent.mode !== 'private') {
+      const { privateSpaceOfSession, SPACE_SESSION_PRIVATE } = await import('../lib/session-group-viewer');
+      if (await privateSpaceOfSession(projectId, sessionId)) return c.json(SPACE_SESSION_PRIVATE, 409);
+    }
+
     // Reachable only for a machine-owned session a manager is editing: `private`
     // means "the OWNER only", so saving it here would lock the editor out of a
     // session they can no longer re-open to undo it.

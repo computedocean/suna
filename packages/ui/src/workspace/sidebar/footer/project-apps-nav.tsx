@@ -19,7 +19,7 @@ import { cn } from '../../../lib/utils';
 import { NavHoverCardContent, NavHoverCardList, useNavHoverCard } from '../../../internal/layout/nav-hover-card';
 import { useProjectApps } from '@kortix/sdk/react';
 import type { App } from '@kortix/sdk';
-import { AppWindowIcon, MagnifyingGlassIcon } from '@phosphor-icons/react';
+import { GlobeSimpleIcon, MagnifyingGlassIcon } from '@phosphor-icons/react';
 import { useUiPathname } from '../../../providers/ui-provider';
 import { useRef, useState } from 'react';
 
@@ -86,7 +86,7 @@ export function ProjectAppsNavItem({ projectId }: { projectId: string }) {
         {/* shrink-0 so the glyph keeps its box when the label is long or the
                 sidebar is narrow — the sibling rows wrap their icons the same way. */}
         <span className="shrink-0">
-          <AppWindowIcon />
+          <GlobeSimpleIcon />
         </span>
         {label}
       </ProjectNavRow>

@@ -12,6 +12,7 @@ import {
   setWorkspaceSessionGroupSharing,
   setWorkspaceSessionGroupTabs,
   updateWorkspaceSessionGroup,
+  updateWorkspaceSessionGroupMemory,
   type CreateProjectSessionGroupInput,
   type ProjectSessionGroup,
   type UpdateWorkspaceSessionGroupInput,
@@ -131,6 +132,34 @@ export function useUpdateWorkspaceSessionGroup(projectId: string) {
     mutationFn: (args: { groupId: string; input: UpdateWorkspaceSessionGroupInput }) =>
       updateWorkspaceSessionGroup(projectId, args.groupId, args.input),
     onSuccess: invalidate,
+    onError: callerShowsError,
+  });
+}
+
+/**
+ * After a memory update: the groups list (`memory_updated_at`), the space's
+ * memory layer and its pages, and every open page (an update may have
+ * rewritten one). Another layer's lists keep their rows.
+ */
+function invalidateAfterSpaceMemoryUpdate(queryClient: QueryClient, projectId: string, groupId: string) {
+  return Promise.all([
+    queryClient.invalidateQueries({ queryKey: qk.project.sessionGroups(projectId) }),
+    queryClient.invalidateQueries({ queryKey: qk.project.memoryLayer(projectId, groupId) }),
+    queryClient.invalidateQueries({ queryKey: [...qk.project.memory(projectId), 'page'] }),
+  ]);
+}
+
+/**
+ * Update a space's memory now (`updateWorkspaceSessionGroupMemory`): resolves
+ * `{ updated_pages, sessions, memory_updated_at }`, then the groups list and
+ * the space's memory pages refetch. A refusal rejects with `ApiError` code
+ * `memory_unavailable`, `memory_model_unavailable` or `memory_update_running`.
+ */
+export function useUpdateWorkspaceSessionGroupMemory(projectId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (groupId: string) => updateWorkspaceSessionGroupMemory(projectId, groupId),
+    onSuccess: (_result, groupId) => invalidateAfterSpaceMemoryUpdate(queryClient, projectId, groupId),
     onError: callerShowsError,
   });
 }

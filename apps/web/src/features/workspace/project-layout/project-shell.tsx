@@ -58,6 +58,7 @@ import {
   useDesktopTabsEnabled,
 } from '@/features/desktop-tabs/desktop-tabs-gate';
 import { keepActivePreview } from '@/features/desktop-tabs/desktop-tabs-store';
+import { WORKSPACE_SETTINGS_RAIL_HOST } from '@/features/workspace/project-admin/workspace-settings-host';
 
 const CommandPalette = lazy(() =>
   import('@/features/workspace/command-palette').then((mod) => ({
@@ -269,6 +270,7 @@ export function ProjectShell({ projectId, initialSidebarOpen, children }: Projec
             help={<HelpMenu onOpenDownloadApp={openDownloadApp} />}
             onOpenSearch={openCommandPalette}
             onOpenDownloadApp={openDownloadApp}
+            settingsHost={WORKSPACE_SETTINGS_RAIL_HOST}
           />
         }
       >

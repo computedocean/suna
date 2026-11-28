@@ -89,6 +89,8 @@ export function bindProjectOperationsReview(projectId: string) {
       update: (groupId: string, input: Parameters<typeof P.updateWorkspaceSessionGroup>[2]) => P.updateWorkspaceSessionGroup(projectId, groupId, input),
       /** Who sees the group (and so its sessions): its creator only. */
       share: (groupId: string, input: Parameters<typeof P.setWorkspaceSessionGroupSharing>[2]) => P.setWorkspaceSessionGroupSharing(projectId, groupId, input),
+      /** Update the group's memory now from its sessions' new messages; `{ updated_pages, sessions, memory_updated_at }`. */
+      updateMemory: (groupId: string) => P.updateWorkspaceSessionGroupMemory(projectId, groupId),
       /** The whole ordered tab list after Sessions. */
       setTabs: (groupId: string, tabs: Parameters<typeof P.setWorkspaceSessionGroupTabs>[2]) => P.setWorkspaceSessionGroupTabs(projectId, groupId, tabs),
       /** Every group id, once, in the new order; an out-of-date list rejects with 409 `group_order_stale`. */

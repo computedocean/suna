@@ -33,6 +33,7 @@ export { chatThreadBoardTurn } from './lib/chat-threads';
 export { sessionWhereTurn } from './lib/session-where';
 export { messageAddressesOnlyPeople, notifyMessageMentions } from './lib/space-posts';
 export { runSpaceWatcherTick } from './lib/space-watch/wake';
+export { runSpaceMemoryTick } from './lib/space-memory-update/service';
 export { runGoalReconcilerTick } from './goals/reconcile';
 export { sessionSpaceAgents } from './lib/front-thread';
 

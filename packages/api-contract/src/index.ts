@@ -1738,12 +1738,15 @@ export type SpaceLinkCreateInput = z.infer<typeof SpaceLinkCreateInputSchema>;
  * sessions (`/projects/:id/session-groups`, behind the `session_groups` flag).
  * Every project member sees the same groups in the same order. A session is
  * in at most one group (`ProjectSession.group_id`). Every session of a group
- * is told the group's name and description at turn start, and mounts the
- * group's Files folder.
+ * is told the group's name, description and instructions at turn start,
+ * mounts the group's Files folder, and reads and writes the group's memory
+ * (memory layer key = `group_id`, folder `/Spaces/<group_id>/Memory`).
  */
 export const SESSION_GROUP_NAME_MAX = 80;
 /** The longest group description. */
 export const SESSION_GROUP_DESCRIPTION_MAX = 2000;
+/** The longest group instructions: what every session of the group must follow there. */
+export const SESSION_GROUP_INSTRUCTIONS_MAX = 8000;
 /** Who sees a group: its creator and members (`private`, the default) or the whole project. */
 export const SESSION_GROUP_VISIBILITIES = ['private', 'project'] as const;
 /** The most people one group is shared with by name. */
@@ -1786,6 +1789,21 @@ export const SessionGroupSchema = z
     name: z.string(),
     /** What the group is for; null when none was given. */
     description: z.string().nullable(),
+    /**
+     * What every session of the group must follow while it works there, in
+     * its members' words (at most `SESSION_GROUP_INSTRUCTIONS_MAX`); null when
+     * none were given. Each session reads them at turn start, below its
+     * system and safety instructions.
+     */
+    instructions: z.string().nullable(),
+    /**
+     * Kortix files durable facts (decisions, people, workstreams, playbooks)
+     * from the group's idle sessions into its memory on its own. On by
+     * default; only whoever manages the group turns it off.
+     */
+    memory_auto_update: z.boolean(),
+    /** When an update last wrote a page into the group's memory; null before the first. */
+    memory_updated_at: z.string().nullable(),
     /** The group's icon. Null on a group created before icons: clients draw `suggestSpaceIcon(name)`. */
     icon: SessionGroupIconSchema.nullable(),
     /**
@@ -1820,6 +1838,8 @@ export type SessionGroupList = z.infer<typeof SessionGroupListSchema>;
 const SessionGroupNameSchema = z.string().trim().min(1).max(SESSION_GROUP_NAME_MAX);
 /** Trimmed; empty or null clears it. */
 const SessionGroupDescriptionSchema = z.string().trim().max(SESSION_GROUP_DESCRIPTION_MAX).nullable();
+/** Trimmed; empty or null clears them. */
+const SessionGroupInstructionsSchema = z.string().trim().max(SESSION_GROUP_INSTRUCTIONS_MAX).nullable();
 
 /**
  * A new group goes last in the order. A name another group of the project has (any case) is refused.
@@ -1829,24 +1849,47 @@ export const SessionGroupCreateInputSchema = z
   .object({
     name: SessionGroupNameSchema,
     description: SessionGroupDescriptionSchema.optional(),
+    instructions: SessionGroupInstructionsSchema.optional(),
     icon: SessionGroupIconSchema.optional(),
   })
   .strict();
 export type SessionGroupCreateInput = z.infer<typeof SessionGroupCreateInputSchema>;
 
-/** Rename a group, change its description, change its icon, or any of them. `icon: null` takes the icon off. */
+/** Rename a group, change its description, its instructions, its icon, or any of them. `icon: null` takes the icon off. */
 export const SessionGroupUpdateInputSchema = z
   .object({
     name: SessionGroupNameSchema.optional(),
     description: SessionGroupDescriptionSchema.optional(),
+    instructions: SessionGroupInstructionsSchema.optional(),
+    /** Turn automatic memory updates on or off. Whoever manages the group only. */
+    memory_auto_update: z.boolean().optional(),
     icon: SessionGroupIconSchema.nullable().optional(),
   })
   .strict()
   .refine(
-    (input) => input.name !== undefined || input.description !== undefined || input.icon !== undefined,
-    'Give name, description, icon, or any of them',
+    (input) =>
+      input.name !== undefined ||
+      input.description !== undefined ||
+      input.instructions !== undefined ||
+      input.memory_auto_update !== undefined ||
+      input.icon !== undefined,
+    'Give name, description, instructions, memory_auto_update, icon, or any of them',
   );
 export type SessionGroupUpdateInput = z.infer<typeof SessionGroupUpdateInputSchema>;
+
+/**
+ * `POST …/session-groups/:id/memory/update`: what one memory update did.
+ * `sessions` = the sessions whose new messages it read (their sync mark moved);
+ * `updated_pages` = the pages it created or changed.
+ */
+export const SessionGroupMemoryUpdateResultSchema = z
+  .object({
+    updated_pages: z.number().int().nonnegative(),
+    sessions: z.number().int().nonnegative(),
+    memory_updated_at: z.string().nullable(),
+  })
+  .strict();
+export type SessionGroupMemoryUpdateResult = z.infer<typeof SessionGroupMemoryUpdateResultSchema>;
 
 /** The project's groups in their new order: every group id, each once. */
 export const SessionGroupOrderInputSchema = z

@@ -59,8 +59,30 @@ export function SpaceShareModal({
   onOpenChange: (open: boolean) => void;
 }) {
   const t = useTranslations('sessionSpaces');
+  return (
+    <Modal open={open} onOpenChange={onOpenChange}>
+      <ModalContent className="lg:max-w-lg">
+        <ModalHeader>
+          <ModalTitle>{t('shareTitle', { name: space.name })}</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+          <SpaceSharePanel projectId={projectId} space={space} enabled={open} />
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}
+
+/**
+ * The sharing controls of a space, without a frame: the share dialog and the
+ * Members pane of Space settings both render it. `enabled` loads the
+ * workspace's people only while the panel shows. Whoever may not manage the
+ * space reads who has access; the controls that change it are not offered.
+ */
+export function SpaceSharePanel({ projectId, space, enabled }: { projectId: string; space: ProjectSessionGroup; enabled: boolean }) {
+  const t = useTranslations('sessionSpaces');
   const share = useSetWorkspaceSessionGroupSharing(projectId);
-  const people = useWorkspacePeople(projectId, open);
+  const people = useWorkspacePeople(projectId, enabled);
   // Rows read the space's own people first: they carry profiles even before the workspace list loads.
   const own = spacePeople(space);
   const personOf = (id: string) => own.get(id) ?? people.get(id);
@@ -73,6 +95,7 @@ export function SpaceShareModal({
       : sharingOf(space);
   const everyone = sharing.visibility === 'project';
   const creator = space.created_by;
+  const canManage = space.can_manage === true;
 
   const save = async (next: Sharing) => {
     try {
@@ -111,64 +134,63 @@ export function SpaceShareModal({
 
   return (
     <>
-      <Modal open={open} onOpenChange={onOpenChange}>
-        <ModalContent className="lg:max-w-lg">
-          <ModalHeader>
-            <ModalTitle>{t('shareTitle', { name: space.name })}</ModalTitle>
-          </ModalHeader>
-          <ModalBody className="space-y-5">
-            <ShareAddField
-              candidates={candidates}
-              excludeIds={excludeIds}
-              onShare={(picked) => save({ visibility: 'private', member_ids: [...sharing.member_ids, ...picked.map((candidate) => candidate.id)] })}
-              pending={share.isPending}
-              disabled={everyone}
-              placeholder={everyone ? t('shareEveryoneHint') : t('shareAddPlaceholder')}
-              shareLabel={t('share')}
-              removeLabel={t('shareRemove')}
-              onUnknownEmails={() => errorToast(t('shareNotMember'))}
-            />
+      <div className="space-y-5">
+        {canManage ? (
+          <ShareAddField
+            candidates={candidates}
+            excludeIds={excludeIds}
+            onShare={(picked) => save({ visibility: 'private', member_ids: [...sharing.member_ids, ...picked.map((candidate) => candidate.id)] })}
+            pending={share.isPending}
+            disabled={everyone}
+            placeholder={everyone ? t('shareEveryoneHint') : t('shareAddPlaceholder')}
+            shareLabel={t('share')}
+            removeLabel={t('shareRemove')}
+            onUnknownEmails={() => errorToast(t('shareNotMember'))}
+          />
+        ) : null}
 
-            <ShareSection label={t('sharePeopleWithAccess')}>
-              <ul className={SHARE_GROUP}>
-                {creator ? <ShareRow candidate={candidateOf(creator, personOf(creator))} trailing={<ShareRole>{t('shareOwner')}</ShareRole>} /> : null}
-                {everyone
-                  ? null
-                  : sharing.member_ids.map((id) => (
-                      <ShareRow
-                        key={id}
-                        candidate={candidateOf(id, personOf(id))}
-                        trailing={
-                          <ShareRoleMenu
-                            label={t('roleMember')}
-                            removeLabel={t('shareRemove')}
-                            removeIcon={<TrashIcon />}
-                            onRemove={() => setRemoving(id)}
-                            disabled={share.isPending}
-                          />
-                        }
-                      />
-                    ))}
-              </ul>
-            </ShareSection>
+        <ShareSection label={t('sharePeopleWithAccess')}>
+          <ul className={SHARE_GROUP}>
+            {creator ? <ShareRow candidate={candidateOf(creator, personOf(creator))} trailing={<ShareRole>{t('shareOwner')}</ShareRole>} /> : null}
+            {everyone
+              ? null
+              : sharing.member_ids.map((id) => (
+                  <ShareRow
+                    key={id}
+                    candidate={candidateOf(id, personOf(id))}
+                    trailing={
+                      canManage ? (
+                        <ShareRoleMenu
+                          label={t('roleMember')}
+                          removeLabel={t('shareRemove')}
+                          removeIcon={<TrashIcon />}
+                          onRemove={() => setRemoving(id)}
+                          disabled={share.isPending}
+                        />
+                      ) : (
+                        <ShareRole>{t('roleMember')}</ShareRole>
+                      )
+                    }
+                  />
+                ))}
+          </ul>
+        </ShareSection>
 
-            <ShareSection label={t('shareGeneralAccess')}>
-              <ShareGeneralAccess
-                value={sharing.visibility}
-                changeLabel={t('shareChange')}
-                disabled={share.isPending}
-                onChange={(next) => void save({ visibility: next, member_ids: [] })}
-                options={[
-                  { value: 'private', label: t('shareRestricted'), hint: t('shareRestrictedHint'), icon: <LockSimpleIcon /> },
-                  { value: 'project', label: t('shareEveryone'), hint: t('shareEveryoneHint'), icon: <UsersThreeIcon /> },
-                ]}
-              />
-            </ShareSection>
+        <ShareSection label={t('shareGeneralAccess')}>
+          <ShareGeneralAccess
+            value={sharing.visibility}
+            changeLabel={t('shareChange')}
+            disabled={!canManage || share.isPending}
+            onChange={(next) => void save({ visibility: next, member_ids: [] })}
+            options={[
+              { value: 'private', label: t('shareRestricted'), hint: t('shareRestrictedHint'), icon: <LockSimpleIcon /> },
+              { value: 'project', label: t('shareEveryone'), hint: t('shareEveryoneHint'), icon: <UsersThreeIcon /> },
+            ]}
+          />
+        </ShareSection>
 
-            {link ? <ShareLinkField link={link} copyLabel={t('copyLink')} onCopy={() => void copy()} /> : null}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+        {link ? <ShareLinkField link={link} copyLabel={t('copyLink')} onCopy={() => void copy()} /> : null}
+      </div>
       <ConfirmDialog
         open={removing !== null}
         onOpenChange={(next) => {

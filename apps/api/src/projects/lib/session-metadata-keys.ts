@@ -107,6 +107,10 @@ export const SERVER_MANAGED_SESSION_METADATA_KEYS = [
   // The session's /workspace volume (platform/services/workspace-volume.ts):
   // its boxes mount it and a delete deletes it.
   'workspace_volume',
+  // Automatic Space memory's sync mark (projects/lib/space-memory-update): a
+  // forged future mark would keep the session out of the Space memory for good.
+  'space_memory_synced_seq',
+  'space_memory_synced_at',
 ] as const;
 
 /**

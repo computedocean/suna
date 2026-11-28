@@ -297,6 +297,9 @@ flow(
       // Telegram write confinement follows a reminder successor to the
       // session it replaces: a client value would add or drop a chat.
       'reminder_successor_of',
+      // Automatic Space memory's sync mark: a forged future mark would keep the session out of the Space memory.
+      'space_memory_synced_seq',
+      'space_memory_synced_at',
     ]) {
       await ctx.step(`PATCH metadata.${key} → 400 (server-managed)`, async () => {
         (

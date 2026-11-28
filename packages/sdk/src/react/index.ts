@@ -333,6 +333,7 @@ export {
   useWorkspaceSessionGroups, useProjectSessionGroups,
   useRenameWorkspaceSessionGroup, useRenameProjectSessionGroup,
   useUpdateWorkspaceSessionGroup,
+  useUpdateWorkspaceSessionGroupMemory,
   useSetWorkspaceSessionGroupSharing,
   useSetWorkspaceSessionGroupTabs,
   useReorderWorkspaceSessionGroups, useReorderProjectSessionGroups,

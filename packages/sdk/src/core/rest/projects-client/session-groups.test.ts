@@ -11,7 +11,9 @@ import {
   setWorkspaceSessionGroupSharing,
   setWorkspaceSessionGroupTabs,
   updateWorkspaceSessionGroup,
+  updateWorkspaceSessionGroupMemory,
   type ProjectSessionGroup,
+  type WorkspaceSessionGroupMemoryUpdate,
 } from './session-groups';
 import { listWorkspaceSessionsPage } from './sessions';
 
@@ -87,6 +89,42 @@ test('createWorkspaceSessionGroup POSTs a description with the name', async () =
   nextResponse = { status: 201, body: { ...storeA, description: 'Launch plan' } };
   expect((await createWorkspaceSessionGroup('P1', { name: 'Store A', description: 'Launch plan' })).description).toBe('Launch plan');
   expect(calls[0]!.body).toEqual({ name: 'Store A', description: 'Launch plan' });
+});
+
+test('a space\'s automatic memory: memory_auto_update PATCHed alone and read back with memory_updated_at', async () => {
+  // Typed fields: this object only compiles when the type declares them.
+  const off: ProjectSessionGroup = { ...storeA, memory_auto_update: false, memory_updated_at: '2026-11-28T12:00:00.000Z' };
+  nextResponse = { status: 200, body: off };
+  const changed = await updateWorkspaceSessionGroup('P1', storeA.group_id, { memory_auto_update: false });
+  expect(changed.memory_auto_update).toBe(false);
+  expect(changed.memory_updated_at).toBe('2026-11-28T12:00:00.000Z');
+  expect(calls).toEqual([{ url: `http://test.local/v1/workspaces/P1/session-groups/${storeA.group_id}`, method: 'PATCH', body: { memory_auto_update: false } }]);
+});
+
+test('updateWorkspaceSessionGroupMemory POSTs memory/update and returns what the update did', async () => {
+  const done: WorkspaceSessionGroupMemoryUpdate = { updated_pages: 2, sessions: 3, memory_updated_at: '2026-11-28T12:00:00.000Z' };
+  nextResponse = { status: 200, body: done };
+  expect(await updateWorkspaceSessionGroupMemory('P1', storeA.group_id)).toEqual(done);
+  expect(calls).toEqual([{ url: `http://test.local/v1/workspaces/P1/session-groups/${storeA.group_id}/memory/update`, method: 'POST', body: undefined }]);
+});
+
+test('updateWorkspaceSessionGroupMemory rejects with the API code: 503 memory_unavailable', async () => {
+  nextResponse = { status: 503, body: { error: 'Space memory needs Files storage.', code: 'memory_unavailable' } };
+  const error = await updateWorkspaceSessionGroupMemory('P1', storeA.group_id).catch((e: unknown) => e);
+  expect(error).toBeInstanceOf(ApiError);
+  expect((error as ApiError).status).toBe(503);
+  expect((error as ApiError).code).toBe('memory_unavailable');
+});
+
+test('a space\'s instructions: created with the group, PATCHed alone, read back, null clears them', async () => {
+  nextResponse = { status: 201, body: { ...storeA, instructions: 'Answer in German.' } };
+  const created = await createWorkspaceSessionGroup('P1', { name: 'Store A', instructions: 'Answer in German.' });
+  expect(created.instructions).toBe('Answer in German.');
+  expect(calls[0]!.body).toEqual({ name: 'Store A', instructions: 'Answer in German.' });
+  nextResponse = { status: 200, body: { ...storeA, instructions: null } };
+  const cleared = await updateWorkspaceSessionGroup('P1', storeA.group_id, { instructions: null });
+  expect(cleared.instructions).toBeNull();
+  expect(calls[1]).toEqual({ url: `http://test.local/v1/workspaces/P1/session-groups/${storeA.group_id}`, method: 'PATCH', body: { instructions: null } });
 });
 
 test('updateWorkspaceSessionGroup PATCHes only the fields given; null clears the description', async () => {

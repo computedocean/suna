@@ -382,7 +382,8 @@ async function addMemoryTurnLayers(req: ForwardRequest, state: ForwardState): Pr
   // Who wrote the prompt, from the API's own delivery only (KRTX-5121).
   if (req.promptAuthor) state.requestBody = withPromptAuthor(state.requestBody, req.promptAuthor);
   const sessionId = req.record.sessionId;
-  const where = await sessionWhereTurn(req.record.projectId, sessionId).catch((error: unknown) => {
+  // The prompter: the caller's person, never a sandbox's own request (no person: the owner rule alone).
+  const where = await sessionWhereTurn(req.record.projectId, sessionId, req.sandboxAuthored ? null : req.userId).catch((error: unknown) => {
     logger.warn('[turn] turn start forwarded without its origin block', {
       session_id: sessionId,
       error: error instanceof Error ? error.message : String(error),
@@ -405,7 +406,7 @@ async function addMemoryTurnLayers(req: ForwardRequest, state: ForwardState): Pr
     void notifyPersonMentions(req, state.requestBody);
   }
   const put = (parts: readonly (string | null | undefined)[]) => {
-    const system = turnSystemText(where?.system ?? null, [thread?.system, where?.spaceBrief, ...parts]);
+    const system = turnSystemText(where?.system ?? null, [thread?.system, ...parts, where?.spaceBrief]);
     if (system) state.requestBody = withMemoryTurn(state.requestBody, { system });
   };
   try {
@@ -469,7 +470,7 @@ export async function markMessageForPeople(input: {
     const message = personMessageOf(input.body);
     if (!message?.text.includes('@')) return input.body;
     if (!(await memoryChannelsOn(input.record.projectId))) return input.body;
-    const where = await sessionWhereTurn(input.record.projectId, input.record.sessionId);
+    const where = await sessionWhereTurn(input.record.projectId, input.record.sessionId, input.userId);
     if (where?.space?.kind !== 'channel') return input.body;
     const forPeople = await messageAddressesOnlyPeople({ accountId: input.record.accountId, projectId: input.record.projectId, authorId: input.userId, text: message.text });
     return forPeople ? withNoReply(input.body, input.path) : input.body;

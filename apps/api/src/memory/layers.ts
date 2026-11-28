@@ -7,19 +7,27 @@
  * | a private channel id | `/Channels/<space_id>/Memory` | the channel's members only |
  * | a DM id      | `/Users/<owner>/Memory`, agent folder `Memory/<agent>` first | the DM owner only |
  * | `mykortix`   | the viewer's own `/Users/<viewer>/Memory/mykortix` | the viewer only     |
+ * | a Space (session group) id | `/Spaces/<group_id>/Memory` | the people who see the Space (`canSeeGroup`), flag `session_groups` on |
  *
  * Read and write rights are the Drive folder rights (`driveSubjectFor`), so a
  * narrower grant made in Files holds here too. A private channel is first
  * checked against membership (`canSeeSpace`): anyone else, a project manager
- * included, gets 404. An archived channel is read-only.
+ * included, gets 404. An archived channel is read-only. A Space is checked
+ * the same way (`canSeeGroup`): its layer has `scope: 'channel'` and
+ * `space_id: null` (the scope union is public SDK surface, so a Space reuses
+ * the channel scope); `driveSubjectFor` grants `write` on `/Spaces/<id>` to
+ * everyone who sees it, so they may all write its memory.
  */
 import { MEMORY_DIR_NAME } from '../drives/folders';
 import { folderAccess, folderAccessAtLeast } from '../drives/folders';
 import { type DriveCaller, type DriveRow, driveSubjectFor, ensureProjectDrive, personalFolderFor } from '../drives/service';
 import { driveStorageAvailable } from '../drives/volumes';
-import { projectSessions, projectSpaces } from '@kortix/db';
+import { projectSessionGroups, projectSessions, projectSpaces } from '@kortix/db';
+import { projectFeatureFlagEnabled } from '../feature-flags/for-project';
+import { hasAccountSessionOversight } from '../iam/session-oversight';
+import { canSeeGroup, groupMemberIds } from '../shared/session-group-access';
 import { resolveUserIdentities } from '../projects/surface';
-import { MY_KORTIX_AGENT_NAME, spaceDriveFolders } from '@kortix/shared';
+import { MY_KORTIX_AGENT_NAME, sessionGroupDriveFolder, spaceDriveFolders } from '@kortix/shared';
 import { and, eq, or, sql } from 'drizzle-orm';
 import { db } from '../shared/db';
 import { isUuid } from '../shared/validate';
@@ -150,14 +158,18 @@ export async function resolveLayer(project: Project, key: string, viewer: Viewer
         ),
       )
       .limit(1);
-    if (!space) throw notFound();
-    // Memory routes refuse session tokens (`withMemoryCaller`): the viewer is a person.
-    if (space.visibility === 'private' && (await hiddenSpaceIds(project.projectId, viewer.userId, null)).has(key)) throw notFound();
-    const readOnly = space.archivedAt !== null;
-    if (space.kind === 'channel') {
+    if (!space) {
+      // Not a channel or DM: a Space (session group) of the project, or nothing.
+      const group = await spaceGroupLayer(project, key, viewer);
+      if (!group) throw notFound();
+      layer = { ...base, ...group };
+    } else if (space.visibility === 'private' && (await hiddenSpaceIds(project.projectId, viewer.userId, null)).has(key)) {
+      // Memory routes refuse session tokens (`withMemoryCaller`): the viewer is a person.
+      throw notFound();
+    } else if (space.kind === 'channel') {
       const folders = space.slug ? spaceDriveFolders('channel', space.slug, null, space.visibility === 'private' ? key : null) : null;
       if (!folders) throw notFound();
-      layer = { ...base, scope: 'channel', spaceId: key, name: `#${space.slug}`, root: folders.memory, readOnly, isDefault: space.isDefault };
+      layer = { ...base, scope: 'channel', spaceId: key, name: `#${space.slug}`, root: folders.memory, readOnly: space.archivedAt !== null, isDefault: space.isDefault };
     } else {
       const personal = personalFolderFor(caller.grants, viewer.userId) ?? caller.personalFolder;
       const agent = space.dmAgentName ?? '';
@@ -170,13 +182,40 @@ export async function resolveLayer(project: Project, key: string, viewer: Viewer
         root: `${personal}/${MEMORY_DIR_NAME}`,
         agentFolder: spaceDriveFolders('dm', agent, personal)?.memory ?? null,
         skip: others.flatMap((dm) => spaceDriveFolders('dm', dm.agent!, personal)?.memory ?? []),
-        readOnly,
+        readOnly: space.archivedAt !== null,
       };
     }
   }
   const access = folderAccess(layer.root, caller.grants, caller.subject);
   if (!folderAccessAtLeast(access, 'read')) throw notFound();
   return { ...layer, canWrite: !layer.readOnly && folderAccessAtLeast(access, 'write') };
+}
+
+/**
+ * A Space's (session group's) memory layer fields, or null when `key` is no
+ * group of the project, the `session_groups` flag is off, or the viewer does
+ * not see the group (`canSeeGroup`: a non-member gets 404; an owner or admin
+ * under session oversight sees it, as the Drive folder grants do).
+ */
+async function spaceGroupLayer(
+  project: Project,
+  key: string,
+  viewer: Viewer,
+): Promise<Pick<Layer, 'scope' | 'spaceId' | 'name' | 'root' | 'readOnly'> | null> {
+  const [group] = await db
+    .select({ groupId: projectSessionGroups.groupId, name: projectSessionGroups.name, visibility: projectSessionGroups.visibility, createdBy: projectSessionGroups.createdBy })
+    .from(projectSessionGroups)
+    .where(and(eq(projectSessionGroups.projectId, project.projectId), eq(projectSessionGroups.groupId, key)))
+    .limit(1);
+  if (!group || !(await projectFeatureFlagEnabled(project.projectId, 'session_groups'))) return null;
+  const members = (await groupMemberIds([group.groupId])).get(group.groupId) ?? [];
+  // Oversight is asked only when nothing else lets the viewer see the group.
+  const seenWithout = canSeeGroup(group, members, { userId: viewer.userId, oversight: false });
+  const oversight = !seenWithout && (await hasAccountSessionOversight(viewer.userId, project.accountId).catch(() => false));
+  if (!canSeeGroup(group, members, { userId: viewer.userId, oversight })) return null;
+  const folder = sessionGroupDriveFolder(group.groupId);
+  if (!folder) return null;
+  return { scope: 'channel', spaceId: null, name: group.name, root: `${folder}/${MEMORY_DIR_NAME}`, readOnly: false };
 }
 
 /** The viewer's newest DM layer key, for a hit in their shared Memory folder; null without a DM. */

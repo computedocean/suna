@@ -39,6 +39,41 @@ export function canManageGroup(row: GroupAccessRow, viewer: GroupViewer): boolea
   return row.createdBy === viewer.userId || viewer.oversight;
 }
 
+/**
+ * Does the owner of a session filed in a group still see the group? A session
+ * no person started (`ownerId` null: a trigger, a backend caller) has nobody
+ * to remove and keeps its group. `oversight` (account session oversight) is
+ * asked only when membership does not decide it. The services wrapper is
+ * `sessionOwnerSeesGroup` (projects/lib/session-group-viewer.ts).
+ */
+export async function ownerSeesGroup(
+  group: GroupAccessRow,
+  ownerId: string | null,
+  ownerIsMember: boolean,
+  oversight: () => Promise<boolean>,
+): Promise<boolean> {
+  if (!ownerId) return true;
+  const members = ownerIsMember ? [ownerId] : [];
+  if (canSeeGroup(group, members, { userId: ownerId, oversight: false })) return true;
+  return canSeeGroup(group, members, { userId: ownerId, oversight: await oversight() });
+}
+
+/**
+ * May a session's box mount its Space's folder, by who the session reaches?
+ * A `project` Space: always (everyone who can reach the session sees the
+ * Space). A `private` Space: only while the session (and, for a child, its
+ * parent) is private to its owner. A session shared with the project or with
+ * named people would hand the folder to people who may not see the Space.
+ */
+export function spaceFolderMountable(input: {
+  groupVisibility: string;
+  sessionVisibility: string | null;
+  parentVisibility: string | null;
+}): boolean {
+  if (input.groupVisibility === 'project') return true;
+  return input.sessionVisibility === 'private' && (input.parentVisibility === null || input.parentVisibility === 'private');
+}
+
 /** Each group's members, in the order they were added. */
 export async function groupMemberIds(groupIds: readonly string[]): Promise<Map<string, string[]>> {
   const out = new Map<string, string[]>(groupIds.map((id) => [id, []]));

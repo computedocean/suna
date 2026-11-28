@@ -107,7 +107,7 @@ import { FIRST_PROMPT_MAX_CHARS, SPACE_NOT_FOUND, ensureDefaultSpace, findForkSo
 import { liveTriggerSpace, triggerRunSpace } from './trigger-space';
 import { findSessionGroup } from './session-groups';
 import { canSeeGroup, groupMemberIds } from '../../shared/session-group-access';
-import { groupViewerFor } from './session-group-viewer';
+import { groupViewerFor, privateSpaceCreateSharing, privateSpaceOfSession, SPACE_SESSION_PRIVATE } from './session-group-viewer';
 
 import {
 } from '../../git-proxy/project-snapshot';
@@ -393,10 +393,14 @@ export async function resolveRequestedSessionSpace(input: CreateProjectSessionIn
  * (`sessionGroupOf`). Flag off, or `null`: no space. An id that is not a group
  * of this project, or one the caller does not see: 404 `group_not_found`.
  */
-export async function resolveRequestedSessionGroup(input: CreateProjectSessionInput): Promise<SessionCreateStep<{ groupId: string | null }>> {
+export async function resolveRequestedSessionGroup(
+  input: CreateProjectSessionInput,
+): Promise<SessionCreateStep<{ groupId: string | null; privateGroup?: boolean }>> {
   const { project, body } = input;
   if (!resolveFeatureFlag(project.metadata, 'session_groups')) return { groupId: null };
-  if (input.callerSessionId || (typeof body.parent_session_id === 'string' && body.parent_session_id.length > 0)) return { groupId: null };
+  const parentId = input.callerSessionId ?? (typeof body.parent_session_id === 'string' && body.parent_session_id.length > 0 ? body.parent_session_id : null);
+  // A child is never filed itself: it reads its parent's Space, and inherits its rule (private stays private).
+  if (parentId) return { groupId: null, privateGroup: (await privateSpaceOfSession(project.projectId, parentId)) !== null };
   if (body.group_id === null) return { groupId: null };
   if (body.group_id === undefined) {
     if (typeof body.fork_from_session_id !== 'string') return { groupId: null };
@@ -408,21 +412,22 @@ export async function resolveRequestedSessionGroup(input: CreateProjectSessionIn
     // A space shares its Files folder read-write with every session in it. A
     // fork of a session someone shared with you, from a space that is not
     // shared with you, lands outside that space.
-    return { groupId: source?.groupId ? await visibleGroupId(input, source.groupId) : null };
+    const forked = source?.groupId ? await visibleGroup(input, source.groupId) : null;
+    return { groupId: forked?.groupId ?? null, privateGroup: forked?.visibility === 'private' };
   }
-  const groupId = typeof body.group_id === 'string' && isUuid(body.group_id) ? await visibleGroupId(input, body.group_id) : null;
+  const group = typeof body.group_id === 'string' && isUuid(body.group_id) ? await visibleGroup(input, body.group_id) : null;
   // A private group says nothing to someone it is not shared with: the same 404.
-  if (!groupId) return { error: { status: 404, body: { error: 'No such space in this workspace.', code: 'group_not_found' } } };
-  return { groupId };
+  if (!group) return { error: { status: 404, body: { error: 'No such space in this workspace.', code: 'group_not_found' } } };
+  return { groupId: group.groupId, privateGroup: group.visibility === 'private' };
 }
 
-/** The group's id when it is a group of this project that the caller sees; else null. */
-async function visibleGroupId(input: CreateProjectSessionInput, groupId: string): Promise<string | null> {
+/** The group when it is a group of this project that the caller sees; else null. */
+async function visibleGroup(input: CreateProjectSessionInput, groupId: string): Promise<{ groupId: string; visibility: string } | null> {
   const { project } = input;
   const group = await findSessionGroup(project.projectId, groupId);
   if (!group || !input.userId) return null;
   const members = (await groupMemberIds([group.groupId])).get(group.groupId) ?? [];
-  return canSeeGroup(group, members, await groupViewerFor(input.userId, project.accountId)) ? group.groupId : null;
+  return canSeeGroup(group, members, await groupViewerFor(input.userId, project.accountId)) ? { groupId: group.groupId, visibility: group.visibility } : null;
 }
 
 /** The session's sharing: explicit, or inherited from the spawning session. */
@@ -1920,6 +1925,11 @@ export async function createProjectSession(input: {
   if (requestedSpace.error) return { error: requestedSpace.error };
   const requestedGroup = await resolveRequestedSessionGroup(input);
   if (requestedGroup.error) return { error: requestedGroup.error };
+  // A session of a private Space, or a child of a session in one, is private to its owner
+  // (`SPACE_SESSION_PRIVATE`): with no sharing asked for it is made private; one asked or implied (a channel thread) beyond private is refused.
+  const spaceRule = privateSpaceCreateSharing(!!requestedGroup.privateGroup, input.visibility ?? requestedSpace.visibility ?? null);
+  if (spaceRule === 'refuse') return { error: { status: 409, body: SPACE_SESSION_PRIVATE } };
+  if (spaceRule === 'private') input = { ...input, visibility: 'private' };
   // A space decides the sharing unless the caller set it explicitly; a private one (a DM, a fork of a private session) always does.
   const { parentSession, visibility, inheritedGrants } = await resolveSessionSharing(
     requestedSpace.visibility && (input.visibility === undefined || requestedSpace.visibility === 'private')

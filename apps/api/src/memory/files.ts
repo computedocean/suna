@@ -490,3 +490,57 @@ export async function addNote(layer: Layer, author: string, input: MemoryNoteInp
     }
   }
 }
+
+/**
+ * An agent's write of a whole page at `rel` (automatic Space memory,
+ * `projects/lib/space-memory-update`). `snapshot` is the page as the agent
+ * read it before it wrote (its mtime); null when the agent saw no such page.
+ *
+ * - `snapshot` null: create only. A file already at `rel` is never
+ *   overwritten: `'conflict'`.
+ * - `snapshot` set: replace the body and heading, front-matter kept, only
+ *   while the file is still the one read (same mtime, then `ifMatch` on the
+ *   etag of this read). A person's edit since the snapshot wins: `'conflict'`.
+ *
+ * `updated_by` is `<agent> (agent)` and `sources` gains the sessions it came
+ * from (at most 20), so history and the page view show who wrote it and from
+ * where. Checked like a person's write (secrets, size).
+ */
+export async function writeAgentPage(
+  layer: Layer,
+  rel: string,
+  input: { title: string; body: string; agent: string; sessions: ReadonlyArray<{ sessionId: string; label: string }> },
+  snapshot: { mtime: number } | null,
+): Promise<'created' | 'updated' | 'conflict'> {
+  assertWrites(layer);
+  const path = pagePath(layer, rel);
+  const body = input.body.endsWith('\n') ? input.body : `${input.body}\n`;
+  checkBody(body);
+  checkSecrets(input.title, body);
+  const read = snapshot ? await volumeOps().read(layer.drive, path) : null;
+  if (snapshot) {
+    const stat = read && (await volumeOps().stat(layer.drive, path));
+    if (!read || !stat || Math.floor(Number(stat.mtime)) !== Math.floor(snapshot.mtime)) return 'conflict';
+  }
+  const previous = read ? splitFrontMatter(read.text) : null;
+  const sources = [
+    ...(Array.isArray(previous?.data.sources) ? previous.data.sources : []),
+    ...input.sessions.map((s) => ({ kind: 'thread', session: s.sessionId, label: s.label.slice(0, MEMORY_LIMITS.source_label_chars) })),
+  ];
+  const unique = sources.filter(
+    (item, i) => typeof item === 'string' || !item.session || sources.findIndex((other) => typeof other !== 'string' && other.session === item.session) === i,
+  );
+  const entries = setFrontMatter(previous?.entries ?? null, {
+    sources: unique.slice(-20),
+    updated_by: `${input.agent} (agent)`,
+    updated_at: new Date().toISOString(),
+  });
+  const text = joinFrontMatter(entries, `# ${input.title.trim()}\n\n${body}`);
+  try {
+    await volumeOps().write(layer.drive, path, text, read ? { overwrite: true, ...(read.etag ? { ifMatch: read.etag } : {}) } : { overwrite: false });
+  } catch (error) {
+    if (conflictOn(error)) return 'conflict';
+    throw error;
+  }
+  return read ? 'updated' : 'created';
+}

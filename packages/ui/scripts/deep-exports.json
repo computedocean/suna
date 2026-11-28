@@ -296,6 +296,7 @@
     "./session/voice/voice-call-card",
     "./theme/wallpapers",
     "./workspace/admin/project-admin-dashboard",
+    "./workspace/admin/workspace-settings-rail",
     "./workspace/calendar/calendar-page",
     "./workspace/home/access-requests-bell",
     "./workspace/home/first-chat",

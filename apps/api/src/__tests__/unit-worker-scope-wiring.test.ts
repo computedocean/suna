@@ -56,6 +56,7 @@ const WORKERS: Record<string, string> = {
   'gateway-replay-sweep': 'worker/jobs/replay-sweep.ts',
   'session-model-fallback': 'worker/jobs/session-model-fallback.ts',
   'space-watcher': 'worker/jobs/space-watcher.ts',
+  'space-memory': 'worker/jobs/space-memory.ts',
   'goal-reconciler': 'worker/jobs/goal-reconciler.ts',
   'eval-runner': 'worker/jobs/eval-runner.ts',
   'workspace-cache-builder': 'worker/jobs/workspace-cache-builder.ts',

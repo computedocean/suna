@@ -36,7 +36,8 @@ import {
 } from '@kortix/ui/workspace';
 import { MagnifyingGlassIcon, PlusIcon, TargetIcon } from '@phosphor-icons/react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { GoalStarter } from './goal-starter';
 import { NewGoalModal } from './new-goal-modal';
 
@@ -82,7 +83,25 @@ export function GoalsPage({ projectId }: { projectId: string }) {
   const [space, setSpace] = useSpaceFilter(projectId);
   const viewerId = useUiViewerId();
   const [mine, setMine] = useState(false);
-  const [creating, setCreating] = useState(false);
+  // `?new=1` (the sidebar panel's +) opens New goal on arrival; the parameter then leaves the URL.
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const askedNew = searchParams.get('new') === '1';
+  const [creating, setCreating] = useState(askedNew);
+  // Also when the page is already open: each new `?new=1` opens it once.
+  const [seenNew, setSeenNew] = useState(askedNew);
+  if (askedNew !== seenNew) {
+    setSeenNew(askedNew);
+    if (askedNew) setCreating(true);
+  }
+  useEffect(() => {
+    if (!askedNew) return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('new');
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }, [askedNew, pathname, router, searchParams]);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useStoredSort<GoalSort>('kortix:goals-sort', GOAL_SORTS, 'activity');
   const tSort = useTranslations('listSort');

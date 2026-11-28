@@ -13,6 +13,7 @@ import {
   useRenameWorkspaceSessionGroup,
   useReorderWorkspaceSessionGroups,
   useSetWorkspaceSessionGroup,
+  useUpdateWorkspaceSessionGroupMemory,
 } from './use-session-groups';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -59,6 +60,7 @@ let api: {
   remove: ReturnType<typeof useDeleteWorkspaceSessionGroup>;
   reorder: ReturnType<typeof useReorderWorkspaceSessionGroups>;
   file: ReturnType<typeof useSetWorkspaceSessionGroup>;
+  memory: ReturnType<typeof useUpdateWorkspaceSessionGroupMemory>;
 };
 
 afterEach(async () => {
@@ -75,6 +77,7 @@ function Probe({ enabled }: { enabled: boolean }) {
     remove: useDeleteWorkspaceSessionGroup('P1'),
     reorder: useReorderWorkspaceSessionGroups('P1'),
     file: useSetWorkspaceSessionGroup('P1'),
+    memory: useUpdateWorkspaceSessionGroupMemory('P1'),
   };
   return null;
 }
@@ -299,4 +302,45 @@ test('a move refused with group_not_found (someone deleted the group) reads the 
   await act(async () => held[0]!.respond(404, { error: 'No such session group in this project.', code: 'group_not_found' }));
   await settle();
   expect(requests()).toContain('GET /workspaces/P1/session-groups');
+});
+
+test('a memory update POSTs memory/update, resolves what it did, then refreshes the groups and that space\'s memory, not another layer', async () => {
+  await mount();
+  client.setQueryData(qk.project.memoryLayer('P1', 'A'), {});
+  client.setQueryData(qk.project.memoryPages('P1', 'A'), { pages: [] });
+  client.setQueryData(qk.project.memoryPages('P1', 'B'), { pages: [] });
+  let result: unknown;
+  await act(async () => {
+    void api.memory.mutateAsync('A').then((r) => (result = r));
+  });
+  await settle();
+  const call = held.find((h) => h.path === '/workspaces/P1/session-groups/A/memory/update');
+  expect(call?.method).toBe('POST');
+  await act(async () => call!.respond(200, { updated_pages: 2, sessions: 1, memory_updated_at: '2026-11-28T12:00:00.000Z' }));
+  await settle();
+  // The groups list is mounted, so the invalidation refetches it: answer that read.
+  const refetch = held.find((h) => h.method === 'GET' && h.path === '/workspaces/P1/session-groups');
+  expect(refetch).toBeDefined();
+  await act(async () => refetch!.respond(200, { groups: [] }));
+  await settle();
+  expect(result).toEqual({ updated_pages: 2, sessions: 1, memory_updated_at: '2026-11-28T12:00:00.000Z' });
+  // The groups list refetched (memory_updated_at): the cache holds the answer of that read.
+  expect(client.getQueryData<ProjectSessionGroup[]>(groupsKey)).toEqual([]);
+  expect(client.getQueryState(qk.project.memoryLayer('P1', 'A'))?.isInvalidated).toBe(true);
+  expect(client.getQueryState(qk.project.memoryPages('P1', 'A'))?.isInvalidated).toBe(true);
+  expect(client.getQueryState(qk.project.memoryPages('P1', 'B'))?.isInvalidated).toBe(false);
+});
+
+test('a refused memory update rejects with the API code and adds no host error toast', async () => {
+  await mount();
+  let error: unknown;
+  await act(async () => {
+    void api.memory.mutateAsync('A').catch((e: unknown) => (error = e));
+  });
+  await settle();
+  const call = held.find((h) => h.path === '/workspaces/P1/session-groups/A/memory/update');
+  await act(async () => call!.respond(503, { error: 'Space memory needs Files storage.', code: 'memory_unavailable' }));
+  await settle();
+  expect((error as { code?: string }).code).toBe('memory_unavailable');
+  expect(hostErrors).toEqual([]);
 });

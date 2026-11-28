@@ -33,13 +33,10 @@
  */
 
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, type ComponentType, type ReactNode } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { type Icon } from '@phosphor-icons/react';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { getProject } from '@kortix/sdk';
 import type { AccountSection } from '../../internal/account-hub/sections';
-import { contract, invalidatePermissionProbes, qk, useCaptureWorkspace, useFeatureFlag } from '@kortix/sdk/react';
-import { captureHref } from '../../internal/capture/use-capture-area';
+import { invalidatePermissionProbes, qk } from '@kortix/sdk/react';
 
 import { useTranslations as useI18nTranslations } from '../../i18n';
 import { Button } from '../../primitives/button';
@@ -55,27 +52,21 @@ import { Skeleton } from '../../primitives/skeleton';
 import { Tabs, TabsList, TabsTrigger } from '../../primitives/tabs';
 import { UiLink as Link, useUiRouter, useUiSearchParams } from '../../providers/ui-provider';
 import { CapabilitiesSkeleton } from '../../customize/shared/capability-skeleton';
-import { projectSettingsSections } from '../../customize/project-settings/project-settings-sections';
+
 import { EmbeddedAccountHubProvider } from '../../internal/account-hub/account-hub-location';
 import { AccountHubSheetProvider } from '../../internal/account-hub/hub-sheet';
-import { useAccountHubAccess } from '../../internal/account-hub/use-account-hub-access';
-import { useAccountsList } from '../../internal/hooks/account/use-accounts-list';
+
 import { useIsMobile } from '../../internal/hooks';
 import { RAIL_HORIZONTAL_ROW_CLASS } from '../../internal/components/nav-rail';
-import { adminResourceRowOpen, capabilityAccess } from '../../internal/layout/project-settings-nav';
 import { SettingsNavProvider } from '../../internal/layout/settings-nav-context';
 import { withStaleChunkRecovery } from '../../internal/lib/chunk-reload';
-import {
-  CUSTOMIZE_SECTION_GATE_ACTIONS,
-  isCustomizeSectionVisible,
-  PROJECT_ACTIONS,
-} from '../../internal/lib/project-actions';
-import { useProjectCans, useProjectPageCans, type CanResult } from '../../internal/lib/use-project-can';
+import { PROJECT_ACTIONS } from '../../internal/lib/project-actions';
 import { capabilityTabHref } from '../../internal/lib/capability-tab-routes';
 import { cn } from '../../internal/lib/utils';
 import { useSettingsPanelStore } from '../../internal/stores/settings-panel-store';
 import { useWorkspaceSettingsRailStore } from '../../internal/stores/workspace-settings-rail-store';
 import { useSettingsSearchLanding } from './settings-search-landing';
+import { railFromGroups, useWorkspaceSettingsRailGroups, type RailRow } from './workspace-settings-rail';
 
 import { buildProjectAdminNav } from './project-admin-nav';
 import {
@@ -84,31 +75,13 @@ import {
   isProjectAdminResource,
   isWorkspaceAccountSection,
   parseProjectAdminSection,
-  PROJECT_ADMIN_RESOURCES,
   projectAdminHref,
   RETIRED_SECTIONS,
-  sectionLabelKey,
   WORKSPACE_SETTINGS_GROUPS,
   type ProjectAdminResourceKey,
   type ProjectAdminSectionKey,
   type ProjectAdminSettingsKey,
-  type WorkspaceAccountSectionKey,
-  type WorkspaceSettingsGroupId,
 } from '../../customize/project-settings/project-admin-sections';
-import {
-  PaintBrushIcon,
-  KeyIcon,
-  UsersIcon,
-  NetworkIcon,
-  ShieldIcon,
-  FingerprintIcon,
-  ScrollIcon,
-  QuestionIcon,
-  CreditCardIcon,
-  CoinsIcon,
-  MonitorPlayIcon,
-  LockKeyIcon as SecurityIcon,
-} from '@phosphor-icons/react';
 
 export { buildProjectAdminNav } from './project-admin-nav';
 export {
@@ -143,21 +116,6 @@ export type ProjectAdminHostSections = Partial<Record<'apps', SectionPage>> & {
   generalExtras?: ComponentType<{ projectId: string; accountId: string }>;
 };
 
-/** Rail glyphs for the account rows, the account hub's own (`sections.ts`). */
-const ACCOUNT_SECTION_ICONS: Record<WorkspaceAccountSectionKey, Icon> = {
-  security: SecurityIcon,
-  branding: PaintBrushIcon,
-  'api-keys': KeyIcon,
-  members: UsersIcon,
-  groups: NetworkIcon,
-  roles: ShieldIcon,
-  identity: FingerprintIcon,
-  audit: ScrollIcon,
-  help: QuestionIcon,
-  plan: CreditCardIcon,
-  usage: CoinsIcon,
-};
-
 function lazyPage<M>(load: () => Promise<M>, pick: (mod: M) => SectionPage) {
   return lazy(withStaleChunkRecovery(() => load().then((mod) => ({ default: pick(mod) }))));
 }
@@ -178,10 +136,6 @@ const RESOURCE_PAGES: Partial<Record<ProjectAdminResourceKey, SectionPage>> = {
   secrets: lazyPage(() => import('../../customize/secrets/secrets-page'), (m) => m.SecretsPage),
   repo: lazyPage(() => import('../layout/project-files-view'), (m) => m.ProjectFilesView),
 };
-
-
-/** The rail group drawn in the rail's footer instead of the scrolling list. */
-const RAIL_FOOTER_GROUP: WorkspaceSettingsGroupId = 'support';
 
 /* A host page owns a full-viewport root (`AppsView` is `h-svh`). Inside this
    pane that box would overflow by the header's height and clip its last row,
@@ -243,27 +197,6 @@ const SETTINGS_PAGES: Record<ProjectAdminSettingsKey, SectionPage> = {
   ),
 };
 
-interface RailRow {
-  key: ProjectAdminSectionKey;
-  /** Where the row goes when it is not a section of this page. */
-  href?: string;
-  label: string;
-  icon: Icon;
-  /** The project pane of this section is open to the caller. */
-  project: boolean;
-  /** The account pane of this section is open to the caller. */
-  account: boolean;
-}
-
-interface RailGroupRows {
-  id: WorkspaceSettingsGroupId;
-  rows: RailRow[];
-}
-
-function answered(caps: Record<string, CanResult>, actions: readonly string[]): boolean {
-  return actions.every((action) => caps[action] && !caps[action].isLoading);
-}
-
 const NO_HOST_SECTIONS: ProjectAdminHostSections = {};
 
 export function ProjectAdminDashboard({
@@ -286,143 +219,12 @@ export function ProjectAdminDashboard({
   const router = useUiRouter();
   const queryClient = useQueryClient();
 
-  // The project row (`GET /projects/:id`, one database read) for the account
-  // id. Not the detail: it reads the repository, and every Customize tab
-  // waited on it for this one field (2026-11-04).
-  const project = useQuery({
-    queryKey: qk.project.summary(projectId),
-    queryFn: () => getProject(projectId),
-    enabled: !!projectId,
-    ...contract('config'),
+  // The rail's rows, by the rule the sidebar's Customize list shares (`workspace-settings-rail.tsx`).
+  const { groups, settled, accessCheckFailed, accountId, isAccountMember } = useWorkspaceSettingsRailGroups(projectId, {
+    account: !!hostSections.account,
+    apps: !!hostSections.apps,
   });
-  const accountId = project.data?.account_id;
-
-  // One batch for the page gate, the resource rows and Members: the same
-  // `PROJECT_PAGE_ACTIONS` batch the sidebar has usually cached already.
-  const pageCans = useProjectPageCans(projectId);
-  const settingsCans = useProjectCans(projectId, CUSTOMIZE_SECTION_GATE_ACTIONS, { accountId });
-  const canAdmin = pageCans[PROJECT_ACTIONS.PROJECT_SETTINGS_WRITE];
-  const projectRowsOpen = canAdmin?.allowed === true;
-  const drives = useFeatureFlag(projectId, 'drives');
-  const evals = useFeatureFlag(projectId, 'evals');
-
-  // The account rows: the account hub's own rule, for a member of the
-  // workspace's account. A project shared into an account the caller does not
-  // belong to has no account panes for them.
-  const accountsQuery = useAccountsList();
-  const isAccountMember =
-    !!accountId && (accountsQuery.data ?? []).some((account) => account.account_id === accountId);
-  const hub = useAccountHubAccess(isAccountMember ? accountId : undefined);
   const accountPane = hostSections.account;
-  // Kortix Capture is per workspace (its tenant is the account). The row
-  // follows the rule the switcher's Capture link follows: Capture is on for
-  // this workspace, for a member of its account.
-  const capture = useCaptureWorkspace(isAccountMember ? (accountId ?? null) : null);
-  const captureOn = isAccountMember && capture.data?.enabled === true;
-
-  // The Customize rule for each library, without its flag clauses: a flag-off
-  // Loops page explains its own gate (`FeatureGateScreen`) instead of
-  // disappearing from the rail. Repo applies `drives` itself, below.
-  const resources = capabilityAccess(pageCans, { drives: true, reminders: true });
-  const settingsAnswered = answered(settingsCans, CUSTOMIZE_SECTION_GATE_ACTIONS);
-  const settingsProbeFailed = CUSTOMIZE_SECTION_GATE_ACTIONS.some((action) => settingsCans[action]?.isError);
-  const settled =
-    !!canAdmin &&
-    !canAdmin.isLoading &&
-    resources.settled &&
-    settingsAnswered &&
-    !drives.isLoading &&
-    !evals.isLoading &&
-    // Members needs the account id: wait for the project so it never pops in.
-    project.isFetched &&
-    accountsQuery.isFetched &&
-    (!isAccountMember || !accountPane || hub.settled);
-
-  // `resources.tabs` is a fresh array each render; its contents are the key.
-  const allowedTabs = resources.tabs.join(',');
-  const drivesOn = drives.enabled;
-  const evalsOn = evals.enabled;
-  const visibleSections = hub.sectionVisible;
-  const groups = useMemo<RailGroupRows[]>(() => {
-    const allowed = new Set(allowedTabs.split(','));
-    const hubOpen = (tab: AccountSection) => !!accountPane && isAccountMember && visibleSections[tab] === true;
-    const settingsByKey = new Map(
-      projectSettingsSections(tI18nComplete)
-        .filter((s): s is typeof s & { key: ProjectAdminSettingsKey } => s.key !== 'review')
-        .map((s) => [s.key, s] as const),
-    );
-    const label = (key: ProjectAdminSectionKey) => tSettings(`sections.${sectionLabelKey(key)}`);
-    const rowFor = (key: ProjectAdminSectionKey): RailRow | null => {
-      // Capture is a link out to the workspace's Kortix Capture area.
-      if (key === 'capture') {
-        if (!captureOn || !accountId) return null;
-        return {
-          key,
-          href: captureHref(accountId, 'devices'),
-          label: label(key),
-          icon: MonitorPlayIcon,
-          project: false,
-          account: false,
-        };
-      }
-      if (isProjectAdminResource(key)) {
-        const resource = PROJECT_ADMIN_RESOURCES.find((r) => r.key === key);
-        if (!resource || !adminResourceRowOpen(resource, projectRowsOpen, allowed)) return null;
-        if (resource.host && !hostSections[resource.key as 'apps']) return null;
-        if (resource.flag === 'drives' && !drivesOn) return null;
-        if (resource.flag === 'evals' && !evalsOn) return null;
-        return {
-          key,
-          label: label(key),
-          icon: resource.icon,
-          project: true,
-          account: false,
-        };
-      }
-      if (isWorkspaceAccountSection(key)) {
-        const tab = ACCOUNT_TAB_FOR_SECTION[key];
-        if (!tab || !hubOpen(tab)) return null;
-        return {
-          key,
-          label: label(key),
-          icon: ACCOUNT_SECTION_ICONS[key],
-          project: false,
-          account: true,
-        };
-      }
-      const setting = settingsByKey.get(key as ProjectAdminSettingsKey);
-      if (!setting) return null;
-      // The Settings page's rule: a failed probe hides nothing. The pane
-      // itself reports a 403 if the server refuses it.
-      const projectOpen =
-        projectRowsOpen &&
-        (settingsProbeFailed ||
-          isCustomizeSectionVisible(setting.gate, (action) => settingsCans[action]?.allowed === true));
-      const tab = ACCOUNT_TAB_FOR_SECTION[key];
-      const account = !!tab && hubOpen(tab);
-      if (!projectOpen && !account) return null;
-      return { key, label: label(key), icon: setting.icon, project: projectOpen, account };
-    };
-    return WORKSPACE_SETTINGS_GROUPS.map((group) => ({
-      id: group.id,
-      rows: group.sections.map(rowFor).filter((row): row is RailRow => row !== null),
-    })).filter((group) => group.rows.length > 0);
-  }, [
-    allowedTabs,
-    accountPane,
-    isAccountMember,
-    visibleSections,
-    projectRowsOpen,
-    hostSections,
-    drivesOn,
-    evalsOn,
-    settingsCans,
-    settingsProbeFailed,
-    tI18nComplete,
-    tSettings,
-    captureOn,
-    accountId,
-  ]);
 
   // The sections of this page; a link-out row (Capture) is never active.
   const rows = groups.flatMap((group) => group.rows).filter((row) => !row.href);
@@ -481,7 +283,6 @@ export function ProjectAdminDashboard({
   // groups). On the desktop the rail lives only there, open or closed with
   // the sidebar: the page never draws a second one.
   const setRail = useWorkspaceSettingsRailStore((s) => s.setRail);
-  const accessCheckFailed = canAdmin?.isError === true;
   useEffect(() => {
     // The gate probe failed: publish no rows, so the sidebar shows Back
     // beside the error instead of a skeleton that never ends.
@@ -490,26 +291,7 @@ export function ProjectAdminDashboard({
       return;
     }
     if (!settled) return;
-    const toRail = (group: RailGroupRows, label?: string) => ({
-      id: group.id,
-      label,
-      rows: group.rows.map((row) => ({
-        key: row.key,
-        href: row.href ?? projectAdminHref(projectId, row.key),
-        label: row.label,
-        icon: row.icon,
-        linkOut: !!row.href,
-      })),
-    });
-    const footer = groups.find((group) => group.id === RAIL_FOOTER_GROUP);
-    setRail({
-      projectId,
-      groups: groups
-        .filter((group) => group.id !== RAIL_FOOTER_GROUP)
-        .map((group) => toRail(group, tSettings(`groups.${group.id}`))),
-      footer: footer ? toRail(footer) : null,
-      active,
-    });
+    setRail(railFromGroups(projectId, groups, (id) => tSettings(`groups.${id}`), active));
   }, [accessCheckFailed, settled, groups, active, projectId, setRail, tSettings]);
 
   // A settings search result scrolls to the card it names once its pane renders.
@@ -531,7 +313,7 @@ export function ProjectAdminDashboard({
   );
 
   // The gate probe failed: say so once, instead of guessing either way.
-  if (canAdmin?.isError) {
+  if (accessCheckFailed) {
     return (
       <AdminAccessCheckFailed
         onRetry={() => {

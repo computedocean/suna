@@ -16,7 +16,6 @@ import {
   ShareNetworkIcon,
   LockSimpleIcon,
   MagnifyingGlassIcon,
-  PencilSimpleIcon,
   StackIcon,
   TrashIcon,
   UsersThreeIcon,
@@ -74,10 +73,10 @@ import type { AttachedFile } from '../../session/composer/session-chat-input';
 import { useProjectHomeSend } from '../layout/use-project-home-send';
 import { AddTabMenu, StoredTabBody, StoredTabTrigger, type SpaceTabsState } from '../spaces/space-tabs';
 import { SpaceIconButton } from './space-icon';
-import { SpaceFormModal } from './space-form-modal';
 import { spaceParticipants, useSpaceAudienceLabel } from './space-people';
 import { SessionParticipantStack } from '../../session/participants/session-participants';
-import { SpaceShareModal } from './space-share-modal';
+import { SPACE_SETTINGS_PARAM as SETTINGS_PARAM, SpaceSettingsModal, isSpaceSettingsPane, type SpaceSettingsPane } from './space-settings-modal';
+import { MEMORY_HISTORY_PARAM, MEMORY_PAGE_PARAM } from '../memory/memory-view';
 
 /** Rows per page of the space's session history. */
 const PAGE_SIZE = 30;
@@ -169,8 +168,6 @@ function CenteredState({ children }: { children: ReactNode }) {
 
 function SpaceView({ projectId, space, renderFolder, renderFile }: { projectId: string; space: ProjectSessionGroup } & SpaceDriveRenderers) {
   const t = useTranslations('sessionSpaces');
-  const [editing, setEditing] = useState(false);
-  const [sharing, setSharing] = useState(false);
   const canManage = space.can_manage === true;
   const state = useSessionSpaceTabs(projectId, space);
   const ownFolder = sessionGroupDriveFolder(space.group_id);
@@ -186,6 +183,26 @@ function SpaceView({ projectId, space, renderFolder, renderFile }: { projectId: 
     (next: string) => navigate(next === HOME_TAB ? pathname : `${pathname}?tab=${encodeURIComponent(next)}`, { replace: true }),
     [navigate, pathname],
   );
+  // Space settings live in the URL too (`?settings=<pane>`), so a link opens a pane.
+  const askedSettings = searchParams?.get(SETTINGS_PARAM);
+  const settingsPane = isSpaceSettingsPane(askedSettings) ? askedSettings : null;
+  const setSettingsPane = useCallback(
+    (next: SpaceSettingsPane | null) => {
+      const params = new URLSearchParams(searchParams?.toString() ?? '');
+      if (next) params.set(SETTINGS_PARAM, next);
+      else {
+        params.delete(SETTINGS_PARAM);
+        // The Memory pane's open page and history belong to the dialog.
+        params.delete(MEMORY_PAGE_PARAM);
+        params.delete(MEMORY_HISTORY_PARAM);
+      }
+      const query = params.toString();
+      navigate(query ? `${pathname}?${query}` : pathname, { replace: true });
+    },
+    [navigate, pathname, searchParams],
+  );
+  const onEdit = useCallback(() => setSettingsPane('general'), [setSettingsPane]);
+  const onShare = canManage ? () => setSettingsPane('members') : undefined;
 
   return (
     // Capped at the screen height: the app shell above sizes to its content (`min-h-svh`), so
@@ -224,16 +241,26 @@ function SpaceView({ projectId, space, renderFolder, renderFile }: { projectId: 
             />
           </TabsList>
           <div className="flex shrink-0 items-center gap-1">
-            <AudienceShare space={space} onShare={canManage ? () => setSharing(true) : undefined} />
-            <SpaceSettingsMenu projectId={projectId} space={space} onEdit={() => setEditing(true)} />
+            <AudienceShare space={space} onShare={onShare} />
+            <Hint label={t('settings.open')}>
+              <Button
+                variant="secondary"
+                size="icon-base"
+                className="shrink-0"
+                aria-label={t('settings.open')}
+                onClick={() => setSettingsPane('general')}
+              >
+                <GearSixIcon className="size-4" />
+              </Button>
+            </Hint>
           </div>
         </header>
         <TabsContent value={HOME_TAB} className="min-h-0 flex-1 overflow-y-auto">
           <SpaceHome
             projectId={projectId}
             space={space}
-            onEdit={() => setEditing(true)}
-            onShare={canManage ? () => setSharing(true) : undefined}
+            onEdit={onEdit}
+            onShare={onShare}
             onOpenFiles={() => setTab(FILES_TAB)}
           />
         </TabsContent>
@@ -254,8 +281,14 @@ function SpaceView({ projectId, space, renderFolder, renderFile }: { projectId: 
           </TabsContent>
         ))}
       </Tabs>
-      <SpaceFormModal projectId={projectId} space={space} open={editing} onOpenChange={setEditing} />
-      {canManage ? <SpaceShareModal projectId={projectId} space={space} open={sharing} onOpenChange={setSharing} /> : null}
+      <SpaceSettingsModal
+        projectId={projectId}
+        space={space}
+        pane={settingsPane}
+        onPaneChange={setSettingsPane}
+        onOpenChange={(open) => setSettingsPane(open ? (settingsPane ?? 'general') : null)}
+        renderFolder={renderFolder}
+      />
     </div>
   );
 }
@@ -305,8 +338,8 @@ export function SpaceSettingsMenu({
         </Hint>
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuItem className="cursor-pointer" onSelect={onEdit}>
-            <PencilSimpleIcon />
-            {t('editDetails')}
+            <GearSixIcon />
+            {t('settings.open')}
           </DropdownMenuItem>
           {space.can_manage === true ? (
             <>
@@ -333,7 +366,7 @@ export function SpaceSettingsMenu({
               successToast(t('deleted'));
               setConfirmOpen(false);
               const all = uiRoutes().sessionSpaces?.(projectId);
-              router.push(all ?? uiRoutes().project(projectId));
+              router.replace(all ?? uiRoutes().project(projectId));
             },
             onError: () => errorToast(t('deleteFailed')),
           });

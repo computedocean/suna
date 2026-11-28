@@ -16,6 +16,9 @@ import { projectsView } from '../workspaces/rows';
  */
 export const INTERNAL_SESSION_TITLE_KEY_NAME = 'internal-session-title';
 
+/** The same kind of one-call key, for one automatic Space memory update (`projects/lib/space-memory-update`). Deleted after the call. */
+export const INTERNAL_SPACE_MEMORY_KEY_NAME = 'internal-space-memory';
+
 export interface CreatedGatewayKey {
   key_id: string;
   name: string;

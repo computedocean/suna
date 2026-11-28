@@ -45,6 +45,7 @@ import { startSessionLogPurgeWorker, stopSessionLogPurgeWorker } from './session
 import { startStorageBillingWorker, stopStorageBillingWorker } from './storage-billing';
 import { startSessionModelFallbackWorker, stopSessionModelFallbackWorker } from './session-model-fallback';
 import { startSpaceWatcher, stopSpaceWatcher } from './space-watcher';
+import { startSpaceMemoryJob, stopSpaceMemoryJob } from './space-memory';
 import { startGoalReconciler, stopGoalReconciler } from './goal-reconciler';
 import { startEvalRunner, stopEvalRunner } from './eval-runner';
 import { startWorkspaceCacheBuilder, stopWorkspaceCacheBuilder } from './workspace-cache-builder';
@@ -135,6 +136,9 @@ export const JOBS: readonly Job[] = [
   { ticks: { 'retention-erasure': 26 * HOUR }, start: startRetentionErasureWorker, stop: stopRetentionErasureWorker },
   // Proactive spaces (flag `spaces_proactive`): wake each watched space's watcher on new events, at most every 10 min.
   { ticks: { 'space-watcher': 10 * MIN }, start: startSpaceWatcher, stop: stopSpaceWatcher },
+  // Spaces (flag `session_groups`, `memory_auto_update` on): file durable facts from idle sessions into the Space memory, 5 Spaces per tick.
+  // Stale limit: 3 min between ticks + up to 5 × ~80 s of model calls, with margin.
+  { ticks: { 'space-memory': 15 * MIN }, start: startSpaceMemoryJob, stop: stopSpaceMemoryJob },
   // Goals (flag `goals`): finishes partial creates, repairs heartbeats, flags lost owners and stalled verifications.
   { ticks: { 'goal-reconciler': 10 * MIN }, start: startGoalReconciler, stop: stopGoalReconciler },
   { ticks: { 'eval-runner': 10 * MIN }, start: startEvalRunner, stop: stopEvalRunner },

@@ -19,6 +19,7 @@
  * (`parent_session_id`, or the older `metadata.spawned_by_session`) stays
  * with its parent.
  */
+import { logger } from '../../lib/logger';
 import { SESSION_GROUPS_MAX, type SessionGroupIcon, type SpaceTab } from '@kortix/api-contract';
 import { accountMembers, projectSessionGroupMembers, projectSessionGroups, projectSessions } from '@kortix/db';
 import { isProjectGlyphName, normalizeProjectGlyphColor, suggestSpaceIcon } from '@kortix/shared';
@@ -81,6 +82,7 @@ export async function createSessionGroup(input: {
   projectId: string;
   name: string;
   description?: string | null;
+  instructions?: string | null;
   /** Already checked (`normalizeSessionGroupIcon`). Absent: the icon the name suggests. */
   icon?: SessionGroupIcon;
   createdBy: string | null;
@@ -97,6 +99,7 @@ export async function createSessionGroup(input: {
           projectId: input.projectId,
           name: input.name,
           description: input.description || null,
+          instructions: input.instructions || null,
           icon: input.icon ?? suggestSpaceIcon(input.name),
           position: existing.length,
           createdBy: input.createdBy,
@@ -111,15 +114,16 @@ export async function createSessionGroup(input: {
 }
 
 /**
- * Rename a group of the project, change its description or its icon. Its own
- * name in another case is free. An empty description clears it; `icon: null`
+ * Rename a group of the project, change its description, its instructions or
+ * its icon. Its own name in another case is free. An empty description or
+ * empty instructions clear them; `icon: null`
  * takes the icon off (clients then draw the suggested one). The icon is
  * already checked (`normalizeSessionGroupIcon`).
  */
 export async function updateSessionGroup(
   projectId: string,
   groupId: string,
-  input: { name?: string; description?: string | null; icon?: SessionGroupIcon | null },
+  input: { name?: string; description?: string | null; instructions?: string | null; memory_auto_update?: boolean; icon?: SessionGroupIcon | null },
 ): Promise<{ ok: true; group: SessionGroupRow } | { ok: false; code: 'group_name_taken' | 'group_not_found' }> {
   try {
     const [group] = await db
@@ -127,6 +131,8 @@ export async function updateSessionGroup(
       .set({
         ...(input.name !== undefined ? { name: input.name } : {}),
         ...(input.description !== undefined ? { description: input.description || null } : {}),
+        ...(input.instructions !== undefined ? { instructions: input.instructions || null } : {}),
+        ...(input.memory_auto_update !== undefined ? { memoryAutoUpdate: input.memory_auto_update } : {}),
         ...(input.icon !== undefined ? { icon: input.icon } : {}),
         updatedAt: new Date(),
       })
@@ -268,7 +274,7 @@ export async function setSessionGroupSharing(input: {
   memberIds: readonly string[];
   addedBy: string;
 }): Promise<{ ok: true; group: SessionGroupRow; memberIds: string[] } | { ok: false; code: 'group_not_found' | 'not_a_member' }> {
-  return db.transaction(async (tx) => {
+  const result = await db.transaction(async (tx) => {
     const [group] = await tx
       .select()
       .from(projectSessionGroups)
@@ -298,6 +304,21 @@ export async function setSessionGroupSharing(input: {
     forgetSessionListPollEtags(input.projectId);
     return { ok: true as const, group: updated!, memberIds: wanted };
   });
+  if (result.ok) {
+    // A running sandbox keeps the Space folder mounted until its mounts are
+    // enforced again: re-check the project's now, so a person removed from the
+    // Space loses its Files and memory folder at once, not at the next resume.
+    // Off the request's path; a failure leaves the next resume to do it.
+    void import('../../drives/service')
+      .then(({ enforceDriveMounts }) => enforceDriveMounts({ projectId: input.projectId }))
+      .catch((error: unknown) =>
+        logger.warn('[session-groups] mounts not re-checked after a sharing change', {
+          project_id: input.projectId,
+          error: error instanceof Error ? error.message : String(error),
+        }),
+      );
+  }
+  return result;
 }
 
 /**

@@ -31,6 +31,7 @@ import { SortMenu, useStoredSort } from '../../primitives/sort-menu';
 import { UiLink as Link, useUiRouter, useUiViewerId } from '../../providers/ui-provider';
 import { SpaceSettingsMenu } from './space-detail-page';
 import { SpaceFormModal } from './space-form-modal';
+import { SPACE_SETTINGS_PARAM } from './space-settings-modal';
 import { SpaceIconBare } from './space-icon';
 import { spaceAudience, spaceParticipants } from './space-people';
 import { SessionParticipantStack } from '../../session/participants/session-participants';
@@ -54,7 +55,6 @@ export function SpacesPage({ projectId }: { projectId: string }) {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useStoredSort<SpaceSort>(SORT_STORAGE_KEY, SORTS, 'activity');
   const [creating, setCreating] = useState(false);
-  const [editing, setEditing] = useState<ProjectSessionGroup | null>(null);
 
   if (flag.isLoading) return null;
   if (!flag.enabled) {
@@ -77,6 +77,11 @@ export function SpacesPage({ projectId }: { projectId: string }) {
   const open = (space: ProjectSessionGroup) => {
     const href = uiRoutes().sessionSpace?.(projectId, space.group_id);
     if (href) router.push(href);
+  };
+  // Space settings open on the space page, which owns the Drive explorer its Files pane needs.
+  const openSettings = (space: ProjectSessionGroup) => {
+    const href = uiRoutes().sessionSpace?.(projectId, space.group_id);
+    if (href) router.push(`${href}?${SPACE_SETTINGS_PARAM}=general`);
   };
   const sortLabel = { activity: t('sortActivity'), name: t('sortName'), created: t('sortCreated') };
 
@@ -114,10 +119,10 @@ export function SpacesPage({ projectId }: { projectId: string }) {
     body = (
       <div className="space-y-1">
         {mine.length > 0 ? (
-          <SpaceGroup label={t('yourSpaces')} spaces={mine} projectId={projectId} onEdit={setEditing} />
+          <SpaceGroup label={t('yourSpaces')} spaces={mine} projectId={projectId} onEdit={openSettings} />
         ) : null}
         {shared.length > 0 ? (
-          <SpaceGroup label={t('sharedWithYou')} spaces={shared} projectId={projectId} onEdit={setEditing} />
+          <SpaceGroup label={t('sharedWithYou')} spaces={shared} projectId={projectId} onEdit={openSettings} />
         ) : null}
       </div>
     );
@@ -152,14 +157,6 @@ export function SpacesPage({ projectId }: { projectId: string }) {
       </ProjectPageHeader>
       <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2 sm:px-3">{body}</div>
       <SpaceFormModal projectId={projectId} space={null} open={creating} onOpenChange={setCreating} onSaved={open} />
-      <SpaceFormModal
-        projectId={projectId}
-        space={editing}
-        open={editing !== null}
-        onOpenChange={(next) => {
-          if (!next) setEditing(null);
-        }}
-      />
     </div>
   );
 }

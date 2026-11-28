@@ -36,7 +36,7 @@ import { sessionPreviewTabId } from '../../internal/stores/session-browser-store
 import {
   AlarmIcon,
   FolderOpenIcon,
-  GlobeIcon,
+  AppWindowIcon,
   MonitorIcon,
   ScrollIcon,
   TerminalWindowIcon,
@@ -45,7 +45,7 @@ import {
 
 const TOOL_META: Record<QuickView, { label: string; Icon: Icon }> = {
   terminal: { label: 'Terminal', Icon: TerminalWindowIcon },
-  browser: { label: 'Browser', Icon: GlobeIcon },
+  browser: { label: 'Browser', Icon: AppWindowIcon },
   files: { label: 'Files', Icon: FolderOpenIcon },
   audit: { label: 'Audit', Icon: ScrollIcon },
   reminders: { label: 'Loops', Icon: AlarmIcon },

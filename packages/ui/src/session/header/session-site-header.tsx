@@ -89,7 +89,7 @@ import {
   CodeSimpleIcon as Code2,
   FileArrowDownIcon as FileDown,
   FolderSimpleIcon,
-  GlobeSimpleIcon,
+  AppWindowIcon,
   MonitorIcon,
   StackIcon as Layers,
   PencilSimpleIcon,
@@ -116,7 +116,7 @@ const DEV_TOOLS: {
   Icon: React.ComponentType<{ className?: string }>;
 }[] = [
     { view: 'terminal', label: 'Terminal', Icon: TerminalIcon },
-    { view: 'browser', label: 'Browser', Icon: GlobeSimpleIcon },
+    { view: 'browser', label: 'Browser', Icon: AppWindowIcon },
     // The computer's live screen (`session-desktop.tsx`).
     { view: 'desktop', label: 'Desktop', Icon: MonitorIcon },
     { view: 'files', label: 'Files', Icon: FolderSimpleIcon },
