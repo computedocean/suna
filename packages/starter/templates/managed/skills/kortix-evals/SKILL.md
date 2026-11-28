@@ -41,6 +41,14 @@ The eval loop. Follow it for any change to an agent.
    verifier that checks the end state, not the transcript wording. Start
    with 5 to 20 tasks that cover the real uses, the hard cases and the ways
    the agent fails today. Add a task for every bug you fix.
+   Tasks you just wrote run from your session branch: commit, `git push`,
+   then run with `--ref <branch>` (and `--path <dir>` before the suite is in
+   kortix.yaml). Do not merge first to measure: merging changes the
+   workspace for everyone, so offer it after the baseline, when the person
+   wants the tasks kept.
+   ```bash
+   kortix evals run --path evals/refunds --agent support-replies --ref "$(git rev-parse --abbrev-ref HEAD)" --wait
+   ```
 2. **Prove each task.** Run `oracle` (it runs `solution/solve.sh`) and `nop`
    (it does nothing). Every task must score 1 with oracle and 0 with nop.
    A task that passes with nop is broken: its verifier checks nothing.
@@ -270,6 +278,7 @@ its content hash, so a re-run runs the same tasks.
 | `kortix evals datasets` | the built-in datasets (`kortix/…`), the Harbor Hub and the legacy registry |
 | `kortix evals tasks --dataset <name>[@<version>]` | the tasks of a dataset |
 | `kortix evals run <suite> [--agent <name>[@<model>]] [--attempts <n>] [--task <glob>] [--wait]` | start a job |
+| `kortix evals run --path <dir> --agent <name> [--ref <branch\|sha>]` | start a job on the tasks under a path, without a suite; `--ref` reads them from a branch, so tasks run before a merge |
 | `kortix evals run --dataset <name>[@<version>] --agent <name> [--task <glob>]` | start a job on a dataset, without a suite |
 | `kortix evals jobs` / `show <job>` / `watch <job>` | read jobs and scores |
 | `kortix evals trial <job> <trial> [--file <path>]` | one trial and its files |
