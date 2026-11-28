@@ -149,6 +149,7 @@ export {
   type UseWorkspacesResult,
   type UseWorkspaceOptions,
 } from './use-workspaces';
+export { useSessionStatsTotals } from './use-session-stats';
 export { useWorkspaceSecrets, useProjectSecrets, workspaceSecretsKey, projectSecretsKey } from './use-project-secrets';
 export { useAccountSecretResources, useSessionProviderSecretPools, useSubscriptionUsage, useSubscriptionUsages, useSubscriptionConnections } from './use-provider-secrets';
 export {

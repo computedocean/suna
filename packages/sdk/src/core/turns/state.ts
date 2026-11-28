@@ -425,7 +425,7 @@ function assistantTokensCost(assistant: AssistantInfoLike, lookup?: ModelPricing
 
 /**
  * Aggregate billed cost for an entire session from step-finish parts.
- * Matches per-turn `getTurnCost` and mobile session stats aggregation.
+ * Matches per-turn `getTurnCost`; `getSessionStats` reports it as a session's cost.
  */
 export function getSessionCost(
   messages: ReadonlyArray<{ info?: MessageInfoLike; parts: PartLike[] }>,

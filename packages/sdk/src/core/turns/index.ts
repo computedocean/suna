@@ -16,6 +16,7 @@ export * from './parts';
 export * from './peer-message-prompt';
 export * from './segments';
 export * from './session-report';
+export * from './session-stats';
 export * from './shell';
 export * from './state';
 export * from './subagent-notice';

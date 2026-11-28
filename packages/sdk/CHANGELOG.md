@@ -5,6 +5,16 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+### Added (session statistics; additive)
+- `getSessionStats(messages)`: a transcript's message count, `getSessionCost`, the five
+  step-finish token counters (absent ones count as zero) and the latest message time
+  (`updated ?? completed ?? created`). `sumSessionStats(items)` sums many sessions;
+  `sumSessionTokens(tokens)` adds the five counters. Type `SessionStats`.
+- `useSessionStatsTotals(runtimeId, sessionIds, enabled?)` (`@kortix/sdk/react`): `{ totals,
+  loading }` of many sessions on one runtime. Each session's transcript comes from
+  `loadSessionExportMessages(sessionId)` (the runtime only); it polls every 60 s and is fresh for
+  30 s. Without a runtime id it reads nothing. Moved from the mobile project page.
+
 ### Added (cost-export record analysis; additive)
 - `analyzeCostExport(result)`: reads a `fetchCostExportCsv` result once and returns it with
   `rowCount` (data records, header excluded) and `capped` (the count reached `rowCap`, so the

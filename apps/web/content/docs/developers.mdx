@@ -9380,6 +9380,7 @@ Pure functions over v1 messages (`MessageWithParts`, `kortix.transcript.v1`, `KO
 | `isTextPart`, `isToolPart`, `isReasoningPart`, `isFilePart`, `isAgentPart`, `isCompactionPart`, `isSnapshotPart`, `isPatchPart`, `isStepPart`, `getPartText` | Type guards. |
 | `sortSessions(now)` · `childMapByParent(sessions)` · `allDescendantIds(map, id)` | Session list order and hierarchy. |
 | `getFilename`, `getDirectory`, `relativizePath`, `stripAnsi`, `formatTokens` | Formatting. |
+| `getSessionStats(messages)` · `sumSessionStats(items)` · `sumSessionTokens(tokens)` | A transcript's message count, cost, token counters and latest time · their sum over sessions · the token total. `useSessionStatsTotals(runtimeId, sessionIds)` (`@kortix/sdk/react`) reads and sums them for many sessions. |
 
 The grouping and status functions accept the structural types `PartLike`, `MessageInfoLike`, `TurnLike`, `ToolStateLike` and `SessionStatusLike`, so your own message shapes work.
 
