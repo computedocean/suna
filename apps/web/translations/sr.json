@@ -27733,7 +27733,33 @@
   },
   "appsList": {
     "search": "Pretraži aplikacije",
-    "noMatch": "Nijedna aplikacija se ne poklapa"
+    "noMatch": "Nijedna aplikacija se ne poklapa",
+    "create": "Napravi aplikaciju",
+    "viewLabel": "Prikaz",
+    "viewGrid": "Mreža",
+    "viewList": "Lista",
+    "columnName": "Naziv",
+    "columnStatus": "Status",
+    "columnUpdated": "Ažurirano",
+    "tabsLabel": "Vrste",
+    "tabs": {
+      "all": "Sve",
+      "app": "Aplikacije",
+      "slides": "Prezentacije",
+      "sheet": "Tabele",
+      "doc": "Dokumenti",
+      "pdf": "PDF-ovi",
+      "page": "Stranice"
+    },
+    "kind": {
+      "app": "Aplikacija",
+      "slides": "Prezentacija",
+      "sheet": "Tabela",
+      "doc": "Dokument",
+      "pdf": "PDF",
+      "page": "Stranica"
+    },
+    "columnKind": "Vrsta"
   },
   "helpMenu": {
     "trigger": "Pomoć",
@@ -27760,5 +27786,99 @@
     "clarificationFailed": "Pojašnjenje nije poslato. Pokušajte ponovo.",
     "discussionLabel": "Razgovarajte o pitanju bez odgovaranja",
     "sendClarification": "Pošalji pojašnjenje"
+  },
+  "appCreate": {
+    "title": "Napravi aplikaciju",
+    "description": "Opiši je, a agent je pravi i postavlja među tvoje aplikacije. Može da napravi i prezentacije, tabele i dokumente.",
+    "placeholder": "Stranica na kojoj se tim prijavljuje svakog jutra",
+    "templatesHeading": "Počni od šablona",
+    "kindsLabel": "Vrste šablona",
+    "kinds": {
+      "app": "Aplikacije",
+      "slides": "Prezentacije",
+      "sheet": "Tabele",
+      "doc": "Dokumenti"
+    },
+    "artifactsNote": "Agent to objavljuje u <link>Artefakti</link>.",
+    "templates": {
+      "attendance": {
+        "title": "Evidencija prisustva",
+        "description": "Dnevne prijave za tim ili razred, sa nedeljnim pregledom",
+        "prompt": "Napravi i postavi Kortix App za evidenciju prisustva. Svaka osoba se prijavi jednom dnevno jednim dodirom. Prikaži današnju listu ko je tu, a ko nedostaje, i nedeljni pregled po osobi. Svi u workspace-u mogu da je otvore."
+      },
+      "requestForm": {
+        "title": "Obrazac za zahteve",
+        "description": "Jedan obrazac za zahteve i lista za pregled i zatvaranje",
+        "prompt": "Napravi i postavi Kortix App sa obrascem za zahteve. Ljudi šalju naslov, detalje i prioritet. Pregledači vide sve zahteve u listi, filtriraju po statusu i označavaju svaki kao otvoren, u toku ili završen."
+      },
+      "metricsDashboard": {
+        "title": "Kontrolna tabla metrika",
+        "description": "Grafikoni tvojih brojeva iz povezanog alata ili CSV-a",
+        "prompt": "Napravi i postavi Kortix App koja prikazuje naše ključne metrike na grafikonima. Uzmi brojeve iz povezanog alata ili iz CSV-a u Files. Prikaži trend za poslednjih 90 dana i promenu u odnosu na prethodni period."
+      },
+      "projectBoard": {
+        "title": "Tabla projekta",
+        "description": "Zadaci u kolonama po statusu, sa nosiocima i rokovima",
+        "prompt": "Napravi i postavi Kortix App sa tablom projekta. Zadaci su u kolonama po statusu: Za uraditi, U toku, Gotovo. Svaki zadatak ima nosioca i rok, i može da se prevuče u drugu kolonu."
+      },
+      "customerLookup": {
+        "title": "Pretraga klijenata",
+        "description": "Pronađi nalog i vidi njegov paket, korišćenje i otvorene tikete",
+        "prompt": "Napravi i postavi Kortix App za pretragu klijenata. Pretraži po imenu ili e-adresi, pa prikaži paket naloga, skorašnje korišćenje i otvorene tikete podrške iz naših povezanih alata."
+      },
+      "teamDirectory": {
+        "title": "Imenik tima",
+        "description": "Svi u timu sa ulogom, timom i kontaktom",
+        "prompt": "Napravi i postavi Kortix App sa imenikom tima. Prikaži ime, ulogu, tim i kontakt podatke svake osobe, sa pretragom i filterom po timu."
+      },
+      "pitchDeck": {
+        "title": "Prezentacija za investitore",
+        "description": "Problem, proizvod, rast i zahtev, u deset slajdova",
+        "prompt": "Napravi prezentaciju koja predstavlja našu kompaniju u deset slajdova: problem, naš proizvod, kako radi, rast, tržište, tim i zahtev. Koristi stvarne činjenice iz Files gde postoje. Objavi je kao artefakt."
+      },
+      "quarterlyReview": {
+        "title": "Kvartalni pregled",
+        "description": "Rezultati u odnosu na ciljeve, sa grafikonima i planom za sledeći kvartal",
+        "prompt": "Napravi prezentaciju za naš kvartalni pregled: rezultate po svakom cilju sa grafikonom, šta je prošlo dobro, šta nije i plan za sledeći kvartal. Koristi stvarne brojeve iz Files ili naših povezanih alata. Objavi je kao artefakt."
+      },
+      "productLaunch": {
+        "title": "Lansiranje proizvoda",
+        "description": "Šta izlazi, za koga je i kako to najavljujemo",
+        "prompt": "Napravi prezentaciju za lansiranje proizvoda: šta izlazi, za koga je, koji problem rešava, plan demonstracije, cenu i plan najave. Objavi je kao artefakt."
+      },
+      "budget": {
+        "title": "Budžet",
+        "description": "Planirani i stvarni troškovi po kategoriji, sa zbirovima",
+        "prompt": "Napravi tabelu za naš budžet: jedan red po kategoriji sa planiranim troškom, stvarnim troškom i razlikom, kolone po mesecima i red sa zbirovima. Objavi je kao artefakt."
+      },
+      "salesPipeline": {
+        "title": "Prodajni levak",
+        "description": "Poslovi po fazi sa vrednošću, nosiocem i sledećim korakom",
+        "prompt": "Napravi tabelu za naš prodajni levak: jedan red po poslu sa kompanijom, fazom, vrednošću, nosiocem, sledećim korakom i datumom zatvaranja, sortirano po fazi. Koristi poslove iz našeg povezanog CRM-a ako postoji. Objavi je kao artefakt."
+      },
+      "contentCalendar": {
+        "title": "Kalendar sadržaja",
+        "description": "Objave po datumu, kanalu i nosiocu za mesec",
+        "prompt": "Napravi tabelu za kalendar sadržaja za sledeći mesec: jedan red po objavi sa datumom, kanalom, temom, nosiocem i statusom. Objavi je kao artefakt."
+      },
+      "projectBrief": {
+        "title": "Opis projekta",
+        "description": "Cilj, obim, nosioci i prekretnice na jednoj stranici",
+        "prompt": "Napiši opis projekta kao dokument: cilj, zašto je važan, šta je u obimu a šta nije, nosioce, prekretnice sa datumima i otvorena pitanja. Objavi ga kao artefakt."
+      },
+      "weeklyUpdate": {
+        "title": "Nedeljni izveštaj",
+        "description": "Šta je isporučeno, šta sledi i šta je blokirano",
+        "prompt": "Napiši naš nedeljni izveštaj kao dokument: šta je isporučeno ove nedelje, šta sledi, šta je blokirano i ko može da ga odblokira. Koristi aktivnost ove nedelje iz naših povezanih alata. Objavi ga kao artefakt."
+      },
+      "productSpec": {
+        "title": "Specifikacija proizvoda",
+        "description": "Problem, rešenje, zahtevi i kako merimo uspeh",
+        "prompt": "Napiši specifikaciju proizvoda kao dokument: problem, ko ga ima, predloženo rešenje, zahteve, šta je van obima i kako merimo uspeh. Objavi je kao artefakt."
+      }
+    },
+    "newApp": "Nova aplikacija",
+    "noStart": "Ovde ne možeš da praviš aplikacije",
+    "noStartHint": "Zamoli osobu koja upravlja workspace-om da ti dozvoli pokretanje sesija."
   }
 }

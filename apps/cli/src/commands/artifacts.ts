@@ -12,6 +12,7 @@ import {
   setArtifactPinned,
   updateArtifact,
   type Artifact,
+  type ArtifactKind,
   type ArtifactListScope,
   type ArtifactType,
   type ArtifactVisibility,
@@ -23,13 +24,16 @@ import { emitJson, fail, missing, resolveProjectContext, surfaceApiError, takeFl
 import { C, help, pad, status } from '../style.ts';
 import { artifactsPublish } from './artifacts-publish.ts';
 import { artifactsTypes } from './artifacts-types.ts';
-import { TYPES, short, type ArtifactsFlags, type ArtifactsRun } from './artifacts-run.ts';
+import { KINDS, TYPES, kindOf, short, type ArtifactsFlags, type ArtifactsRun } from './artifacts-run.ts';
 const HELP = help`Usage: kortix artifacts <subcommand> [options]
 
 An artifact is a path in the workspace's Files shared as one of two types:
   doc    a Markdown file people read and edit in place (export as PDF)
   html   an HTML page, or a folder with index.html and its assets: a deck,
          a dashboard, a mockup, a tool
+Its kind says what it is in the Apps gallery: slides (a deck), sheet (a
+spreadsheet-like table), page (a dashboard, a tool, any other page), pdf, or
+doc (a doc only). Default: doc for a doc, page for html.
 The files are plain files in Files: edit them there (in a session, under
 /drives) or with \`publish --id\`. Every save is a version.
 
@@ -45,6 +49,8 @@ Subcommands:
                              --title "<title>" (default: the doc's # heading or
                              the page's <title>), --description "<sentence>",
                              --visibility private|workspace|public (default private),
+                             --kind slides|sheet|page|pdf|doc (what it is;
+                             doc only for a .md, the others only for html),
                              --space <slug>, --agent <name> (where it is grouped;
                              default agent: this session's agent; spaces are
                              Work in progress, shown only with the workspace flag
@@ -57,6 +63,7 @@ Subcommands:
                              .md file. --base-version <v> refuses the save
                              (exit 3) when someone saved after version <v>
                              (the entry_version from \`info\` or \`pull\`).
+                             --kind <kind> marks what it is now.
   ls                         Artifacts you may view, newest first.
                              --mine, --shared (others shared), --pinned,
                              --type doc|html, --search "<text>",
@@ -97,7 +104,7 @@ Exit codes: 0 ok, 1 API error, 2 usage error, 3 version conflict.
 
 Examples:
   kortix artifacts publish report.md --title "Q3 churn report"
-  kortix artifacts publish ./deck --visibility workspace
+  kortix artifacts publish ./deck --kind slides --visibility workspace
   kortix artifacts add /Company/Plans/roadmap.md --visibility workspace
   kortix artifacts share 3f2a1b9c --visibility public
 `;
@@ -122,7 +129,7 @@ async function artifactsRead(sub: string, { pid, client, f, a0, a1, resolve, out
       if (f.json) return out(list, '');
       if (!list.length) return out(null, 'No artifacts yet. Publish one with `kortix artifacts publish <file>`.');
       for (const a of list) {
-        process.stdout.write(`${C.dim}${short(a.artifact_id)}${C.reset}  ${pad(a.type, 6)}${pad(toWorkspaceAlias(a.visibility), 11)}${pad(formatRelative(a.updated_at, { maxRelativeDays: null }) ?? '—', 9)}${a.pinned ? '★ ' : ''}${a.title}  ${C.dim}${a.path}${C.reset}\n`);
+        process.stdout.write(`${C.dim}${short(a.artifact_id)}${C.reset}  ${pad(kindOf(a), 7)}${pad(toWorkspaceAlias(a.visibility), 11)}${pad(formatRelative(a.updated_at, { maxRelativeDays: null }) ?? '—', 9)}${a.pinned ? '★ ' : ''}${a.title}  ${C.dim}${a.path}${C.reset}\n`);
       }
       return 0;
     }
@@ -134,7 +141,7 @@ async function artifactsRead(sub: string, { pid, client, f, a0, a1, resolve, out
       if (f.json) return out(a, '');
       process.stdout.write(`${C.bold}${a.title}${C.reset}  ${C.dim}${a.artifact_id}${C.reset}\n`);
       if (sub === 'info') {
-        process.stdout.write(`  ${a.type} · ${toWorkspaceAlias(a.visibility)}${a.shared_with_user_ids.length ? ` + ${a.shared_with_user_ids.length} people` : ''} · by ${a.created_by.name ?? a.created_by.email ?? a.created_by.user_id} · updated ${formatRelative(a.updated_at, { maxRelativeDays: null }) ?? '—'}${a.can_edit ? '' : ' · view only'}\n`);
+        process.stdout.write(`  ${a.type}${a.kind && a.kind !== a.type ? ` · ${a.kind}` : ''} · ${toWorkspaceAlias(a.visibility)}${a.shared_with_user_ids.length ? ` + ${a.shared_with_user_ids.length} people` : ''} · by ${a.created_by.name ?? a.created_by.email ?? a.created_by.user_id} · updated ${formatRelative(a.updated_at, { maxRelativeDays: null }) ?? '—'}${a.can_edit ? '' : ' · view only'}\n`);
         process.stdout.write(`  ${C.dim}entry_version${C.reset} ${a.entry_version ?? '-'}\n`);
         if (a.description) process.stdout.write(`  ${a.description}\n`);
         for (const file of a.version.files) process.stdout.write(`  ${C.dim}${pad(String(file.size), 9)}${C.reset}${file.path}\n`);
@@ -243,6 +250,7 @@ function parseFlags(rest: string[]): ArtifactsFlags {
     space: takeFlagValue(rest, ['--space']),
     agent: takeFlagValue(rest, ['--agent']),
     clear: takeFlagBool(rest, ['--clear']),
+    kind: takeFlagValue(rest, ['--kind']),
   };
 }
 
@@ -261,6 +269,7 @@ export async function runArtifacts(argv: string[]): Promise<number> {
   if (unknown) return fail(`unknown option "${unknown}". Run \`kortix artifacts --help\`.`);
   if (!KNOWN.includes(sub)) return fail(`unknown subcommand "${sub}". Run \`kortix artifacts --help\`.`);
   if (f.type && !TYPES.includes(f.type)) return fail(`--type must be doc or html.`);
+  if (f.kind !== undefined && !(KINDS as readonly string[]).includes(f.kind)) return fail(`--kind must be slides, sheet, doc, pdf or page.`);
   if (f.visibility && !VISIBILITIES.includes(f.visibility)) return fail(`--visibility must be private, workspace or public.`);
   if (f.space !== undefined && !/^[a-z0-9][a-z0-9_-]{0,62}$/.test(f.space)) return fail(`--space "${f.space}" is not a space slug (lowercase letters, digits, "-" or "_", at most 63 characters).`);
   if (f.agent !== undefined && !/^[a-z0-9][a-z0-9_-]{0,127}$/.test(f.agent)) return fail(`--agent "${f.agent}" is not an agent name.`);
@@ -276,6 +285,7 @@ export async function runArtifacts(argv: string[]): Promise<number> {
     ...(f.title ? { title: f.title } : {}),
     ...(f.description ? { description: f.description } : {}),
     ...(f.visibility ? { visibility: f.visibility as ArtifactVisibility } : {}),
+    ...(f.kind ? { kind: f.kind as ArtifactKind } : {}),
     ...(f.space ? { space: f.space } : {}),
     ...(f.agent ? { agent: f.agent } : {}),
   };
@@ -294,7 +304,7 @@ export async function runArtifacts(argv: string[]): Promise<number> {
       const [a0, a1] = rest;
       const shared = (a: Artifact, verb: string) => {
         if (f.json) return out(a, '');
-        process.stdout.write(`${status.ok(`${verb} "${a.title}" (${a.type}, ${toWorkspaceAlias(a.visibility)})`)} ${C.dim}${short(a.artifact_id)}${C.reset}\n`);
+        process.stdout.write(`${status.ok(`${verb} "${a.title}" (${kindOf(a)}, ${toWorkspaceAlias(a.visibility)})`)} ${C.dim}${short(a.artifact_id)}${C.reset}\n`);
         printLinks(a);
         return 0;
       };

@@ -16,6 +16,13 @@ import { unwrap } from './shared';
 
 /** `doc`: a document Kortix styles and people edit in place. `html`: any page or bundle, served as written. */
 export type ArtifactType = 'doc' | 'html';
+/**
+ * What an artifact is, for the gallery: a finer label than `type`. `doc` goes
+ * only with type `doc`; `slides` (a deck), `sheet` (a spreadsheet-like table),
+ * `pdf` and `page` (any other page) only with `html`. The server answers 400
+ * `kind_mismatch` otherwise.
+ */
+export type ArtifactKind = 'slides' | 'sheet' | 'doc' | 'pdf' | 'page';
 export type ArtifactVisibility = 'private' | 'project' | 'public';
 export type ArtifactListScope = 'all' | 'mine' | 'shared' | 'pinned';
 
@@ -34,6 +41,11 @@ export interface Artifact {
   title: string;
   description: string | null;
   type: ArtifactType;
+  /**
+   * The kind the publisher named, else derived by the server: `doc` for a doc,
+   * `pdf` for a .pdf entry, else `page`. Never null. Older servers omit it.
+   */
+  kind?: ArtifactKind;
   /** The shared path in Files: a folder, or a single file. */
   path: string;
   /** The page a reader opens: `index.md` / `index.html` in a folder, or the file's name. */
@@ -132,6 +144,8 @@ export interface PublishArtifactInput extends ArtifactBindingInput {
   description?: string | null;
   /** Default private. */
   visibility?: ArtifactVisibility;
+  /** What it is. Default: derived (`doc` for index.md, else `page`). */
+  kind?: ArtifactKind;
   /** path → file. `index.md` makes a doc, `index.html` a page. Stored in your folder in Files. */
   files: Record<string, ArtifactFileInput>;
 }
@@ -142,11 +156,14 @@ export interface ShareArtifactPathInput extends ArtifactBindingInput {
   title?: string;
   description?: string | null;
   visibility?: ArtifactVisibility;
+  kind?: ArtifactKind;
 }
 
 export interface SaveArtifactInput {
   title?: string;
   description?: string | null;
+  /** Mark what it is now, e.g. `slides` once a page became a deck. Unset: unchanged. */
+  kind?: ArtifactKind;
   /** path → file, written into the artifact in Files. */
   files: Record<string, ArtifactFileInput>;
   /** The `entry_version` you edited; a newer save fails with 409 `version_conflict`. */
@@ -157,6 +174,8 @@ export interface UpdateArtifactInput extends ArtifactBindingInput {
   title?: string;
   description?: string | null;
   visibility?: ArtifactVisibility;
+  /** Unset: unchanged. */
+  kind?: ArtifactKind;
   /** People who may view a private artifact. Replaces the list. */
   shared_with_user_ids?: string[];
 }

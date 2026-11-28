@@ -10129,6 +10129,8 @@ export const artifacts = kortixSchema.table('artifacts', {
   title: text('title').notNull(),
   description: text('description'),
   type: varchar('type', { length: 16 }).notNull(),
+  /** What the artifact is for the gallery: slides, sheet, doc, pdf or page. Null: derived from type and entry (`resolveArtifactKind`). */
+  kind: varchar('kind', { length: 16 }),
   visibility: varchar('visibility', { length: 16 }).default('private').notNull(),
   sharedWithUserIds: uuid('shared_with_user_ids').array().default(sql`'{}'::uuid[]`).notNull(),
   pinnedByUserIds: uuid('pinned_by_user_ids').array().default(sql`'{}'::uuid[]`).notNull(),
@@ -10147,6 +10149,7 @@ export const artifacts = kortixSchema.table('artifacts', {
   index('idx_artifacts_project_updated').on(table.projectId, table.updatedAt),
   uniqueIndex('idx_artifacts_drive_path').on(table.driveId, table.root, table.entry),
   check('artifacts_type_check', sql`${table.type} in ('doc', 'html')`),
+  check('artifacts_kind_check', sql`${table.kind} is null or ${table.kind} in ('slides', 'sheet', 'doc', 'pdf', 'page')`),
   check('artifacts_visibility_check', sql`${table.visibility} in ('private', 'project', 'public')`),
 ]);
 

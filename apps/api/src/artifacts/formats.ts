@@ -15,6 +15,29 @@ export const ARTIFACT_TYPE_KEYS = ['doc', 'html'] as const;
 const MERMAID_CDN = 'https://cdn.jsdelivr.net/npm/mermaid@11.12.0/dist/mermaid.esm.min.mjs';
 export type ArtifactType = (typeof ARTIFACT_TYPE_KEYS)[number];
 
+/**
+ * What an artifact is, for the gallery tabs. A finer label than `type`:
+ *   slides  an html slide deck        sheet  an html spreadsheet-like table
+ *   page    any other html page       pdf    an html artifact whose entry is a .pdf
+ *   doc     a Markdown doc (type doc only)
+ * Stored when the publisher names it; null means "derive" (resolveArtifactKind).
+ */
+export const ARTIFACT_KIND_KEYS = ['slides', 'sheet', 'doc', 'pdf', 'page'] as const;
+export type ArtifactKind = (typeof ARTIFACT_KIND_KEYS)[number];
+
+/** The kind an artifact shows as: the stored kind, else doc for a doc, pdf for a .pdf entry, else page. */
+export function resolveArtifactKind(row: { kind: string | null; type: string; entry: string }): ArtifactKind {
+  if (row.kind && (ARTIFACT_KIND_KEYS as readonly string[]).includes(row.kind)) return row.kind as ArtifactKind;
+  if (row.type === 'doc') return 'doc';
+  if (/\.pdf$/i.test(row.entry)) return 'pdf';
+  return 'page';
+}
+
+/** `doc` goes only with type doc; every other kind only with type html. */
+export function kindFitsType(kind: ArtifactKind, type: string): boolean {
+  return kind === 'doc' ? type === 'doc' : type === 'html';
+}
+
 /** The type of an entry file, or null when it is neither. */
 export function typeOfEntry(name: string): ArtifactType | null {
   if (/\.(md|markdown)$/i.test(name)) return 'doc';
@@ -82,6 +105,7 @@ export const ARTIFACT_TYPES = [
       'The page runs sandboxed: no cookies, storage may throw (wrap it in try/catch), no access to Kortix. Load libraries from a CDN (cdnjs, jsdelivr, unpkg) at a pinned version when they do real work.',
       'Make it work from 400px wide to a large screen with no sideways scroll, and in light and dark: every color a token on :root, redefined under prefers-color-scheme: dark.',
       'The design method (treatment, token plan, charts, copy, naming) is in the kortix-artifacts skill, references/design.md.',
+      'Name what it is with `kind` (`--kind` in the CLI): slides for a deck, sheet for a spreadsheet-like table, page for a dashboard, tool or any other page. Default: page.',
     ].join('\n'),
     starter: HTML_STARTER,
   },

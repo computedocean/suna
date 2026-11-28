@@ -93,6 +93,8 @@ for (const [name, experimental] of [
     // Flags come from the bare project row (`useFeatureFlag`).
     queryClient.setQueryData(qk.project.summary(projectId), { project_id: projectId, experimental });
     queryClient.setQueryData(qk.project.apps(projectId), []);
+    // The page also lists artifacts: none here.
+    queryClient.setQueryData(qk.project.artifactList(projectId, JSON.stringify({ scope: 'all', limit: 200 })), []);
     const host = win.document.createElement('div');
     win.document.body.append(host);
     const root = createRoot(host as unknown as Element);

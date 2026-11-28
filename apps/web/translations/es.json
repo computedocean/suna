@@ -27733,7 +27733,33 @@
   },
   "appsList": {
     "search": "Buscar apps",
-    "noMatch": "Ninguna app coincide"
+    "noMatch": "Ninguna app coincide",
+    "create": "Crear aplicación",
+    "viewLabel": "Vista",
+    "viewGrid": "Cuadrícula",
+    "viewList": "Lista",
+    "columnName": "Nombre",
+    "columnStatus": "Estado",
+    "columnUpdated": "Actualizada",
+    "tabsLabel": "Tipos",
+    "tabs": {
+      "all": "Todo",
+      "app": "Aplicaciones",
+      "slides": "Presentaciones",
+      "sheet": "Hojas",
+      "doc": "Documentos",
+      "pdf": "PDF",
+      "page": "Páginas"
+    },
+    "kind": {
+      "app": "Aplicación",
+      "slides": "Presentación",
+      "sheet": "Hoja",
+      "doc": "Documento",
+      "pdf": "PDF",
+      "page": "Página"
+    },
+    "columnKind": "Tipo"
   },
   "helpMenu": {
     "trigger": "Ayuda",
@@ -27760,5 +27786,99 @@
     "clarificationFailed": "No se pudo enviar la aclaración. Inténtalo de nuevo.",
     "discussionLabel": "Hablar sobre la pregunta sin responderla",
     "sendClarification": "Enviar aclaración"
+  },
+  "appCreate": {
+    "title": "Crear una aplicación",
+    "description": "Descríbela y un agente la crea y la despliega en tus aplicaciones. También puede hacer presentaciones, hojas y documentos.",
+    "placeholder": "Una página donde el equipo se registra cada mañana",
+    "templatesHeading": "Empezar con una plantilla",
+    "kindsLabel": "Tipos de plantilla",
+    "kinds": {
+      "app": "Aplicaciones",
+      "slides": "Presentaciones",
+      "sheet": "Hojas",
+      "doc": "Documentos"
+    },
+    "artifactsNote": "El agente lo publica en <link>Artefactos</link>.",
+    "templates": {
+      "attendance": {
+        "title": "Control de asistencia",
+        "description": "Registro diario para un equipo o una clase, con un resumen semanal",
+        "prompt": "Crea y despliega una Kortix App de asistencia. Cada persona se registra una vez al día con un toque. Muestra la lista de hoy con quién está y quién falta, y un resumen semanal por persona. Cualquiera del workspace puede abrirla."
+      },
+      "requestForm": {
+        "title": "Formulario de solicitudes",
+        "description": "Un formulario para solicitudes y una lista para revisarlas y cerrarlas",
+        "prompt": "Crea y despliega una Kortix App con un formulario de solicitudes. Las personas envían un título, detalles y una prioridad. Quienes revisan ven todas las solicitudes en una lista, la filtran por estado y marcan cada una como abierta, en curso o hecha."
+      },
+      "metricsDashboard": {
+        "title": "Panel de métricas",
+        "description": "Gráficos de tus cifras desde una herramienta conectada o un CSV",
+        "prompt": "Crea y despliega una Kortix App que muestre nuestras métricas clave en gráficos. Toma las cifras de una herramienta conectada o de un CSV en Files. Muestra la tendencia de los últimos 90 días y el cambio respecto al periodo anterior."
+      },
+      "projectBoard": {
+        "title": "Tablero de proyecto",
+        "description": "Tareas en columnas por estado, con responsables y fechas límite",
+        "prompt": "Crea y despliega una Kortix App con un tablero de proyecto. Las tareas están en columnas por estado: Pendiente, En curso, Hecho. Cada tarea tiene una persona responsable y una fecha límite, y se puede arrastrar a otra columna."
+      },
+      "customerLookup": {
+        "title": "Búsqueda de clientes",
+        "description": "Busca una cuenta y ve su plan, su uso y sus tickets abiertos",
+        "prompt": "Crea y despliega una Kortix App para buscar clientes. Busca por nombre o correo y muestra el plan de la cuenta, su uso reciente y sus tickets de soporte abiertos desde nuestras herramientas conectadas."
+      },
+      "teamDirectory": {
+        "title": "Directorio del equipo",
+        "description": "Todo el equipo con su rol, su equipo y su contacto",
+        "prompt": "Crea y despliega una Kortix App con un directorio del equipo. Muestra el nombre, el rol, el equipo y los datos de contacto de cada persona, con búsqueda y un filtro por equipo."
+      },
+      "pitchDeck": {
+        "title": "Presentación para inversores",
+        "description": "El problema, el producto, la tracción y lo que pedimos, en diez diapositivas",
+        "prompt": "Haz una presentación que presente nuestra empresa en diez diapositivas: el problema, nuestro producto, cómo funciona, la tracción, el mercado, el equipo y lo que pedimos. Usa datos reales de Files donde existan. Publícala como artefacto."
+      },
+      "quarterlyReview": {
+        "title": "Revisión trimestral",
+        "description": "Resultados frente a objetivos, con gráficos y el plan del próximo trimestre",
+        "prompt": "Haz una presentación para nuestra revisión trimestral: resultados frente a cada objetivo con un gráfico, qué salió bien, qué no y el plan del próximo trimestre. Usa cifras reales de Files o de nuestras herramientas conectadas. Publícala como artefacto."
+      },
+      "productLaunch": {
+        "title": "Lanzamiento de producto",
+        "description": "Qué sale, para quién es y cómo lo anunciamos",
+        "prompt": "Haz una presentación para un lanzamiento de producto: qué sale, para quién es, qué problema resuelve, un guion de demo, el precio y el plan de anuncio. Publícala como artefacto."
+      },
+      "budget": {
+        "title": "Presupuesto",
+        "description": "Gasto previsto y real por categoría, con totales",
+        "prompt": "Haz una hoja para nuestro presupuesto: una fila por categoría con el gasto previsto, el gasto real y la diferencia, columnas por mes y una fila de totales. Publícala como artefacto."
+      },
+      "salesPipeline": {
+        "title": "Embudo de ventas",
+        "description": "Oportunidades por etapa con valor, responsable y siguiente paso",
+        "prompt": "Haz una hoja para nuestro embudo de ventas: una fila por oportunidad con empresa, etapa, valor, responsable, siguiente paso y fecha de cierre, ordenada por etapa. Usa las oportunidades de nuestro CRM conectado si hay uno. Publícala como artefacto."
+      },
+      "contentCalendar": {
+        "title": "Calendario de contenido",
+        "description": "Publicaciones por fecha, canal y responsable del mes",
+        "prompt": "Haz una hoja para el calendario de contenido del próximo mes: una fila por publicación con fecha, canal, tema, responsable y estado. Publícala como artefacto."
+      },
+      "projectBrief": {
+        "title": "Resumen de proyecto",
+        "description": "Objetivo, alcance, responsables e hitos en una página",
+        "prompt": "Escribe un resumen de proyecto como documento: el objetivo, por qué importa, qué entra y qué no, los responsables, los hitos con fechas y las preguntas abiertas. Publícalo como artefacto."
+      },
+      "weeklyUpdate": {
+        "title": "Informe semanal",
+        "description": "Qué salió, qué sigue y qué está bloqueado",
+        "prompt": "Escribe nuestro informe semanal como documento: qué salió esta semana, qué sigue, qué está bloqueado y quién puede desbloquearlo. Usa la actividad de esta semana de nuestras herramientas conectadas. Publícalo como artefacto."
+      },
+      "productSpec": {
+        "title": "Especificación de producto",
+        "description": "El problema, la solución, los requisitos y cómo medirlo",
+        "prompt": "Escribe una especificación de producto como documento: el problema, quién lo tiene, la solución propuesta, los requisitos, qué queda fuera y cómo medimos el éxito. Publícala como artefacto."
+      }
+    },
+    "newApp": "Nueva aplicación",
+    "noStart": "No puedes crear aplicaciones aquí",
+    "noStartHint": "Pide a quien gestiona el workspace que te permita iniciar sesiones."
   }
 }

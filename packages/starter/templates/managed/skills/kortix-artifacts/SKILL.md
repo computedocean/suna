@@ -18,7 +18,10 @@ Before every publish:
    the artifact stays private to the channel's members.
 3. **Answer first**: the recommendation or result is the first paragraph.
 4. **One artifact per thing.** Revising an existing one? Save into it (`--id`).
-5. **Hand it over with `show`**: `url` = the artifact's app link, `title` = its
+5. **Name the kind** of an html artifact: `--kind slides` for a deck,
+   `--kind sheet` for a spreadsheet-like table page, `--kind page` for a
+   dashboard, tool or any other page. A doc needs none (it is `doc`).
+6. **Hand it over with `show`**: `url` = the artifact's app link, `title` = its
    name. The user sees it in the chat and opens it beside the chat. Then one
    line on what it shows.
 </checklist>
@@ -123,6 +126,20 @@ same artifact as the plan changes: its history keeps every earlier version.
 
 `kortix artifacts types <type>` prints the format rules and a starter.
 
+Every artifact also has a **kind**: the tab it shows under in the gallery.
+Pass it with `--kind` when you publish an html artifact:
+
+| Kind | For | Type |
+|---|---|---|
+| `slides` | a slide deck | html |
+| `sheet` | a spreadsheet-like table page: rows and columns to sort, filter or read across | html |
+| `page` | a dashboard, a tool, a mockup, any other page (the default for html) | html |
+| `pdf` | an html artifact whose entry is a PDF (set by the server for a `.pdf` entry) | html |
+| `doc` | a doc (always, and only, for a `.md`) | doc |
+
+A kind that does not fit the type (`--kind slides` on a `.md`, `--kind doc` on
+html) fails with `kind_mismatch`.
+
 **doc**: one `# Title`, then headings, paragraphs, **bold**, *italic*,
 `code`, links, bulleted, numbered and task lists (`- [ ]`), quotes, code
 blocks, tables, ` ```mermaid ` diagrams, images and videos (files in `media/` next to
@@ -142,7 +159,9 @@ pinned version (Chart.js for charts, Reveal.js for decks). It must work from
 Two ways, same result:
 
     kortix artifacts publish report.md --title "Q3 churn report"   # uploads to your Artifacts folder in Drive
-    kortix artifacts publish ./deck                                 # a folder with index.html
+    kortix artifacts publish ./deck --kind slides                   # a folder with index.html: a deck
+    kortix artifacts publish ./pipeline --kind sheet                # a spreadsheet-like table page
+    kortix artifacts publish ./dashboard --kind page                # a dashboard, a tool, any other page
     kortix artifacts add /Company/Plans/roadmap                     # shares a folder already in Drive (index.md or index.html)
 
 A `.md` file is a doc; anything else is html. The command prints the artifact
@@ -195,9 +214,9 @@ an explicit "everyone in the workspace".
 | Command | Does |
 |---|---|
 | `kortix artifacts types [<type>]` | types; one type's format and starter |
-| `kortix artifacts publish <file\|dir> [--title --description --visibility]` | upload and share |
-| `kortix artifacts add <folder> [--title --visibility]` | share a folder already in Drive; its `index.md` or `index.html` stands for the folder, any other lone file is refused (publish it instead) |
-| `kortix artifacts publish <file\|dir> --id <id> [--base-version v]` | save new content |
+| `kortix artifacts publish <file\|dir> [--title --description --visibility --kind]` | upload and share; `--kind slides\|sheet\|page` for html |
+| `kortix artifacts add <folder> [--title --visibility --kind]` | share a folder already in Drive; its `index.md` or `index.html` stands for the folder, any other lone file is refused (publish it instead) |
+| `kortix artifacts publish <file\|dir> --id <id> [--base-version v] [--kind k]` | save new content; `--kind` re-marks what it is |
 | `kortix artifacts ls [--mine\|--shared\|--pinned] [--type t] [--search q]` | list |
 | `kortix artifacts info <id>` / `open <id>` | details, path, links |
 | `kortix artifacts cat <id> [path] [--version v]` / `pull <id> <dir>` | read |

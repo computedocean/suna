@@ -27733,7 +27733,33 @@
   },
   "appsList": {
     "search": "Search Apps",
-    "noMatch": "No App matches"
+    "noMatch": "No App matches",
+    "create": "Create app",
+    "viewLabel": "View",
+    "viewGrid": "Grid",
+    "viewList": "List",
+    "columnName": "Name",
+    "columnStatus": "Status",
+    "columnUpdated": "Updated",
+    "tabsLabel": "Kinds",
+    "tabs": {
+      "all": "All",
+      "app": "Apps",
+      "slides": "Slides",
+      "sheet": "Sheets",
+      "doc": "Docs",
+      "pdf": "PDFs",
+      "page": "Pages"
+    },
+    "kind": {
+      "app": "App",
+      "slides": "Slides",
+      "sheet": "Sheet",
+      "doc": "Doc",
+      "pdf": "PDF",
+      "page": "Page"
+    },
+    "columnKind": "Kind"
   },
   "helpMenu": {
     "trigger": "Help",
@@ -27760,5 +27786,99 @@
     "clarificationFailed": "Could not send clarification. Try again.",
     "discussionLabel": "Discuss the question without answering it",
     "sendClarification": "Send clarification"
+  },
+  "appCreate": {
+    "title": "Create an app",
+    "description": "Describe it and an agent builds it and deploys it to your Apps. It can also make slides, sheets and docs.",
+    "placeholder": "A page where the team checks in each morning",
+    "templatesHeading": "Start from a template",
+    "kindsLabel": "Template kinds",
+    "kinds": {
+      "app": "Apps",
+      "slides": "Slides",
+      "sheet": "Sheets",
+      "doc": "Docs"
+    },
+    "artifactsNote": "The agent publishes it to <link>Artifacts</link>.",
+    "templates": {
+      "attendance": {
+        "title": "Attendance tracker",
+        "description": "Daily check-ins for a team or a class, with a weekly summary",
+        "prompt": "Build and deploy a Kortix App for attendance. Each person checks in once a day with one tap. Show today's list of who is in and who is missing, and a weekly summary per person. Anyone in the workspace can open it."
+      },
+      "requestForm": {
+        "title": "Request form",
+        "description": "One form for requests, and a list to review and close them",
+        "prompt": "Build and deploy a Kortix App with a request form. People submit a title, details and a priority. Reviewers see every request in a list, filter it by status, and mark each one open, in progress or done."
+      },
+      "metricsDashboard": {
+        "title": "Metrics dashboard",
+        "description": "Charts of your numbers from a connected tool or a CSV",
+        "prompt": "Build and deploy a Kortix App that shows our key metrics as charts. Pull the numbers from a connected tool or a CSV in Files. Show the trend for the last 90 days and the change against the previous period."
+      },
+      "projectBoard": {
+        "title": "Project board",
+        "description": "Tasks in columns by status, with owners and due dates",
+        "prompt": "Build and deploy a Kortix App with a project board. Tasks sit in columns by status: To do, In progress, Done. Each task has an owner and a due date, and people can drag a task to another column."
+      },
+      "customerLookup": {
+        "title": "Customer lookup",
+        "description": "Search an account to see its plan, usage and open tickets",
+        "prompt": "Build and deploy a Kortix App to look up a customer. Search by name or email, then show the account's plan, recent usage and open support tickets from our connected tools."
+      },
+      "teamDirectory": {
+        "title": "Team directory",
+        "description": "Everyone on the team with their role, team and contact",
+        "prompt": "Build and deploy a Kortix App with a team directory. Show each person's name, role, team and contact details, with search and a filter by team."
+      },
+      "pitchDeck": {
+        "title": "Pitch deck",
+        "description": "The problem, the product, traction and the ask, in ten slides",
+        "prompt": "Make a slide deck that pitches our company in ten slides: the problem, our product, how it works, traction, the market, the team and the ask. Use real facts from Files where they exist. Publish it as an artifact."
+      },
+      "quarterlyReview": {
+        "title": "Quarterly review",
+        "description": "Results against goals, with charts and next quarter's plan",
+        "prompt": "Make a slide deck for our quarterly review: results against each goal with a chart, what went well, what did not, and the plan for next quarter. Use real numbers from Files or our connected tools. Publish it as an artifact."
+      },
+      "productLaunch": {
+        "title": "Product launch",
+        "description": "What ships, who it is for, and how we announce it",
+        "prompt": "Make a slide deck for a product launch: what ships, who it is for, the problem it solves, a demo outline, pricing and the announcement plan. Publish it as an artifact."
+      },
+      "budget": {
+        "title": "Budget",
+        "description": "Planned and actual spend by category, with totals",
+        "prompt": "Make a sheet for our budget: one row per category with planned spend, actual spend and the difference, monthly columns, and a totals row. Publish it as an artifact."
+      },
+      "salesPipeline": {
+        "title": "Sales pipeline",
+        "description": "Deals by stage with value, owner and next step",
+        "prompt": "Make a sheet for our sales pipeline: one row per deal with company, stage, value, owner, next step and close date, sorted by stage. Use deals from our connected CRM if there is one. Publish it as an artifact."
+      },
+      "contentCalendar": {
+        "title": "Content calendar",
+        "description": "Posts by date, channel and owner for the month",
+        "prompt": "Make a sheet for next month's content calendar: one row per post with date, channel, topic, owner and status. Publish it as an artifact."
+      },
+      "projectBrief": {
+        "title": "Project brief",
+        "description": "Goal, scope, owners and milestones on one page",
+        "prompt": "Write a project brief as a doc: the goal, why it matters, what is in and out of scope, the owners, milestones with dates, and open questions. Publish it as an artifact."
+      },
+      "weeklyUpdate": {
+        "title": "Weekly update",
+        "description": "What shipped, what is next, and what is blocked",
+        "prompt": "Write our weekly update as a doc: what shipped this week, what is next, and what is blocked and who can unblock it. Use this week's activity from our connected tools. Publish it as an artifact."
+      },
+      "productSpec": {
+        "title": "Product spec",
+        "description": "The problem, the solution, requirements and how to measure it",
+        "prompt": "Write a product spec as a doc: the problem, who has it, the proposed solution, requirements, what is out of scope, and how we measure success. Publish it as an artifact."
+      }
+    },
+    "newApp": "New app",
+    "noStart": "You cannot create apps here",
+    "noStartHint": "Ask a workspace manager to let you start sessions."
   }
 }

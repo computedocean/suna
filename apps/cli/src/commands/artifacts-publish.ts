@@ -87,6 +87,7 @@ export async function artifactsPublish(sub: string, { pid, f, a0, a1, meta, reso
           files: first,
           ...(f.title ? { title: f.title } : {}),
           ...(f.description ? { description: f.description } : {}),
+          ...(meta.kind ? { kind: meta.kind } : {}),
           ...(f.baseVersion ? { base_version: f.baseVersion } : {}),
         });
       } else {

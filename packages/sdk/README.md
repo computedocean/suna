@@ -1987,3 +1987,13 @@ the root); a move into its own subtree returns `409`. Deleting a folder moves
 its subfolders and artifacts up one level. Artifact IDs, Files paths, and links stay
 unchanged. React consumers use `useArtifactFolders` and
 `useArtifactFolderMutations` from `@kortix/sdk/react`.
+
+### Artifact kind
+
+Every artifact carries `kind: ArtifactKind` (`'slides' | 'sheet' | 'doc' |
+'pdf' | 'page'`), the gallery tab it shows under. Pass `kind` to
+`createArtifact`, `shareArtifactPath`, `saveArtifact` or `updateArtifact` to
+mark what it is. `doc` goes only with type `doc`; the other kinds only with
+type `html`. A mismatch rejects with `400` `kind_mismatch`. Unset, the server
+derives it: `doc` for a doc, `pdf` for a `.pdf` entry, else `page`. Older
+servers omit `kind`; read `artifact.kind ?? artifact.type`.

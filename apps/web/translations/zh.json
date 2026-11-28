@@ -27733,7 +27733,33 @@
   },
   "appsList": {
     "search": "搜索应用",
-    "noMatch": "没有匹配的应用"
+    "noMatch": "没有匹配的应用",
+    "create": "创建应用",
+    "viewLabel": "视图",
+    "viewGrid": "网格",
+    "viewList": "列表",
+    "columnName": "名称",
+    "columnStatus": "状态",
+    "columnUpdated": "更新时间",
+    "tabsLabel": "类型",
+    "tabs": {
+      "all": "全部",
+      "app": "应用",
+      "slides": "幻灯片",
+      "sheet": "表格",
+      "doc": "文档",
+      "pdf": "PDF",
+      "page": "页面"
+    },
+    "kind": {
+      "app": "应用",
+      "slides": "幻灯片",
+      "sheet": "表格",
+      "doc": "文档",
+      "pdf": "PDF",
+      "page": "页面"
+    },
+    "columnKind": "类型"
   },
   "helpMenu": {
     "trigger": "帮助",
@@ -27760,5 +27786,99 @@
     "clarificationFailed": "无法发送说明请求，请重试。",
     "discussionLabel": "讨论问题而不作答",
     "sendClarification": "发送说明请求"
+  },
+  "appCreate": {
+    "title": "创建应用",
+    "description": "描述你的需求，智能体会构建并部署到你的应用中。它也能制作幻灯片、表格和文档。",
+    "placeholder": "一个让团队每天早上签到的页面",
+    "templatesHeading": "从模板开始",
+    "kindsLabel": "模板类型",
+    "kinds": {
+      "app": "应用",
+      "slides": "幻灯片",
+      "sheet": "表格",
+      "doc": "文档"
+    },
+    "artifactsNote": "智能体会将其发布到<link>工件</link>。",
+    "templates": {
+      "attendance": {
+        "title": "考勤",
+        "description": "团队或班级的每日签到，附每周汇总",
+        "prompt": "构建并部署一个考勤用的 Kortix App。每个人每天一键签到一次。显示今天谁到了、谁缺席，以及每个人的每周汇总。工作区中的任何人都可以打开它。"
+      },
+      "requestForm": {
+        "title": "申请表",
+        "description": "一个提交申请的表单，以及审核和关闭申请的列表",
+        "prompt": "构建并部署一个带申请表的 Kortix App。提交人填写标题、详情和优先级。审核人在列表中查看所有申请，按状态筛选，并把每条标记为待处理、处理中或已完成。"
+      },
+      "metricsDashboard": {
+        "title": "指标看板",
+        "description": "用图表展示来自已连接工具或 CSV 的数据",
+        "prompt": "构建并部署一个用图表展示关键指标的 Kortix App。从已连接的工具或 Files 中的 CSV 获取数据。显示最近 90 天的趋势以及与上一周期的变化。"
+      },
+      "projectBoard": {
+        "title": "项目看板",
+        "description": "按状态分列的任务，带负责人和截止日期",
+        "prompt": "构建并部署一个带项目看板的 Kortix App。任务按状态分列：待办、进行中、已完成。每个任务有负责人和截止日期，可以拖到另一列。"
+      },
+      "customerLookup": {
+        "title": "客户查询",
+        "description": "搜索账户，查看其套餐、用量和未解决工单",
+        "prompt": "构建并部署一个查询客户的 Kortix App。按名称或邮箱搜索，然后从已连接的工具中显示该账户的套餐、近期用量和未解决的支持工单。"
+      },
+      "teamDirectory": {
+        "title": "团队通讯录",
+        "description": "团队每个人的职位、所属团队和联系方式",
+        "prompt": "构建并部署一个带团队通讯录的 Kortix App。显示每个人的姓名、职位、所属团队和联系方式，支持搜索和按团队筛选。"
+      },
+      "pitchDeck": {
+        "title": "融资路演",
+        "description": "用十页幻灯片讲清问题、产品、进展和诉求",
+        "prompt": "制作一份用十页介绍我们公司的幻灯片：问题、我们的产品、工作原理、进展、市场、团队和诉求。尽量使用 Files 中的真实信息。将其发布为工件。"
+      },
+      "quarterlyReview": {
+        "title": "季度回顾",
+        "description": "对照目标的结果、图表和下季度计划",
+        "prompt": "为我们的季度回顾制作幻灯片：每个目标的结果及图表、做得好的、做得不好的，以及下季度计划。使用 Files 或已连接工具中的真实数据。将其发布为工件。"
+      },
+      "productLaunch": {
+        "title": "产品发布",
+        "description": "发布什么、面向谁、如何宣布",
+        "prompt": "为一次产品发布制作幻灯片：发布什么、面向谁、解决什么问题、演示流程、定价和宣布计划。将其发布为工件。"
+      },
+      "budget": {
+        "title": "预算",
+        "description": "按类别列出计划支出和实际支出，附合计",
+        "prompt": "为我们的预算制作一张表格：每个类别一行，包含计划支出、实际支出和差额，按月分列，并附合计行。将其发布为工件。"
+      },
+      "salesPipeline": {
+        "title": "销售管道",
+        "description": "按阶段列出商机及其金额、负责人和下一步",
+        "prompt": "为我们的销售管道制作一张表格：每个商机一行，包含公司、阶段、金额、负责人、下一步和预计成交日期，按阶段排序。如果已连接 CRM，就使用其中的商机。将其发布为工件。"
+      },
+      "contentCalendar": {
+        "title": "内容日历",
+        "description": "按日期、渠道和负责人排列本月的内容",
+        "prompt": "为下个月的内容日历制作一张表格：每条内容一行，包含日期、渠道、主题、负责人和状态。将其发布为工件。"
+      },
+      "projectBrief": {
+        "title": "项目简介",
+        "description": "一页写清目标、范围、负责人和里程碑",
+        "prompt": "写一份项目简介文档：目标、为什么重要、范围内和范围外的内容、负责人、带日期的里程碑以及待解决的问题。将其发布为工件。"
+      },
+      "weeklyUpdate": {
+        "title": "每周更新",
+        "description": "本周交付了什么、接下来做什么、哪里受阻",
+        "prompt": "写一份每周更新文档：本周交付了什么、接下来做什么、哪里受阻以及谁能解决。使用已连接工具中本周的动态。将其发布为工件。"
+      },
+      "productSpec": {
+        "title": "产品规格",
+        "description": "问题、方案、需求以及如何衡量成功",
+        "prompt": "写一份产品规格文档：问题、谁遇到这个问题、提议的方案、需求、不在范围内的内容以及如何衡量成功。将其发布为工件。"
+      }
+    },
+    "newApp": "新建应用",
+    "noStart": "你无法在这里创建应用",
+    "noStartHint": "请让工作区管理员允许你启动会话。"
   }
 }

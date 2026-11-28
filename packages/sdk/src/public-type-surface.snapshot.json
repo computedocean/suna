@@ -153,6 +153,7 @@
     "ArtifactFileInput",
     "ArtifactFolder",
     "ArtifactFolderInput",
+    "ArtifactKind",
     "ArtifactListScope",
     "ArtifactPerson",
     "ArtifactType",

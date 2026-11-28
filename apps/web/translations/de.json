@@ -27733,7 +27733,33 @@
   },
   "appsList": {
     "search": "Apps suchen",
-    "noMatch": "Keine App gefunden"
+    "noMatch": "Keine App gefunden",
+    "create": "App erstellen",
+    "viewLabel": "Ansicht",
+    "viewGrid": "Raster",
+    "viewList": "Liste",
+    "columnName": "Name",
+    "columnStatus": "Status",
+    "columnUpdated": "Aktualisiert",
+    "tabsLabel": "Arten",
+    "tabs": {
+      "all": "Alle",
+      "app": "Apps",
+      "slides": "Folien",
+      "sheet": "Tabellen",
+      "doc": "Dokumente",
+      "pdf": "PDFs",
+      "page": "Seiten"
+    },
+    "kind": {
+      "app": "App",
+      "slides": "Folien",
+      "sheet": "Tabelle",
+      "doc": "Dokument",
+      "pdf": "PDF",
+      "page": "Seite"
+    },
+    "columnKind": "Art"
   },
   "helpMenu": {
     "trigger": "Hilfe",
@@ -27760,5 +27786,99 @@
     "clarificationFailed": "Nachfrage konnte nicht gesendet werden. Versuche es erneut.",
     "discussionLabel": "Die Frage besprechen, ohne sie zu beantworten",
     "sendClarification": "Nachfrage senden"
+  },
+  "appCreate": {
+    "title": "App erstellen",
+    "description": "Beschreibe sie, und ein Agent baut sie und stellt sie unter deinen Apps bereit. Er kann auch Folien, Tabellen und Dokumente erstellen.",
+    "placeholder": "Eine Seite, auf der sich das Team jeden Morgen eincheckt",
+    "templatesHeading": "Mit einer Vorlage beginnen",
+    "kindsLabel": "Vorlagenarten",
+    "kinds": {
+      "app": "Apps",
+      "slides": "Folien",
+      "sheet": "Tabellen",
+      "doc": "Dokumente"
+    },
+    "artifactsNote": "Der Agent veröffentlicht es unter <link>Artefakte</link>.",
+    "templates": {
+      "attendance": {
+        "title": "Anwesenheit",
+        "description": "Tägliches Einchecken für ein Team oder eine Klasse, mit Wochenübersicht",
+        "prompt": "Baue eine Kortix App für die Anwesenheit und stelle sie bereit. Jede Person checkt einmal am Tag mit einem Tippen ein. Zeige die heutige Liste, wer da ist und wer fehlt, und eine Wochenübersicht pro Person. Alle im Workspace können sie öffnen."
+      },
+      "requestForm": {
+        "title": "Anfrageformular",
+        "description": "Ein Formular für Anfragen und eine Liste, um sie zu prüfen und abzuschließen",
+        "prompt": "Baue eine Kortix App mit einem Anfrageformular und stelle sie bereit. Personen senden einen Titel, Details und eine Priorität. Prüfende sehen alle Anfragen in einer Liste, filtern nach Status und setzen jede auf offen, in Arbeit oder erledigt."
+      },
+      "metricsDashboard": {
+        "title": "Kennzahlen-Dashboard",
+        "description": "Diagramme deiner Zahlen aus einem verbundenen Tool oder einer CSV",
+        "prompt": "Baue eine Kortix App, die unsere wichtigsten Kennzahlen als Diagramme zeigt, und stelle sie bereit. Hole die Zahlen aus einem verbundenen Tool oder einer CSV in Files. Zeige den Verlauf der letzten 90 Tage und die Veränderung zum Vorzeitraum."
+      },
+      "projectBoard": {
+        "title": "Projektboard",
+        "description": "Aufgaben in Spalten nach Status, mit Verantwortlichen und Fälligkeiten",
+        "prompt": "Baue eine Kortix App mit einem Projektboard und stelle sie bereit. Aufgaben stehen in Spalten nach Status: Offen, In Arbeit, Erledigt. Jede Aufgabe hat eine verantwortliche Person und ein Fälligkeitsdatum, und Aufgaben lassen sich in eine andere Spalte ziehen."
+      },
+      "customerLookup": {
+        "title": "Kundensuche",
+        "description": "Ein Konto suchen und Tarif, Nutzung und offene Tickets sehen",
+        "prompt": "Baue eine Kortix App, um Kunden nachzuschlagen, und stelle sie bereit. Suche nach Name oder E-Mail und zeige dann Tarif, aktuelle Nutzung und offene Support-Tickets des Kontos aus unseren verbundenen Tools."
+      },
+      "teamDirectory": {
+        "title": "Teamverzeichnis",
+        "description": "Alle im Team mit Rolle, Team und Kontakt",
+        "prompt": "Baue eine Kortix App mit einem Teamverzeichnis und stelle sie bereit. Zeige Name, Rolle, Team und Kontaktdaten jeder Person, mit Suche und einem Filter nach Team."
+      },
+      "pitchDeck": {
+        "title": "Pitch-Deck",
+        "description": "Problem, Produkt, Traktion und das Ziel der Runde in zehn Folien",
+        "prompt": "Erstelle ein Foliendeck, das unser Unternehmen in zehn Folien vorstellt: das Problem, unser Produkt, wie es funktioniert, Traktion, der Markt, das Team und was wir brauchen. Nutze echte Fakten aus Files, wo es sie gibt. Veröffentliche es als Artefakt."
+      },
+      "quarterlyReview": {
+        "title": "Quartalsbericht",
+        "description": "Ergebnisse gegenüber den Zielen, mit Diagrammen und dem Plan fürs nächste Quartal",
+        "prompt": "Erstelle ein Foliendeck für unseren Quartalsbericht: Ergebnisse je Ziel mit einem Diagramm, was gut lief, was nicht, und der Plan für das nächste Quartal. Nutze echte Zahlen aus Files oder unseren verbundenen Tools. Veröffentliche es als Artefakt."
+      },
+      "productLaunch": {
+        "title": "Produktlaunch",
+        "description": "Was erscheint, für wen es ist und wie wir es ankündigen",
+        "prompt": "Erstelle ein Foliendeck für einen Produktlaunch: was erscheint, für wen es ist, welches Problem es löst, ein Demo-Ablauf, Preise und der Ankündigungsplan. Veröffentliche es als Artefakt."
+      },
+      "budget": {
+        "title": "Budget",
+        "description": "Geplante und tatsächliche Ausgaben nach Kategorie, mit Summen",
+        "prompt": "Erstelle eine Tabelle für unser Budget: eine Zeile pro Kategorie mit geplanten und tatsächlichen Ausgaben und der Differenz, Monatsspalten und eine Summenzeile. Veröffentliche sie als Artefakt."
+      },
+      "salesPipeline": {
+        "title": "Vertriebspipeline",
+        "description": "Deals nach Phase mit Wert, Verantwortlichen und nächstem Schritt",
+        "prompt": "Erstelle eine Tabelle für unsere Vertriebspipeline: eine Zeile pro Deal mit Firma, Phase, Wert, verantwortlicher Person, nächstem Schritt und Abschlussdatum, sortiert nach Phase. Nutze Deals aus unserem verbundenen CRM, falls es eines gibt. Veröffentliche sie als Artefakt."
+      },
+      "contentCalendar": {
+        "title": "Redaktionsplan",
+        "description": "Beiträge nach Datum, Kanal und Verantwortlichen für den Monat",
+        "prompt": "Erstelle eine Tabelle für den Redaktionsplan des nächsten Monats: eine Zeile pro Beitrag mit Datum, Kanal, Thema, verantwortlicher Person und Status. Veröffentliche sie als Artefakt."
+      },
+      "projectBrief": {
+        "title": "Projektsteckbrief",
+        "description": "Ziel, Umfang, Verantwortliche und Meilensteine auf einer Seite",
+        "prompt": "Schreibe einen Projektsteckbrief als Dokument: das Ziel, warum es wichtig ist, was dazugehört und was nicht, die Verantwortlichen, Meilensteine mit Daten und offene Fragen. Veröffentliche ihn als Artefakt."
+      },
+      "weeklyUpdate": {
+        "title": "Wochenupdate",
+        "description": "Was erschienen ist, was als Nächstes kommt und was blockiert ist",
+        "prompt": "Schreibe unser Wochenupdate als Dokument: was diese Woche erschienen ist, was als Nächstes kommt, was blockiert ist und wer es lösen kann. Nutze die Aktivität dieser Woche aus unseren verbundenen Tools. Veröffentliche es als Artefakt."
+      },
+      "productSpec": {
+        "title": "Produktspezifikation",
+        "description": "Das Problem, die Lösung, Anforderungen und wie wir den Erfolg messen",
+        "prompt": "Schreibe eine Produktspezifikation als Dokument: das Problem, wer es hat, die vorgeschlagene Lösung, Anforderungen, was nicht dazugehört und wie wir den Erfolg messen. Veröffentliche sie als Artefakt."
+      }
+    },
+    "newApp": "Neue App",
+    "noStart": "Du kannst hier keine Apps erstellen",
+    "noStartHint": "Bitte eine Person, die den Workspace verwaltet, dir das Starten von Sitzungen zu erlauben."
   }
 }

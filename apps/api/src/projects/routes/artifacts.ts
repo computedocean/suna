@@ -27,7 +27,7 @@ import { projectsApp } from '../lib/app';
 import { loadProjectRosterIds } from '../lib/project-access-view';
 import { buildSessionParticipants, sessionAudienceIds } from '../lib/session-audience';
 import { DriveStorageError, legacyDriveStatus } from '../../drives/volumes';
-import { ARTIFACT_TYPES, ARTIFACT_TYPE_KEYS } from '../../artifacts/formats';
+import { ARTIFACT_KIND_KEYS, ARTIFACT_TYPES, ARTIFACT_TYPE_KEYS, resolveArtifactKind } from '../../artifacts/formats';
 import { BINDING_AGENT_RE, SPACE_SLUG_RE } from '@kortix/shared/app-config';
 import {
   ARTIFACT_VISIBILITIES,
@@ -60,6 +60,10 @@ const ProjectParams = z.object({ workspaceId: z.string().uuid() });
 const ArtifactParams = ProjectParams.extend({ artifactId: z.string().uuid() });
 const TypeEnum = z.enum(ARTIFACT_TYPE_KEYS);
 const VisibilityEnum = z.enum(ARTIFACT_VISIBILITIES);
+const KindEnum = z.enum(ARTIFACT_KIND_KEYS);
+const KindInput = KindEnum.optional().openapi({
+  description: 'What it is: slides, sheet, pdf or page for an html artifact, doc for a doc. A mismatch with the type answers 400 kind_mismatch. Unset: derived (doc, pdf for a .pdf entry, else page).',
+});
 const CommitId = z.string().min(1).max(80).regex(/^[A-Za-z0-9_-]+$/);
 
 const FileInputSchema = z.object({
@@ -81,6 +85,7 @@ const PublishBody = z.object({
   title: z.string().min(1).max(200).optional().openapi({ description: "Default: a doc's first `# ` heading, a page's <title>." }),
   description: z.string().max(1000).nullable().optional(),
   visibility: VisibilityEnum.optional().openapi({ description: 'Default private.' }),
+  kind: KindInput,
   files: Files.openapi({ description: 'path → file. index.md makes a doc, index.html a page. One file is stored as `<title>.md|.html` in your folder in Files, more as a folder.' }),
   ...BindingFields,
 });
@@ -90,12 +95,14 @@ const ShareBody = z.object({
   title: z.string().min(1).max(200).optional(),
   description: z.string().max(1000).nullable().optional(),
   visibility: VisibilityEnum.optional(),
+  kind: KindInput,
   ...BindingFields,
 });
 
 const SaveBody = z.object({
   title: z.string().min(1).max(200).optional(),
   description: z.string().max(1000).nullable().optional(),
+  kind: KindInput,
   files: Files.openapi({ description: 'path → file, written into the artifact in Files. A single-file artifact takes only its entry (index.md / index.html stand for it).' }),
   base_version: z.string().min(1).max(200).optional().openapi({ description: 'The entry version (`entry_version`) you edited. A newer save answers 409 version_conflict.' }),
 });
@@ -104,6 +111,7 @@ const PatchBody = z.object({
   title: z.string().min(1).max(200).optional(),
   description: z.string().max(1000).nullable().optional(),
   visibility: VisibilityEnum.optional(),
+  kind: KindInput,
   shared_with_user_ids: z.array(z.string().uuid()).max(200).optional().openapi({ description: 'People who may view a private artifact. Replaces the list.' }),
   ...BindingFields,
 });
@@ -116,6 +124,7 @@ const ArtifactSchema = z.object({
   title: z.string(),
   description: z.string().nullable(),
   type: TypeEnum,
+  kind: KindEnum.openapi({ description: 'What it is: the kind the publisher named, else derived (doc, pdf for a .pdf entry, else page). Never null.' }),
   path: z.string().openapi({ description: 'The shared path in Files: a folder, or a single file.' }),
   entry: z.string(),
   visibility: VisibilityEnum,
@@ -178,6 +187,7 @@ async function serialize(rows: ArtifactRow[], viewer: Viewer) {
       title: row.title,
       description: row.description,
       type: row.type as z.infer<typeof TypeEnum>,
+      kind: resolveArtifactKind(row),
       path: sharedPath(row),
       entry: row.entry,
       visibility: row.visibility as z.infer<typeof VisibilityEnum>,

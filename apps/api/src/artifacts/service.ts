@@ -51,12 +51,12 @@ import {
   writeVolumeFile,
   writeVolumeFiles,
 } from '../drives/volumes';
-import { ARTIFACT_TYPE_KEYS, docTitle, htmlTitle, typeOfEntry, type ArtifactType } from './formats';
+import { ARTIFACT_TYPE_KEYS, docTitle, htmlTitle, kindFitsType, typeOfEntry, type ArtifactKind, type ArtifactType } from './formats';
 import { entrySaves } from './versions';
 export const ARTIFACT_VISIBILITIES = ['private', 'project', 'public'] as const;
 export type ArtifactVisibility = (typeof ARTIFACT_VISIBILITIES)[number];
 export type ArtifactRow = typeof artifacts.$inferSelect;
-export type { ArtifactType };
+export type { ArtifactKind, ArtifactType };
 
 export const MAX_FILE_BYTES = 16 * 1024 * 1024;
 export const MAX_PUBLISH_BYTES = 32 * 1024 * 1024;
@@ -215,6 +215,15 @@ function refuseWiderThanChannel(folder: string | null, visibility: ArtifactVisib
   }
 }
 
+/** 400 kind_mismatch when `kind` does not go with `type`: doc only with a doc, the others only with html. */
+function refuseKindMismatch(kind: ArtifactKind | undefined | null, type: string): void {
+  if (kind && !kindFitsType(kind, type)) {
+    throw new ArtifactError(400, kind === 'doc'
+      ? 'kind doc is only for a doc (index.md)'
+      : `kind ${kind} is only for an html artifact (index.html)`, 'kind_mismatch');
+  }
+}
+
 function decodeFile(path: string, file: FileInput): Uint8Array<ArrayBuffer> {
   if (typeof file.content === 'string') return new Uint8Array(Buffer.from(file.content, 'utf8'));
   if (typeof file.content_base64 === 'string') return new Uint8Array(Buffer.from(file.content_base64, 'base64'));
@@ -267,7 +276,7 @@ async function exists(volume: DriveVolume, path: string): Promise<boolean> {
 export async function publishNew(
   scope: { accountId: string; projectId: string },
   author: Author,
-  input: { title?: string; description?: string | null; visibility?: ArtifactVisibility; files: Record<string, FileInput> } & Binding,
+  input: { title?: string; description?: string | null; visibility?: ArtifactVisibility; kind?: ArtifactKind; files: Record<string, FileInput> } & Binding,
   channelFolder: string | null = null,
 ): Promise<ArtifactRow> {
   if (input.folder_id) await requireArtifactFolder(scope.projectId, input.folder_id);
@@ -276,6 +285,7 @@ export async function publishNew(
   const entry = ENTRIES.find((e) => files.some((f) => f.rel === e));
   if (!entry) throw new ArtifactError(400, 'An artifact needs an index.md (a doc) or an index.html (a page)', 'missing_entry');
   const type = typeOfEntry(entry)!;
+  refuseKindMismatch(input.kind, type);
   const entryText = new TextDecoder().decode(files.find((f) => f.rel === entry)!.bytes);
   const title = input.title?.trim() || titleOf(type, entryText) || 'Untitled';
   const drive = await ensureProjectDrive(scope.accountId, scope.projectId);
@@ -294,7 +304,7 @@ export async function publishNew(
   const binding = await bindingAtCreate(author, input);
   const row = await insertGalleryArtifact({
     projectId: scope.projectId, accountId: scope.accountId, driveId: drive.driveId,
-    root: written.root, entry, folder: true, title, type,
+    root: written.root, entry, folder: true, title, type, kind: input.kind ?? null,
     description: input.description ?? null, visibility: input.visibility ?? 'private',
     createdByUserId: author.userId, createdBySessionId: author.sessionId, galleryFolderId: input.folder_id ?? null,
     ...binding,
@@ -310,7 +320,7 @@ export async function share(
   scope: { accountId: string; projectId: string },
   author: Author,
   viewer: Viewer,
-  input: { path: string; title?: string; description?: string | null; visibility?: ArtifactVisibility } & Binding,
+  input: { path: string; title?: string; description?: string | null; visibility?: ArtifactVisibility; kind?: ArtifactKind } & Binding,
 ): Promise<ArtifactRow> {
   if (input.folder_id) await requireArtifactFolder(scope.projectId, input.folder_id);
   const path = normalizeDrivePath(input.path);
@@ -339,11 +349,12 @@ export async function share(
     refuseWiderThanChannel(await privateFolderOfRoot(scope.projectId, target.root), input.visibility);
   }
   const type = typeOfEntry(target.entry)!;
+  refuseKindMismatch(input.kind, type);
   const text = await (await readVolumeFile(driveVolume(drive), join(target.root, target.entry))).text();
   const binding = await bindingAtCreate(author, input);
   const row = await insertGalleryArtifact({
     projectId: scope.projectId, accountId: scope.accountId, driveId: drive.driveId,
-    root: target.root, entry: target.entry, folder: target.folder, type,
+    root: target.root, entry: target.entry, folder: target.folder, type, kind: input.kind ?? null,
     title: input.title?.trim() || titleOf(type, text) || target.entry,
     description: input.description ?? null, visibility: input.visibility ?? 'private',
     createdByUserId: author.userId, createdBySessionId: author.sessionId, galleryFolderId: input.folder_id ?? null,
@@ -381,8 +392,9 @@ export async function entryVersion(row: ArtifactRow, at?: string): Promise<strin
  */
 export async function publishChanges(
   row: ArtifactRow,
-  input: { title?: string; description?: string | null; files: Record<string, FileInput>; base_version?: string },
+  input: { title?: string; description?: string | null; kind?: ArtifactKind; files: Record<string, FileInput>; base_version?: string },
 ): Promise<ArtifactRow> {
+  refuseKindMismatch(input.kind, row.type);
   const drive = await driveOf(row);
   const files = encodeFiles(input.files).map((f) => ({ ...f, rel: row.folder ? f.rel : f.rel === 'index.md' || f.rel === 'index.html' ? row.entry : f.rel }));
   if (!row.folder && files.some((f) => f.rel !== row.entry)) throw new ArtifactError(400, `This artifact is one file: publish only ${row.entry}`, 'single_file');
@@ -416,6 +428,7 @@ export async function publishChanges(
       updatedAt: new Date(),
       ...(title ? { title } : {}),
       ...(input.description !== undefined ? { description: input.description } : {}),
+      ...(input.kind ? { kind: input.kind } : {}),
     }).where(eq(artifacts.artifactId, row.artifactId)).returning();
     return updated!;
   });
@@ -551,13 +564,15 @@ export function canManage(row: ArtifactRow, viewer: Viewer): boolean {
 
 export async function updateArtifactMeta(
   row: ArtifactRow,
-  patch: { title?: string; description?: string | null; visibility?: ArtifactVisibility; shared_with_user_ids?: string[] } & Binding,
+  patch: { title?: string; description?: string | null; visibility?: ArtifactVisibility; kind?: ArtifactKind; shared_with_user_ids?: string[] } & Binding,
 ): Promise<ArtifactRow> {
+  refuseKindMismatch(patch.kind, row.type);
   if (patch.visibility && patch.visibility !== 'private') refuseWiderThanChannel(await artifactPrivateFolder(row), patch.visibility);
   const meta = {
     ...(patch.title?.trim() ? { title: patch.title.trim() } : {}),
     ...(patch.description !== undefined ? { description: patch.description } : {}),
     ...(patch.visibility ? { visibility: patch.visibility } : {}),
+    ...(patch.kind ? { kind: patch.kind } : {}),
     ...(patch.shared_with_user_ids ? { sharedWithUserIds: [...new Set(patch.shared_with_user_ids)] } : {}),
   };
   const binding = {
