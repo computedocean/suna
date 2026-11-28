@@ -73,11 +73,16 @@ const checkedId = (id: string): string => {
 
 const commitOf = async (project: ProjectRow, ref?: string | null) => {
   const gitProject = await withProjectGitAuth(project);
-  try {
-    return { gitProject, commit: await resolveCommitSha(gitProject, ref ?? undefined) };
-  } catch {
-    throw new EvalConfigError([`The ref ${ref ?? gitProject.defaultBranch} does not resolve to a commit of this project's repository.`]);
+  // A branch the person (or their session) just pushed is not in the mirror until its next refresh:
+  // `kortix evals run --ref <branch>` right after `git push` answered 422. Ask the remote once before refusing.
+  for (const freshness of [false, true] as const) {
+    try {
+      return { gitProject, commit: await resolveCommitSha(gitProject, ref ?? undefined, freshness) };
+    } catch {
+      /* try the remote, then refuse */
+    }
   }
+  throw new EvalConfigError([`The ref ${ref ?? gitProject.defaultBranch} does not resolve to a commit of this project's repository.`]);
 };
 
 const metaString = (value: unknown): string | null => (typeof value === 'string' && value.trim() ? value.trim() : null);

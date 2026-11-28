@@ -100,11 +100,13 @@ function decodeStatusChar(code: string): GitCommitFile['status'] {
  * Resolve a ref (branch name, tag, "HEAD") to a full 40-char commit SHA.
  * Used by the snapshot builder to pin a build to a specific commit even
  * when the default branch moves underneath it.
+ * `freshness: true` asks the remote for this ref now: a session branch pushed
+ * straight to the upstream is not in the mirror until the next refresh.
  */
 export async function resolveCommitSha(
   project: GitBackedProject,
   ref?: string,
-  freshness: Extract<MirrorRefresh, false | 'tip-proof'> = false,
+  freshness: MirrorRefresh = false,
 ): Promise<string> {
   const treeRef = validateRef(ref || project.defaultBranch);
   const repoPath = await (freshness
