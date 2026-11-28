@@ -29,7 +29,7 @@ evals:
 | Task | Capability | Steps | Graded on |
 |---|---|---|---|
 | `agent-newsletter-writer` | agents | 1 | A new agent exists, only one; its instructions do the job and forbid invented numbers (judged). |
-| `connector-mcp` | connectors | add-and-use · oauth-link | The DeepWiki MCP connector answers (the grader calls it) and the reply lists its sections; then a Linear connector waiting for sign-in, with the link in the chat. |
+| `connector-mcp` | connectors | add-and-use · linear-ask · oauth-link | The DeepWiki MCP connector answers (the grader calls it) and the reply lists its sections; "connect our Linear too" starts no sign-in and says what it gives agents (judged); after the yes, a Linear connector waiting for sign-in, with the link in the chat. |
 | `secret-request` | secrets | request · verify | The reply carries a live secret link (the API resolves it); `setup.sh` fills it; the value appears nowhere in the session and its end is not read back. |
 | `memory-remember-forget` | memory | remember · forget | The memory pages the next session reads hold both facts; after "forget", only the one kept. |
 | `app-opening-hours` | apps | 1 | A public App answers at its URL with the opening hours. |

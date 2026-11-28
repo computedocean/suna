@@ -12,6 +12,11 @@ for q in late-order damaged-cake changed-mind; do
 done
 git add evals && git -c user.email=oracle@example.test -c user.name=oracle commit -qm "Refund evals for support-replies"
 git push -q origin HEAD
-branch=$(git rev-parse --abbrev-ref HEAD)
-kortix evals run --path evals/refunds --agent support-replies --ref "$branch" --json > /tmp/job.json
+# A just-pushed commit can take a moment to resolve on the API side (422 "does not resolve"): retry.
+sha=$(git rev-parse HEAD)
+for i in 1 2 3 4 5 6; do
+  kortix evals run --path evals/refunds --agent support-replies --ref "$sha" --json > /tmp/job.json 2>/tmp/run.err && break
+  sleep 10
+done
+[ -s /tmp/job.json ] || { cat /tmp/run.err; exit 1; }
 mkdir -p /logs/agent; echo "⏳ The baseline runs: support-replies on 3 refund tasks." > /logs/agent/response.md
