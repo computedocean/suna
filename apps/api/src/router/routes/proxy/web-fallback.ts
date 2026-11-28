@@ -79,7 +79,7 @@ async function scrape(request: Record<string, unknown>): Promise<Response | null
     return Response.json({ success: false, error: `The page answered HTTP ${page.status}` }, { status: 424 });
   }
   const contentType = page.headers.get('content-type') ?? '';
-  if (contentType && !/^text\/|json|xml/i.test(contentType)) {
+  if (contentType && !/^(?:text\/|application\/(?:[a-z0-9!#$&^_.+-]+\+)?(?:json|xml)(?:\s*;|$))/i.test(contentType)) {
     await page.body?.cancel().catch(() => {});
     return null; // a PDF or an image: the provider's job
   }

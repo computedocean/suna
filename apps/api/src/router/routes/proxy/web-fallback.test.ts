@@ -263,6 +263,23 @@ describe('page scrape fallback (KRTX-5162)', () => {
     expect(performance.now() - started).toBeLessThan(2_000);
   });
 
+  for (const type of ['application/x-notjson-binary', 'image/xmlish', 'application/jsonp', 'application/xml-binary']) {
+    test(`an unsupported media type does not become scrape text: ${type}`, async () => {
+      network(PLAN_LIMIT, SERPER_OK, { status: 200, body: 'synthetic binary', type });
+      const response = await call('firecrawl', '/v2/scrape', { url: 'https://page.example/binary' });
+      expect(response.status).toBe(503);
+    });
+  }
+
+  for (const type of ['text/plain', 'application/json; charset=utf-8', 'application/xml', 'application/ld+json', 'application/rss+xml']) {
+    test(`a supported text media type remains readable: ${type}`, async () => {
+      network(PLAN_LIMIT, SERPER_OK, { status: 200, body: 'synthetic text', type });
+      const response = await call('firecrawl', '/v2/scrape', { url: 'https://page.example/text' });
+      expect(response.status).toBe(200);
+      expect((await response.json() as ScrapeBody).data.markdown).toBe('synthetic text');
+    });
+  }
+
   test("a PDF is not read by the fallback: the provider's 503 stays", async () => {
     network(PLAN_LIMIT, SERPER_OK, { status: 200, body: '%PDF-1.7', type: 'application/pdf' });
 
