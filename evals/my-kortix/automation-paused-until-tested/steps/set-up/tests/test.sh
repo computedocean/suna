@@ -1,5 +1,5 @@
 #!/bin/bash
-# scheduled: one weekday 09:00 Europe/London trigger that starts an agent. not_live_untested: it is paused, or it already ran once (its test). says_state: the reply says whether it is live (judged).
+# scheduled: a weekday 09:00 Europe/London trigger that starts an agent (a paused older copy may stay; at most one live). not_live_untested: it is paused, or it already ran once (its test). says_state: the reply says whether it is live (judged).
 mkdir -p /logs/verifier
 judge() { kortix evals judge "$@" || { echo "kortix evals judge failed: no reward, so the trial counts as an error, not a 0"; rm -f /logs/verifier/reward.json; exit 1; }; }
 python3 - <<'PY'
@@ -18,7 +18,8 @@ def london(t):
     return 'london' in str(t.get('timezone') or (t.get('source') or {}).get('timezone') or '').lower()
 found = digests()
 tested = [t for t in found if ran(t)]
-save({'scheduled': 1 if len(found) == 1 and london(found[0]) else 0, 'not_live_untested': 1 if found and all(not live(t) or t in tested for t in found) else 0})
+# A rebuilt automation may leave the old one paused next to it: deleting it needs the person's word. At most one may be live.
+save({'scheduled': 1 if found and all(london(t) for t in found) and sum(1 for t in found if live(t)) <= 1 else 0, 'not_live_untested': 1 if found and all(not live(t) or t in tested for t in found) else 0})
 PY
 [ $? = 0 ] || { echo "the grader crashed: no reward, so the trial counts as an error, not a 0"; rm -f /logs/verifier/reward.json; exit 1; }
 judge \
