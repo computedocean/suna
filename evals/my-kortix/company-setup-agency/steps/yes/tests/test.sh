@@ -1,5 +1,5 @@
 #!/bin/bash
-# writer: content-writer exists with no secrets and no connectors. schedule: one Monday 09:00 Europe/Berlin agent trigger, paused or already tested. invite: Ana is invited as a member.
+# writer: content-writer exists with no secrets and no connectors. schedule: a Monday 09:00 Europe/Berlin agent trigger, paused or already tested (a paused older copy may stay; at most one live). invite: Ana is invited as a member.
 mkdir -p /logs/verifier
 judge() { kortix evals judge "$@" || { echo "kortix evals judge failed: no reward, so the trial counts as an error, not a 0"; rm -f /logs/verifier/reward.json; exit 1; }; }
 python3 - <<'PY'
@@ -21,7 +21,8 @@ def ran(t):
 none = lambda v: v in (None, 'none', [], '')
 w = writer(); found = report()
 save({'writer': 1 if w and none(w.get('secrets')) and none(w.get('connectors')) else 0,
-      'schedule': 1 if len(found) == 1 and 'berlin' in str(found[0].get('timezone') or (found[0].get('source') or {}).get('timezone') or '').lower() and (not live(found[0]) or ran(found[0])) else 0,
+      # A failed test may leave its copy paused next to the fixed one (deleting needs the person's word). At most one live, and a live one tested.
+      'schedule': 1 if found and all('berlin' in str(t.get('timezone') or (t.get('source') or {}).get('timezone') or '').lower() for t in found) and sum(1 for t in found if live(t)) <= 1 and all(not live(t) or ran(t) for t in found) else 0,
       'invite': 1 if any(re.search(r'"(project_role|role)":\s*"member"', json.dumps(i)) for i in ana()) else 0})
 PY
 [ $? = 0 ] || { echo "the grader crashed: no reward, so the trial counts as an error, not a 0"; rm -f /logs/verifier/reward.json; exit 1; }

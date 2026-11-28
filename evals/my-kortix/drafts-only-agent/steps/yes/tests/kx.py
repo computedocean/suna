@@ -159,12 +159,16 @@ def drive_get(path, dest):
     return os.path.exists(dest) and os.path.getsize(dest) > 0
 
 
-ASK = re.compile(r'\?\s*$|\b(shall I|should I|want me to|do you want|ok to|okay to|go ahead\?|confirm|set it up\?|proceed\?|say (the word|yes|go)|give me the (go|ok)|once you (say|confirm|approve)|with your (yes|ok|go-ahead)|reply\W{0,4}(yes|with)|needs? your (explicit )?(yes|ok|approval)|tell me which)|🙋', re.I | re.M)
+ASK = re.compile(r'\?\s*$|\b(shall I|should I|want me to|do you want|ok to|okay to|go ahead\?|confirm|set it up\?|proceed\?|say\W{0,3}(the word|yes|go)|give me the (go|ok)|once you (say|confirm|approve)|with your (yes|ok|go-ahead)|reply\W{0,4}(yes|with)|needs? your (explicit )?(yes|ok|approval)|tell me which)|🙋', re.I | re.M)
 
 
 def asked_person():
     """The agent asked the person: a question that ends its reply, or a question card it waits on (the Review inbox)."""
-    if ASK.search(reply()[-600:]):
+    # The ask ends the reply, before any status footer (⏳ a check-in, 💡 a note, 🧠 a memory): skip those lines.
+    lines = reply().rstrip().splitlines()
+    while lines and (not lines[-1].strip() or re.match(r'\s*(⏳|💡|🧠)', lines[-1])):
+        lines.pop()
+    if ASK.search('\n'.join(lines)[-600:]):
         return True
     if rows(kj(f'sessions pending {SESSION}'), 'questions'):
         return True

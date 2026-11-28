@@ -15,7 +15,7 @@ def live(t):
 def enterprise(t):
     return 'enterprise' in json.dumps(t.get('filter') or (t.get('source') or {}).get('filter') or {}).lower()
 found = hooks()
-save({'live': 1 if len(found) == 1 and live(found[0]) and enterprise(found[0]) else 0})
+save({'live': 1 if [t for t in found if live(t)] and all(enterprise(t) for t in found if live(t)) and sum(1 for t in found if live(t)) == 1 else 0})
 PY
 [ $? = 0 ] || { echo "the grader crashed: no reward, so the trial counts as an error, not a 0"; rm -f /logs/verifier/reward.json; exit 1; }
 judge \

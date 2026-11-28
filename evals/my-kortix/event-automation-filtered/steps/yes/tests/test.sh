@@ -15,7 +15,8 @@ def live(t):
 def enterprise(t):
     return 'enterprise' in json.dumps(t.get('filter') or (t.get('source') or {}).get('filter') or {}).lower()
 found = hooks()
-save({'saved': 1 if len(found) == 1 and enterprise(found[0]) else 0})
+# A rebuilt hook may leave the old one paused (deleting needs the person's word): every hook filtered, at most one live.
+save({'saved': 1 if found and all(enterprise(t) for t in found) and sum(1 for t in found if live(t)) <= 1 else 0})
 PY
 [ $? = 0 ] || { echo "the grader crashed: no reward, so the trial counts as an error, not a 0"; rm -f /logs/verifier/reward.json; exit 1; }
 python3 -c 'import sys; sys.path.insert(0, "/tests"); import kx; kx.finalize()'

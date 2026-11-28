@@ -29,7 +29,7 @@ facts = [
 # Loops and check-ins on the chat count too: a report moved to a chat loop is set up, not invented.
 loops = rows(kj(f'loops ls --session {SESSION}'), 'loops')
 facts.append('loops on this chat: ' + ('none' if not loops else '; '.join(f"{str(l.get('schedule') or l.get('cron') or l.get('every') or l.get('at') or l.get('when') or '')} {str(l.get('text') or l.get('prompt') or '')[:80]}".strip() for l in loops)))
-open(f'{V}/judge-input.md', 'w').write(reply() + '\n\n---\nWorkspace state, read by the grader:\n- ' + '\n- '.join(facts) + '\n')
+open(f'{V}/judge-input.md', 'w').write('The reply to the person:\n\n' + reply() + '\n\n---\nWorkspace state, read by the grader:\n- ' + '\n- '.join(facts) + '\n')
 print('\n'.join(facts))
 save({})
 PY
