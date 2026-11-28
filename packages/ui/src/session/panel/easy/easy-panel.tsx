@@ -38,6 +38,7 @@ import { ContextCard } from './context-card';
 import { useSessionContextUsage } from './context-meter';
 import { pathOutput } from './easy-panel-logic';
 import { OutputsCard } from './outputs-card';
+import { SourcesCard } from './sources-card';
 import { PlanPanelCard } from './plan-card';
 
 export function EasyPanel() {
@@ -55,7 +56,7 @@ export function EasyPanel() {
   // read-only inside `legacy-subagent-chat.tsx`, which has no panel at all.
   if (!panel) return null;
 
-  const { files, context, apps, isSessionBusy, sessionId, handleOpenOutput, openDetail } = panel;
+  const { files, context, sources, apps, isSessionBusy, sessionId, handleOpenOutput, openDetail } = panel;
 
   return (
     // A fill-and-scroll column, not a scrolling stack.
@@ -72,6 +73,7 @@ export function EasyPanel() {
     // `min-h-0` is what lets this shrink at all — a flex container defaults to
     // its content's minimum height and would otherwise refuse.
     <div className="flex h-full min-h-0 flex-col pb-2">
+      <SourcesCard sources={sources} onOpenDetail={openDetail} />
       <OutputsCard
         fill={!changeRequests?.requests.length}
         outputs={files}

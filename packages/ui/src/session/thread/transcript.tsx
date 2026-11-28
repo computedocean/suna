@@ -91,6 +91,8 @@ import { ThrottledMarkdown } from '../turn/throttled-markdown';
 import { TurnViewport } from '../turn/turn-viewport';
 import { UserMessage } from '../turn/user-message';
 import { useOptionalSessionPanel } from '../panel/session-panel-provider';
+import { deriveTurnSources, type TurnSource } from '../panel/shared/derive-panels';
+import { TurnSourcesButton } from '../turn/turn-sources';
 import { Composer as SessionChatInput } from '../composer/composer';
 import { ConnectProviderDialog } from '../models/model-selector';
 import { TurnOutcomes } from '../outcomes/turn-outcomes';
@@ -804,6 +806,12 @@ export function openTextBlock(
 
 /** The turn's reply blocks, each call in its open shape (`sessionLogOpenCall`). One array per turn object. */
 const openBlocks = new WeakMap<SessionLogTurn, SessionLogBlock[]>();
+
+const NO_SOURCES: TurnSource[] = [];
+
+function isToolCallBlock(block: SessionLogBlock): block is ToolCallBlock {
+  return block.type === 'tool_call';
+}
 function turnBlocks(turn: SessionLogTurn): SessionLogBlock[] {
   let list = openBlocks.get(turn);
   if (!list) {
@@ -2313,6 +2321,8 @@ function TurnFooter(
     hideActionBar?: boolean;
     /** The busy line says only that the agent works, never which tool runs (`messagesOnly`). */
     quietBusy?: boolean;
+    /** The web pages this response read (`deriveTurnSources`). */
+    sources: TurnSource[];
     model: TurnModelState;
     errors: TurnErrorState;
     answered: TurnAnsweredState;
@@ -2396,6 +2406,8 @@ function TurnFooter(
           copy: no bar, so no empty hover band under it. */}
       {!working && !props.hideActionBar && hasCopyableResponse(response, answered.inlineContentParts) && (
         <TurnActionBar
+          turnId={turn.id}
+          sources={props.sources}
           response={response}
           inlineContentParts={answered.inlineContentParts}
           turnEndedAt={turnEndedAt}
@@ -2560,9 +2572,14 @@ function TurnActionBar({
   servedModel,
   tHardcodedUi,
   inToolbar = false,
+  turnId,
+  sources,
 }: {
   /** Inside a message row's toolbar, which owns the hover reveal. */
   inToolbar?: boolean;
+  turnId: string;
+  /** The web pages this response read: the bar's Sources button. */
+  sources: TurnSource[];
   response: string;
   inlineContentParts: TurnAnsweredState['inlineContentParts'];
   turnEndedAt: TurnSettledMeta['turnEndedAt'];
@@ -2633,6 +2650,7 @@ const handleCopy = async () => {
             </span>
           </Button>
       ) : null}
+        <TurnSourcesButton turnId={turnId} sources={sources} />
         <SessionTurnMeta
           endedAt={turnEndedAt}
           durationMs={turnDurationMs}
@@ -2702,6 +2720,15 @@ function SessionTurnImpl(props: SessionTurnProps) {
   const status = useTurnLiveStatus({ turn, blocks: model.blocks, agentWorking: model.agentWorking });
   const retry = useTurnRetryState({ sessionStatus, isWorkingTurn });
   const meta = useTurnSettledMeta({ working: model.working, turn });
+  // The pages this response read, for its Sources button. Only a settled turn shows the bar.
+  // A run's report turns draw no bar of their own (KRTX-5238): their pages count on the host's.
+  const sources = useMemo(
+    () =>
+      model.working
+        ? NO_SOURCES
+        : deriveTurnSources([model.blocks, ...(props.runTurns ?? []).map(turnBlocks)].flat().filter(isToolCallBlock)),
+    [model.working, model.blocks, props.runTurns],
+  );
   const segments = useTurnSegments({
     blocks: model.blocks,
     answeredQuestionCallsById: answered.answeredQuestionCallsById,
@@ -2785,7 +2812,7 @@ function SessionTurnImpl(props: SessionTurnProps) {
           <TurnAssistantBlock {...props} model={model} answered={answered} userContent={userContent} tHardcodedUi={tHardcodedUi} />
         </GenuiTelemetryContext.Provider>
         {/* One action bar per run: the host's, under the last reply (KRTX-5238). */}
-        <TurnFooter {...props} hideActionBar model={model} errors={errors} answered={answered} status={status} retry={retry} meta={meta} tHardcodedUi={tHardcodedUi} connectProviderOpen={connectProviderOpen} onConnectProviderOpenChange={setConnectProviderOpen} />
+        <TurnFooter {...props} sources={sources} hideActionBar model={model} errors={errors} answered={answered} status={status} retry={retry} meta={meta} tHardcodedUi={tHardcodedUi} connectProviderOpen={connectProviderOpen} onConnectProviderOpenChange={setConnectProviderOpen} />
       </div>
     );
   }
@@ -2926,6 +2953,8 @@ function SessionTurnImpl(props: SessionTurnProps) {
               model.working ? null : (
                 <TurnActionBar
                   inToolbar
+                  turnId={turn.id}
+                  sources={sources}
                   response={model.response}
                   inlineContentParts={answered.inlineContentParts}
                   turnEndedAt={meta.turnEndedAt}
@@ -2964,7 +2993,7 @@ function SessionTurnImpl(props: SessionTurnProps) {
               {messagesOnly && !model.working && errors.turnErrorIsAbort && model.response.trim() === '' && shownSegments.length === 0 ? (
                 <p className="text-muted-foreground text-sm">{tTurnRows('stopped')}</p>
               ) : null}
-              <TurnFooter {...props} hideActionBar quietBusy={messagesOnly} model={model} errors={errors} answered={answered} status={status} retry={retry} meta={meta} tHardcodedUi={tHardcodedUi} connectProviderOpen={connectProviderOpen} onConnectProviderOpenChange={setConnectProviderOpen} />
+              <TurnFooter {...props} sources={sources} hideActionBar quietBusy={messagesOnly} model={model} errors={errors} answered={answered} status={status} retry={retry} meta={meta} tHardcodedUi={tHardcodedUi} connectProviderOpen={connectProviderOpen} onConnectProviderOpenChange={setConnectProviderOpen} />
               {messagesOnly && !model.working ? (
                 <TurnMessageWork turn={props.turn} front={rows.front === true} />
               ) : null}
@@ -3014,7 +3043,7 @@ function SessionTurnImpl(props: SessionTurnProps) {
       </GenuiTelemetryContext.Provider>
       {/* While the run works, its one busy row stands under the last report: a row per report
           turn came and went with each reply, and the content shrank and grew under the reader. */}
-      <TurnFooter {...props} model={runWorking ? { ...model, working: true } : model} errors={errors} answered={answered} status={status} retry={retry} meta={meta} tHardcodedUi={tHardcodedUi} connectProviderOpen={connectProviderOpen} onConnectProviderOpenChange={setConnectProviderOpen} />
+      <TurnFooter {...props} sources={sources} model={runWorking ? { ...model, working: true } : model} errors={errors} answered={answered} status={status} retry={retry} meta={meta} tHardcodedUi={tHardcodedUi} connectProviderOpen={connectProviderOpen} onConnectProviderOpenChange={setConnectProviderOpen} />
     </div>
   );
 }

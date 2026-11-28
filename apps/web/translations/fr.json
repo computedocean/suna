@@ -2276,7 +2276,10 @@
       "retry": "Réessayer",
       "resume": "Reprendre",
       "agentIsWorking": "{agent} travaille",
-      "needsYouOn": "Vous attend : {header}"
+      "needsYouOn": "Vous attend : {header}",
+      "seeAllSources": "Tout voir",
+      "sources": "{count, plural, one {# source} other {# sources}}",
+      "sourcesTitle": "Sources"
     },
     "panel": {
       "outputNew": "Nouveau",

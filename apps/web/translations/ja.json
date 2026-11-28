@@ -2276,7 +2276,10 @@
       "retry": "再試行",
       "resume": "再開",
       "agentIsWorking": "{agent} が作業中",
-      "needsYouOn": "あなたの対応が必要: {header}"
+      "needsYouOn": "あなたの対応が必要: {header}",
+      "seeAllSources": "すべて表示",
+      "sources": "{count, plural, other {#件のソース}}",
+      "sourcesTitle": "ソース"
     },
     "panel": {
       "outputNew": "新規",

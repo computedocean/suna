@@ -2276,7 +2276,10 @@
       "retry": "重试",
       "resume": "继续",
       "agentIsWorking": "{agent} 正在处理",
-      "needsYouOn": "需要你：{header}"
+      "needsYouOn": "需要你：{header}",
+      "seeAllSources": "查看全部",
+      "sources": "{count, plural, other {# 个来源}}",
+      "sourcesTitle": "来源"
     },
     "panel": {
       "outputNew": "新",

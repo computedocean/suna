@@ -26,7 +26,7 @@ import {
   type WebSearchSource,
 } from '@kortix/sdk';
 import { getToolPrimaryArg, normalizeName } from '../../tool/tool-meta';
-import { extractReadableHtml } from '@kortix/shared';
+import { extractReadableHtml, safeHttpUrl } from '@kortix/shared';
 import {
   contextLabelForTool,
   createArtifactKind,
@@ -663,4 +663,51 @@ export function deriveContext(calls: ToolCallBlock[]): {
   }
 
   return { files, web, tools };
+}
+
+/** One web page a turn consulted, as the turn's Sources list shows it. */
+export interface TurnSource {
+  url: string;
+  title: string;
+  /** The host without `www.`: the line above the title. */
+  domain: string;
+  /** The search result's excerpt. A fetched page has none. */
+  snippet?: string;
+}
+
+/**
+ * The web pages one turn consulted, in the order the agent met them: every
+ * search result and every fetched page, one row per page. A page that a
+ * search surfaced and a later fetch opened is one row, and it keeps the
+ * search excerpt. Failed calls and searches with no parseable result add
+ * nothing: a bare query is not a source.
+ */
+export function deriveTurnSources(calls: ToolCallBlock[]): TurnSource[] {
+  const byKey = new Map<string, TurnSource>();
+  for (const call of calls) {
+    if (call.status !== 'complete' || call.result?.is_error) continue;
+    if (familyForTool(call.name) !== 'web') continue;
+    if (toolKind(call.name) === 'web_search') {
+      for (const parsed of parseWebSearchOutput(rawOutputOf(call))) {
+        for (const source of parsed.sources) addTurnSource(byKey, source.url, source.title, source.snippet);
+      }
+      continue;
+    }
+    for (const source of webSourcesOf(call)) addTurnSource(byKey, source.url, source.label);
+  }
+  return [...byKey.values()];
+}
+
+function addTurnSource(byKey: Map<string, TurnSource>, url: string, title: string, snippet?: string): void {
+  const href = safeHttpUrl(url);
+  if (!href) return;
+  const key = normalizeUrl(href);
+  const domain = wsDomain(href).replace(/^www\./i, '');
+  const text = snippet?.replace(/\s+/g, ' ').trim() || undefined;
+  const seen = byKey.get(key);
+  if (seen) {
+    seen.snippet ??= text;
+    return;
+  }
+  byKey.set(key, { url: href, title: title.trim() || domain, domain, snippet: text });
 }

@@ -1646,7 +1646,10 @@ const catalog = {
       "retry": "Retry",
       "resume": "Resume",
       "agentIsWorking": "{agent} is working",
-      "needsYouOn": "Needs you: {header}"
+      "needsYouOn": "Needs you: {header}",
+      "seeAllSources": "See all",
+      "sources": "{count, plural, one {# source} other {# sources}}",
+      "sourcesTitle": "Sources"
     },
     "panel": {
       "outputNew": "New",

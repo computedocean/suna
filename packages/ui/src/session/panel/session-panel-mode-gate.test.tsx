@@ -27,6 +27,7 @@ function withPanel(node: ReactNode, over: Partial<SessionPanelValue> = {}) {
     sessionId: 's1',
     files: [],
     context: { files: [], web: [], tools: [] },
+    sources: [],
     apps: [],
     isSessionBusy: false,
     detail: null,

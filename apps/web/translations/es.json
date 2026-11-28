@@ -2276,7 +2276,10 @@
       "retry": "Reintentar",
       "resume": "Reanudar",
       "agentIsWorking": "{agent} está trabajando",
-      "needsYouOn": "Te necesita: {header}"
+      "needsYouOn": "Te necesita: {header}",
+      "seeAllSources": "Ver todas",
+      "sources": "{count, plural, one {# fuente} other {# fuentes}}",
+      "sourcesTitle": "Fuentes"
     },
     "panel": {
       "outputNew": "Nuevo",

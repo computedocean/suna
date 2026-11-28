@@ -73,7 +73,7 @@ import {
 } from './easy/easy-panel-logic';
 import { FilePreview, reportsIntrinsicSize } from './easy/file-preview';
 import { forgetFrameHistory, noteBrowserApps, resumableFrameHistory } from './easy/frame-history';
-import { type deriveContext, type OutputItem } from './shared/derive-panels';
+import { type deriveContext, type OutputItem, type TurnSource } from './shared/derive-panels';
 import { usePanelDerivations } from './shared/use-panel-derivations';
 import { usePanelHandoffs } from './shared/use-panel-handoffs';
 import { useDeliverableReadiness } from './shared/use-deliverable-readiness';
@@ -96,6 +96,8 @@ export interface SessionPanelValue {
   /** Card data — everything the floating overlay renders. */
   files: OutputItem[];
   context: ReturnType<typeof deriveContext>;
+  /** Every web page the session read (`deriveTurnSources`): the Sources card. */
+  sources: TurnSource[];
   apps: OutputItem[];
   /** The session works now: lists that poll (Background tasks) poll faster. */
   isSessionBusy: boolean;
@@ -170,7 +172,7 @@ export function SessionPanelProvider({
   const tI18nComplete = useTranslations('hardcodedUi.i18nComplete');
   const tDesktop = useTranslations('sessionDesktop');
   const tReminders = useTranslations('reminders');
-  const { steps, calls, outputs, context, apps, files, isRunning, outcome } = usePanelDerivations({
+  const { steps, calls, outputs, context, sources, apps, files, isRunning, outcome } = usePanelDerivations({
     sessionId, projectId, projectSessionId, isSessionBusy,
   });
 
@@ -791,6 +793,7 @@ export function SessionPanelProvider({
       booting,
       files,
       context,
+      sources,
       apps,
       isSessionBusy,
       detail,
@@ -814,6 +817,7 @@ export function SessionPanelProvider({
       booting,
       files,
       context,
+      sources,
       apps,
       isSessionBusy,
       detail,

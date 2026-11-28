@@ -2276,7 +2276,10 @@
       "retry": "Покушај поново",
       "resume": "Настави",
       "agentIsWorking": "{agent} ради",
-      "needsYouOn": "Потребан си: {header}"
+      "needsYouOn": "Потребан си: {header}",
+      "seeAllSources": "Прикажи све",
+      "sources": "{count, plural, one {# извор} few {# извора} other {# извора}}",
+      "sourcesTitle": "Извори"
     },
     "panel": {
       "outputNew": "Ново",

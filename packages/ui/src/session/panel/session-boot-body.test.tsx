@@ -103,6 +103,7 @@ function panelValue(overrides: Partial<SessionPanelValue>): SessionPanelValue {
     sessionId: 'route-session',
     files: [],
     context: [] as unknown as SessionPanelValue['context'],
+    sources: [],
     apps: [],
     isSessionBusy: false,
     detail: null,

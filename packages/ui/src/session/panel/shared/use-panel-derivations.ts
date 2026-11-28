@@ -3,7 +3,7 @@ import { useSessionLogThread } from '@kortix/sdk/react';
 import { samePartsList } from '../../turn/same-parts';
 import { deriveIsRunning } from '../easy/easy-panel-logic';
 import { collectAllToolCalls } from './collect-tool-parts';
-import { deriveContext, deriveOutputs } from './derive-panels';
+import { deriveContext, deriveTurnSources, deriveOutputs } from './derive-panels';
 import { groupSteps } from '@kortix/sdk';
 import { latestRunMessages } from './latest-run';
 import { sortOutputs } from './output-priority';
@@ -44,6 +44,7 @@ export function usePanelDerivations({ sessionId, projectId, projectSessionId, is
   const latestIds = useMemo(() => new Set(latestCalls.map((c) => c.call_id)), [latestCalls]);
   const outputs = useMemo(() => deriveOutputs(calls, { latestRun: latestIds }), [calls, latestIds]);
   const context = useMemo(() => deriveContext(calls), [calls]);
+  const sources = useMemo(() => deriveTurnSources(calls), [calls]);
 
   // The latest run's own steps, not the session's — read by `outcome` below (a
   // text-only turn must never inherit a verdict from an old errored run
@@ -82,5 +83,5 @@ export function usePanelDerivations({ sessionId, projectId, projectSessionId, is
     [messages, latestSteps],
   );
 
-  return { steps, calls, outputs, context, apps, files, isRunning, outcome };
+  return { steps, calls, outputs, context, sources, apps, files, isRunning, outcome };
 }
