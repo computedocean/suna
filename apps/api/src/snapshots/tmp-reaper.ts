@@ -10,8 +10,8 @@
 //
 // This sweep runs on EVERY replica (build contexts are created on any pod during
 // on-demand session boot, not just the leader) and removes kortix-* temp dirs
-// whose mtime is older than MAX_AGE — long past the seconds-to-minutes a context
-// is actually needed, so in-flight builds are never touched.
+// whose mtime is older than MAX_AGE. Tree-thread scratch directories are
+// long-lived: tree-jobs.ts owns their cleanup on thread stop and process exit.
 
 import { readdir, stat, rm } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -34,6 +34,9 @@ export async function runTmpReaperSweep(): Promise<void> {
   let reclaimed = 0;
   for (const name of entries) {
     if (!name.startsWith(PREFIX)) continue;
+    // An idle tree thread still owns this directory, regardless of its mtime.
+    // TreeJobs removes it on stop and sweeps folders left by dead processes.
+    if (name.startsWith('kortix-tree-thread-')) continue;
     const path = join(dir, name);
     try {
       const s = await stat(path);
